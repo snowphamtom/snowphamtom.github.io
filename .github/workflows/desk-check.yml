@@ -1,0 +1,17 @@
+name: desk-check
+on:
+  push:
+    paths:
+      - desk.html
+      - desk_check.py
+      - .github/workflows/desk-check.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  score:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: score source and edges
+        run: python3 desk_check.py
