@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Creator">
+<meta name="theme-color" content="#f6f3ee">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>Character Creator</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #1e1c19;
+    background: #f6f3ee;
+    line-height: 1.45;
+  }
+  button, textarea::placeholder { color: #b0aaa2; }
+  textarea, input { font-family: inherit; color: inherit; }
+  button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  ::selection { background: #d5ebe8; }
+  .app { max-width: 440px; margin: 0 auto; min-height: 100dvh; background: #f6f3ee; padding-bottom: calc(18px + env(safe-area-inset-bottom)); }
+  @media (min-width: 560px) {
+    body { background: #e4dfd6; }
+    .app { margin: 16px auto; min-height: calc(100dvh - 32px); border-radius: 28px; box-shadow: 0 16px 40px rgba(40, 32, 20, 0.08); }
+  }
+  .top {
+    position: sticky; top: 0; z-index: 5;
+    padding: calc(12px + env(safe-area-inset-top)) 18px 10px;
+    background: rgba(246, 243, 238, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(30, 28, 25, 0.06);
+  }
+  .brand { margin: 0 0 6px; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #8a847c; }
+  .meter-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .meter-row span { font-size: 13px; color: #5c574f; }
+  .meter-row strong { font-size: 18px; font-variant-numeric: tabular-nums; }
+  .band { font-weight: 650; color: #1f4f4c; }
+  .bar { margin-top: 6px; height: 8px; border-radius: 99px; background: #e6e0d6; overflow: hidden; }
+  .meter-fill { display: block; height: 100%; width: 0%; border-radius: inherit; background: linear-gradient(90deg, #c8b89a, #3d7a74); transition: width 0.25s ease; }
+  .meter-label { margin: 6px 0 0; font-size: 12px; color: #6e6962; }
+  main { padding: 16px 18px 28px; }
+  h1, h2.roster-title {
+    margin: 0 0 6px;
+    font-family: Georgia, "Iowan Old Style", Palatino, serif;
+    font-weight: 500; font-size: 32px; letter-spacing: -0.03em; line-height: 1.1;
+  }
+  .lede { margin: 0 0 14px; color: #5c574f; }
+  label.field { display: block; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: #6e6962; margin-bottom: 6px; }
+  textarea {
+    width: 100%; min-height: 148px; border-radius: 16px; border: 1.5px solid #e6e0d6;
+    padding: 12px 14px; font-size: 16px; line-height: 1.45; background: #fffcf8; resize: vertical;
+  }
+  textarea[readonly] { background: #f3efe8; }
+  .hint, .install { margin: 8px 0 0; font-size: 13px; color: #6e6962; }
+  .install { background: #fffcf8; border: 1px solid #ece7df; border-radius: 16px; padding: 12px 14px; }
+  .count { margin: 4px 0 0; font-size: 12px; color: #8a847c; font-variant-numeric: tabular-nums; min-height: 1.2em; }
+  .card {
+    margin-top: 16px; background: #fffcf8; border: 1px solid #ece7df; border-radius: 24px;
+    padding: 12px 12px 14px; box-shadow: 0 12px 32px rgba(40, 32, 20, 0.05);
+  }
+  .card.locked { box-shadow: 0 0 0 2px rgba(31, 79, 76, 0.18), 0 12px 32px rgba(40, 32, 20, 0.05); }
+  .lock { margin: 0 8px 8px; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #1f4f4c; font-weight: 650; }
+  .portrait { position: relative; height: 268px; border-radius: 18px; overflow: hidden; background: #f7f4ef; border: 1px solid #f0ebe3; }
+  .wash, .floor { position: absolute; pointer-events: none; }
+  .wash { inset: 0; opacity: 0; }
+  .portrait.has-color .wash { opacity: 0.78; background: linear-gradient(160deg, var(--wash1), var(--wash2)); }
+  .floor { left: 18%; right: 18%; bottom: 14px; height: 12px; border-radius: 50%; background: rgba(40, 32, 20, 0.07); }
+  .scaler { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); transform-origin: bottom center; }
+  .scaler.tall { transform: translateX(-50%) scale(1.08); }
+  .scaler.short { transform: translateX(-50%) scale(0.86); }
+  .fig { position: relative; width: 108px; height: 192px; }
+  .fig .head { position: absolute; z-index: 3; top: 6px; left: 50%; width: 36px; height: 40px; margin-left: -18px; border-radius: 50% 50% 46% 46%; background: linear-gradient(#f7f3ec, #e3dcd2); }
+  .fig .neck { position: absolute; z-index: 2; top: 42px; left: 50%; width: 12px; height: 12px; margin-left: -6px; background: #e6dfd6; }
+  .fig .torso { position: absolute; z-index: 2; top: 52px; left: 50%; width: 70px; height: 74px; margin-left: -35px; border-radius: 18px 18px 12px 12px; background: linear-gradient(#f7f4ef, #e5dfd6); }
+  .fig.female .torso { width: 54px; margin-left: -27px; border-radius: 26px 26px 16px 16px; }
+  .fig.male .torso { width: 84px; margin-left: -42px; border-radius: 16px 16px 12px 12px; }
+  .fig.muscular .torso { width: 92px; margin-left: -46px; }
+  .fig.slim .torso { width: 48px; margin-left: -24px; }
+  .fig .hip { position: absolute; z-index: 1; top: 118px; left: 50%; width: 64px; height: 26px; margin-left: -32px; border-radius: 12px; background: #e4ddd4; }
+  .fig.female .hip { width: 72px; margin-left: -36px; }
+  .fig .leg { position: absolute; z-index: 1; top: 136px; width: 16px; height: 50px; border-radius: 8px; background: linear-gradient(#e7e1d8, #d5cfc5); }
+  .fig .leg.l { left: 32px; } .fig .leg.r { right: 32px; }
+  .fig .arm { position: absolute; z-index: 1; top: 62px; width: 14px; height: 56px; border-radius: 8px; background: linear-gradient(#f3eee7, #e0d9cf); }
+  .fig .arm.l { left: 8px; } .fig .arm.r { right: 8px; }
+  .fig.male .arm.l { left: 0; } .fig.male .arm.r { right: 0; }
+  .fig.clothed .torso, .fig.clothed .arm, .fig.clothed .hip, .fig.clothed .leg { background: linear-gradient(180deg, var(--cloth, #d7d1c6), var(--cloth2, #c9c2b6)); }
+  .fig.coat .torso { height: 92px; top: 50px; }
+  .fig.armor .torso { background-image: repeating-linear-gradient(180deg, rgba(255,255,255,0.28) 0 7px, transparent 7px 14px), linear-gradient(180deg, var(--cloth, #b7bec6), var(--cloth2, #8e98a2)); }
+  .fig .hair, .fig .scar, .fig .eye, .gear { display: none; }
+  .fig.has-hair .hair { display: block; position: absolute; z-index: 1; top: -2px; left: 50%; width: 50px; height: 50px; margin-left: -25px; border-radius: 40px 40px 14px 14px; background: linear-gradient(var(--hair, #c4b09a), #efe8dc); }
+  .fig.has-eyes .eye { display: block; position: absolute; z-index: 4; top: 22px; width: 5px; height: 5px; border-radius: 50%; background: var(--eye, #6e7c86); }
+  .fig.has-eyes .eye.l { left: 8px; } .fig.has-eyes .eye.r { right: 8px; }
+  .fig.has-scar .scar { display: block; position: absolute; z-index: 5; top: 20px; left: 16px; width: 16px; height: 2px; border-radius: 2px; background: #a56858; transform: rotate(-32deg); }
+  .fig.show-visor .gear.visor { display: block; position: absolute; z-index: 5; left: 2px; right: 2px; top: 16px; height: 7px; border-radius: 4px; background: linear-gradient(#f4f7f8, #8d98a2); }
+  .fig.show-phones .gear.phone { display: block; position: absolute; z-index: 5; top: 14px; width: 8px; height: 12px; border-radius: 4px; background: #4d5960; }
+  .fig.show-phones .gear.phone.l { left: -4px; } .fig.show-phones .gear.phone.r { right: -4px; }
+  .fig.show-belt .gear.belt { display: block; position: absolute; z-index: 4; top: 78px; left: 8px; right: 8px; height: 6px; border-radius: 3px; background: #6d624e; }
+  .fig.show-weapon .gear.weapon { display: block; position: absolute; z-index: 1; top: 48px; right: -10px; width: 4px; height: 92px; border-radius: 3px; background: #8d9398; }
+  .fig.show-pack .gear.pack { display: block; position: absolute; z-index: 1; top: 58px; left: -8px; width: 18px; height: 26px; border-radius: 6px; background: #8a7356; }
+  .fig.show-helmet .hair, .fig.show-helmet.has-hair .hair { display: block; height: 34px; border-radius: 16px 16px 8px 8px; background: var(--hair, #8e98a2); }
+  .card h2 { margin: 12px 8px 2px; font-family: Georgia, "Iowan Old Style", Palatino, serif; font-weight: 500; font-size: 22px; letter-spacing: -0.02em; }
+  .note { margin: 0 8px 10px; font-size: 12.5px; color: #8a847c; }
+  .traits { list-style: none; margin: 0; padding: 0 4px; }
+  .traits li { display: grid; grid-template-columns: 84px 1fr; gap: 8px; padding: 7px 6px; border-top: 1px solid #f0ebe3; font-size: 14px; }
+  .traits .k { color: #6e6962; }
+  .traits .v { color: #b0aaa2; }
+  .traits li.on .k { color: #1f4f4c; font-weight: 650; }
+  .traits li.on .v { color: #1e1c19; }
+  .actions, .row { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+  .row { flex-direction: row; }
+  .row .ghost { flex: 1; }
+  .primary { height: 54px; border: 0; border-radius: 16px; background: #1f4f4c; color: #fff; font-size: 17px; font-weight: 650; }
+  .primary:disabled { background: #ddd6cc; color: #8d877e; cursor: not-allowed; }
+  .ghost { height: 44px; border-radius: 14px; border: 1.5px solid #d9d3c8; background: transparent; color: #5c574f; font-size: 15px; font-weight: 600; }
+  .ghost:disabled { opacity: 0.45; cursor: not-allowed; }
+  .roster { margin-top: 22px; }
+  .roster-title { font-size: 26px; }
+  .person { width: 100%; text-align: left; border: 1px solid #ece7df; background: #fffcf8; border-radius: 16px; padding: 12px 14px; margin-top: 8px; color: #1e1c19; }
+  .person strong { display: block; font-size: 16px; }
+  .person span { display: block; margin-top: 2px; font-size: 12px; color: #6e6962; }
+  .file { display: none; }
+  :focus-visible { outline: 2px solid #1f4f4c; outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { .meter-fill { transition: none; } }
+  @media (display-mode: standalone) { .install { display: none; } }
+</style>
+</head>
+<body>
+  <div class="app">
+    <header class="top">
+      <p class="brand">Character Creator</p>
+      <div class="meter" id="meter" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Realism. Vague stays low. Specific and detailed scores higher.">
+        <div class="meter-row">
+          <span>Realism <span class="band" id="band">Vague</span></span>
+          <strong id="pct">0%</strong>
+        </div>
+        <div class="bar"><span class="meter-fill" id="fill"></span></div>
+        <p class="meter-label">Longer and more specific raises this, from vague to detailed.</p>
+      </div>
+    </header>
+    <main>
+      <h1>How should they look?</h1>
+      <p class="lede">One description. Say it as specifically as you can. The card below only fills in what you actually write. Saved characters stay on this phone.</p>
+      <p class="install" id="install">On iPhone, open this page in Safari. Tap Share, then Add to Home Screen, then Add. Open it from the new icon. There is no account.</p>
+      <label class="field" for="desc">Description</label>
+      <textarea id="desc" placeholder="Tall, silver hair in a loose braid, frost-blue eyes, a worn coat, a thin scar through one brow, goggles hanging from the belt."></textarea>
+      <p class="hint">Hair, eyes, build, clothing, colors, scars, and gear all raise the score.</p>
+      <p class="count" id="count"></p>
+      <article class="card" id="card" aria-live="polite">
+        <p class="lock" id="lock" hidden>Created</p>
+        <div class="portrait" id="portrait" aria-hidden="true">
+          <div class="wash"></div>
+          <div class="floor"></div>
+          <div class="scaler" id="scaler">
+            <div class="fig" id="fig">
+              <div class="hair"></div>
+              <div class="head"><i class="eye l"></i><i class="eye r"></i><i class="scar"></i><i class="gear visor"></i><i class="gear phone l"></i><i class="gear phone r"></i></div>
+              <div class="neck"></div>
+              <div class="arm l"></div><div class="arm r"></div>
+              <div class="torso"></div>
+              <i class="gear belt"></i>
+              <div class="hip"></div>
+              <div class="leg l"></div><div class="leg r"></div>
+              <i class="gear weapon"></i>
+              <i class="gear pack"></i>
+            </div>
+          </div>
+        </div>
+        <h2 id="card-title">Preview</h2>
+        <p class="note">Flat preview from your words. Not a photograph and not a 3D render.</p>
+        <ul class="traits" id="traits">
+          <li data-trait="hair"><span class="k">Hair</span><span class="v">Not described</span></li>
+          <li data-trait="eyes"><span class="k">Eyes</span><span class="v">Not described</span></li>
+          <li data-trait="build"><span class="k">Build</span><span class="v">Not described</span></li>
+          <li data-trait="clothing"><span class="k">Clothing</span><span class="v">Not described</span></li>
+          <li data-trait="colors"><span class="k">Colors</span><span class="v">Not described</span></li>
+          <li data-trait="scars"><span class="k">Scars</span><span class="v">Not described</span></li>
+          <li data-trait="gear"><span class="k">Gear</span><span class="v">Not described</span></li>
+        </ul>
+      </article>
+      <div class="actions">
+        <button type="button" class="primary" id="create" disabled>Create</button>
+        <button type="button" class="ghost" id="reset" disabled>Start over</button>
+      </div>
+      <section class="roster" id="roster">
+        <h2 class="roster-title">On this phone</h2>
+        <p class="note" id="roster-note">None saved yet.</p>
+        <div id="people"></div>
+        <div class="row">
+          <button type="button" class="ghost" id="export">Export</button>
+          <button type="button" class="ghost" id="import">Import</button>
+        </div>
+        <input class="file" id="file" type="file" accept="application/json,.json">
+      </section>
+    </main>
+  </div>
+<script>
+(function () {
+  var KEY = "character-creator.roster";
+  var TRAITS = [
+    { id: "hair", re: /\b(hair|ponytail|braids?|buns?|bangs|mohawks?|afros?|locks|curls|undercuts?|buzz ?cuts?|bald|manes?|dreadlocks|dreads)\b/i },
+    { id: "eyes", re: /\b(eyes|eye|gaze|irises|iris|heterochromia)\b/i },
+    { id: "build", re: /\b(tall|towering|short(?!\s+hair)|slim|slender|muscular|broad|petite|stocky|lean|athletic|wiry|heavyset|lanky|compact|hulking|slight|willowy|stout|burly|lithe|tiny)\b/i },
+    { id: "clothing", re: /\b(coat|cloak|jacket|armou?r|suit|dress|robe|shirt|hoodie|vest|pants|boots|scarf|gown|uniform|tunic|cape|kimono|overalls|leather|silk|denim|hood|clothes|clothing|outfit|wearing)\b/i },
+    { id: "colors", re: /\b(silver|cyan|gold|golden|black|white|red|blue|green|copper|moss|sand|ink|frost|titanium|grey|gray|brown|purple|pink|orange|teal|ivory|charcoal|crimson|amber|violet|navy|bone|rust|blonde|blond|auburn|scarlet|ginger)\b/i },
+    { id: "scars", re: /\b(scars?|scarred|burns?|branded|stitches|wounds?)\b/i },
+    { id: "gear", re: /\b(goggles|visors?|swords?|knives|knife|tools?|belts?|drones?|headphones|badges?|weapons?|rifles?|staves|staffs?|staff|packs?|satchels?|gauntlets?|shields?|holsters?|radios?|gloves|helmets?|gear|kit)\b/i }
+  ];
+  var SWATCH = { silver:"#c5ccd1", cyan:"#7fd6dc", gold:"#d4b15a", golden:"#d4b15a", black:"#2a2a2e", white:"#f4f1ea", red:"#c45a52", blue:"#6aa0d4", green:"#6f9468", copper:"#c47a52", moss:"#7d9468", sand:"#e2c9a1", ink:"#2c2c33", frost:"#c5e7ec", titanium:"#c5ccd1", grey:"#a9a49c", gray:"#a9a49c", brown:"#8a6a4a", purple:"#8a74a8", pink:"#e7b7c6", orange:"#e08a45", teal:"#3aa8a0", ivory:"#f3ead7", charcoal:"#3e4248", crimson:"#9c2b3a", amber:"#e0a045", violet:"#7a5ea7", navy:"#2c3e55", bone:"#e7dcc8", rust:"#a85a3a", blonde:"#e6d39a", blond:"#e6d39a", auburn:"#8a4b2f", scarlet:"#c43b3b", ginger:"#c4723a" };
+  var ta = document.getElementById("desc");
+  var locked = false;
+  var editing = null;
+  var roster = load();
+  function load() { try { var v = JSON.parse(localStorage.getItem(KEY) || "[]"); return Array.isArray(v) ? v : []; } catch (e) { return []; } }
+  function saveRoster() { localStorage.setItem(KEY, JSON.stringify(roster)); renderRoster(); }
+  function uid() { return Math.random().toString(36).slice(2, 10) + Date.now().toString(36); }
+  function matchOne(re, text) { return new RegExp(re.source, "i").exec(text); }
+  function matchAll(re, text) { return text.match(new RegExp(re.source, "gi")) || []; }
+  function phraseAround(text, index, length) {
+    var cuts = [text.lastIndexOf(",", index), text.lastIndexOf(".", index), text.lastIndexOf(";", index), text.lastIndexOf("!", index), text.lastIndexOf("?", index)];
+    var start = Math.max.apply(null, cuts); start = start < 0 ? 0 : start + 1;
+    var ends = [",", ".", ";", "!", "?"].map(function (mark) { return text.indexOf(mark, index + length); }).filter(function (n) { return n >= 0; });
+    var end = ends.length ? Math.min.apply(null, ends) : text.length;
+    var slice = text.slice(start, end).replace(/\s+/g, " ").trim();
+    if (slice.length > 72) slice = text.slice(Math.max(start, index - 20), Math.min(end, index + length + 28)).replace(/\s+/g, " ").trim();
+    return slice.replace(/^[,.;:!?\s]+|[,.;:!?\s]+$/g, "");
+  }
+  function words(text) { return text.match(/[A-Za-z][A-Za-z'-]*/g) || []; }
+  function colorNear(text, re) {
+    var m = matchOne(re, text); if (!m) return null;
+    var start = Math.max(0, m.index - 48), end = Math.min(text.length, m.index + m[0].length + 28);
+    var colorRe = new RegExp(TRAITS[4].re.source, "gi"), best = null, bestDist = 1e9, found;
+    while ((found = colorRe.exec(text.slice(start, end)))) { var dist = Math.abs(start + found.index - m.index); if (dist < bestDist) { bestDist = dist; best = found[0].toLowerCase(); } }
+    return best ? (SWATCH[best] || null) : null;
+  }
+  function analyze(text) {
+    var out = {};
+    TRAITS.forEach(function (trait) {
+      if (trait.id === "colors") {
+        var all = matchAll(trait.re, text), uniq = [];
+        all.forEach(function (word) { var key = word.toLowerCase(); if (uniq.indexOf(key) < 0) uniq.push(key); });
+        out.colors = uniq.length ? { phrase: uniq.slice(0, 4).join(", "), keys: uniq } : null;
+        return;
+      }
+      var found = matchOne(trait.re, text);
+      out[trait.id] = found ? { phrase: phraseAround(text, found.index, found[0].length), keys: [found[0].toLowerCase()] } : null;
+    });
+    return out;
+  }
+  function realism(text, info) {
+    var trimmed = text.trim(); if (!trimmed) return 0;
+    var lenPts = Math.min(40, Math.round(words(trimmed).length * 2.2));
+    var hits = TRAITS.filter(function (trait) { return info[trait.id]; }).length;
+    var specific = TRAITS.filter(function (trait) { return info[trait.id] && info[trait.id].phrase.split(/\s+/).length >= 3; }).length;
+    return Math.min(100, lenPts + hits * 8 + specific);
+  }
+  function bandFor(score, empty) { if (empty || score < 21) return "Vague"; if (score < 46) return "Light"; if (score < 76) return "Specific"; return "Detailed"; }
+  function paint(text) {
+    var info = analyze(text), fig = document.getElementById("fig"), scaler = document.getElementById("scaler"), portrait = document.getElementById("portrait");
+    fig.className = "fig"; scaler.className = "scaler"; portrait.classList.remove("has-color");
+    portrait.style.removeProperty("--wash1"); portrait.style.removeProperty("--wash2"); fig.style.removeProperty("--hair"); fig.style.removeProperty("--eye"); fig.style.removeProperty("--cloth"); fig.style.removeProperty("--cloth2");
+    if (/\b(woman|female|girl|lady)\b/i.test(text)) fig.classList.add("female"); else if (/\b(man|male|boy|guy)\b/i.test(text)) fig.classList.add("male");
+    if (/\b(muscular|broad|stocky|hulking|burly|heavyset|stout)\b/i.test(text)) fig.classList.add("muscular"); else if (/\b(slim|slender|lean|petite|wiry|slight|willowy|lithe|lanky)\b/i.test(text)) fig.classList.add("slim");
+    if (/\b(tall|towering)\b/i.test(text)) scaler.classList.add("tall"); if (/\b(short(?!\s+hair)|tiny|compact)\b/i.test(text)) scaler.classList.add("short");
+    if (info.hair) { fig.classList.add("has-hair"); fig.style.setProperty("--hair", colorNear(text, TRAITS[0].re) || "#c4b09a"); }
+    if (info.eyes) { fig.classList.add("has-eyes"); fig.style.setProperty("--eye", colorNear(text, TRAITS[1].re) || "#6e7c86"); }
+    if (info.scars) fig.classList.add("has-scar");
+    if (info.clothing) { fig.classList.add("clothed"); var cloth = colorNear(text, TRAITS[3].re) || (info.colors ? SWATCH[info.colors.keys[0]] : "#d7d1c6"); fig.style.setProperty("--cloth", cloth); fig.style.setProperty("--cloth2", cloth); if (/\b(coat|cloak|cape|robe|gown|hood)\b/i.test(text)) fig.classList.add("coat"); if (/\barmou?r\b/i.test(text)) fig.classList.add("armor"); }
+    if (info.colors) { portrait.classList.add("has-color"); portrait.style.setProperty("--wash1", SWATCH[info.colors.keys[0]]); portrait.style.setProperty("--wash2", SWATCH[info.colors.keys[1] || info.colors.keys[0]]); }
+    if (info.gear) { if (/\b(goggles|visors?)\b/i.test(text)) fig.classList.add("show-visor"); if (/\bheadphones\b/i.test(text)) fig.classList.add("show-phones"); if (/\bbelts?\b/i.test(text)) fig.classList.add("show-belt"); if (/\b(swords?|knives|knife|rifles?|staves|staffs?|staff|weapons?)\b/i.test(text)) fig.classList.add("show-weapon"); if (/\b(packs?|satchels?|kit)\b/i.test(text)) fig.classList.add("show-pack"); if (/\bhelmets?\b/i.test(text)) fig.classList.add("show-helmet"); }
+    var hits = 0;
+    TRAITS.forEach(function (trait) { var row = document.querySelector('[data-trait="' + trait.id + '"]'); var value = row.querySelector(".v"); if (info[trait.id]) { hits += 1; row.classList.add("on"); value.textContent = info[trait.id].phrase; } else { row.classList.remove("on"); value.textContent = "Not described"; } });
+    var score = realism(text, info), empty = !text.trim();
+    document.getElementById("pct").textContent = score + "%"; document.getElementById("fill").style.width = score + "%"; document.getElementById("band").textContent = bandFor(score, empty); document.getElementById("meter").setAttribute("aria-valuenow", String(score));
+    var count = words(text.trim());
+    document.getElementById("count").textContent = empty ? "" : count.length + (count.length === 1 ? " word" : " words") + " · " + hits + " of 7 traits";
+    document.getElementById("card-title").textContent = locked ? "Created" : "Preview";
+    return { score: score, info: info, band: bandFor(score, empty) };
+  }
+  function syncButtons() { var empty = !ta.value.trim(); var create = document.getElementById("create"); create.disabled = locked || empty; create.textContent = locked ? "Saved on this phone" : (editing ? "Save edit" : "Create"); document.getElementById("reset").disabled = !locked && empty && !editing; }
+  function update() { paint(ta.value); syncButtons(); }
+  function labelOf(item) { var line = (item.description || "").split(/[\n.]/)[0].trim(); return line.length > 42 ? line.slice(0, 42) + "…" : (line || "Untitled"); }
+  function renderRoster() {
+    var box = document.getElementById("people"); box.innerHTML = "";
+    document.getElementById("roster-note").textContent = roster.length ? roster.length + " saved on this phone." : "None saved yet.";
+    document.getElementById("export").disabled = !roster.length;
+    roster.slice().reverse().forEach(function (item) {
+      var b = document.createElement("button"); b.type = "button"; b.className = "person";
+      b.innerHTML = "<strong></strong><span></span>"; b.querySelector("strong").textContent = labelOf(item); b.querySelector("span").textContent = item.band + " · " + item.score + "% · tap to edit";
+      b.addEventListener("click", function () { openItem(item.id); }); box.appendChild(b);
+    });
+  }
+  function openItem(id) {
+    var item = roster.filter(function (n) { return n.id === id; })[0]; if (!item) return;
+    editing = id; locked = false; ta.readOnly = false; ta.value = item.description; document.getElementById("card").classList.remove("locked"); document.getElementById("lock").hidden = true; update(); ta.focus();
+  }
+  function traitsOnly(info) { var out = {}; TRAITS.forEach(function (trait) { out[trait.id] = info[trait.id] ? info[trait.id].phrase : null; }); return out; }
+  ta.addEventListener("input", function () { if (locked) return; update(); });
+  document.getElementById("create").addEventListener("click", function () {
+    if (locked || !ta.value.trim()) return;
+    var painted = paint(ta.value);
+    var record = { id: editing || uid(), description: ta.value.trim(), traits: traitsOnly(painted.info), score: painted.score, band: painted.band, createdAt: new Date().toISOString() };
+    roster = roster.filter(function (n) { return n.id !== record.id; }); roster.push(record); editing = record.id; saveRoster();
+    locked = true; ta.readOnly = true; document.getElementById("card").classList.add("locked"); document.getElementById("lock").hidden = false; document.getElementById("card-title").textContent = "Created"; syncButtons();
+  });
+  document.getElementById("reset").addEventListener("click", function () {
+    locked = false; editing = null; ta.readOnly = false; ta.value = ""; document.getElementById("card").classList.remove("locked"); document.getElementById("lock").hidden = true; update(); ta.focus();
+  });
+  document.getElementById("people").addEventListener("click", function () {});
+  document.getElementById("export").addEventListener("click", function () {
+    var blob = new Blob([JSON.stringify(roster, null, 2)], { type: "application/json" });
+    var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "character-creator.json"; a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+  });
+  document.getElementById("import").addEventListener("click", function () { document.getElementById("file").click(); });
+  document.getElementById("file").addEventListener("change", function (e) {
+    var file = e.target.files && e.target.files[0]; if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function () {
+      try {
+        var incoming = JSON.parse(String(reader.result)); if (!Array.isArray(incoming)) return;
+        incoming.forEach(function (item) { if (!item || !item.description) return; if (!item.id) item.id = uid(); roster = roster.filter(function (n) { return n.id !== item.id; }); roster.push(item); });
+        saveRoster();
+      } catch (err) {}
+    };
+    reader.readAsText(file); e.target.value = "";
+  });
+  document.getElementById("people").addEventListener("contextmenu", function (e) {
+    var button = e.target.closest("button"); if (!button) return; e.preventDefault();
+  });
+  renderRoster(); update();
+  if (window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone) document.getElementById("install").hidden = true;
+  if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(function () {});
+})();
+</script>
+</body>
+</html>
