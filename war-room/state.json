@@ -1,1 +1,91 @@
-{"asof":"2026-10-20","calibration":{"mean_predicted":null,"mean_realized":null,"rows":[]},"divergence":{"dollars":0.0,"pct":0.0},"gate":{"pct":2.0,"position":null,"reason":"best AMZN +1.13% below 2.0% gate; AAPL paper position from 2026-10-19 held (day 1/5)","review_in":"18 trading days","signal":null,"universe":[{"pass":false,"price":217.09,"ret5d":-0.0408,"ticker":"NVDA"},{"pass":false,"price":342.94,"ret5d":0.0058,"ticker":"AAPL"},{"pass":false,"price":533.52,"ret5d":-0.0141,"ticker":"MSFT"},{"pass":false,"price":262.45,"ret5d":0.0113,"ticker":"AMZN"},{"pass":false,"price":538.05,"ret5d":-0.0945,"ticker":"AMD"}],"verdict":"SILENCE"},"gate2":[],"kill":{"halted":false,"line":8.0,"postmortem":null},"ledger":[{"book":"paper","created_at":"2026-10-20T13:20:13.284Z","hash":"bd220a93167f1ecd596b0c1e8348830098a6692f18b6a2faf8c025a286f695a6","id":1,"price":343.6317,"side":"open","size_dollars":2.5,"ticker":"AAPL","trade_date":"2026-10-19"}],"live":{"closed_trades":0,"equity":10.0,"position":null,"win_rate":null},"paper":{"closed_trades":0,"equity":10.0,"position":{"days_held":1,"entry_date":"2026-10-19","entry_price":343.6317,"size_dollars":2.5,"ticker":"AAPL"},"win_rate":null}}
+{
+  "asof": "2026-10-21",
+  "calibration": {
+    "mean_predicted": null,
+    "mean_realized": null,
+    "rows": []
+  },
+  "divergence": {
+    "dollars": 0.0,
+    "pct": 0.0
+  },
+  "gate": {
+    "pct": 2.0,
+    "position": null,
+    "reason": "best AMZN +1.19% below 2.0% gate; AAPL paper position from 2026-10-19 held (day 2/5)",
+    "review_in": "17 trading days",
+    "signal": null,
+    "universe": [
+      {
+        "pass": false,
+        "price": 216.47,
+        "ret5d": -0.0435,
+        "ticker": "NVDA"
+      },
+      {
+        "pass": false,
+        "price": 339.5,
+        "ret5d": -0.0043,
+        "ticker": "AAPL"
+      },
+      {
+        "pass": false,
+        "price": 531.87,
+        "ret5d": -0.0171,
+        "ticker": "MSFT"
+      },
+      {
+        "pass": false,
+        "price": 262.63,
+        "ret5d": 0.0119,
+        "ticker": "AMZN"
+      },
+      {
+        "pass": false,
+        "price": 534.74,
+        "ret5d": -0.1001,
+        "ticker": "AMD"
+      }
+    ],
+    "verdict": "SILENCE"
+  },
+  "gate2": [],
+  "kill": {
+    "halted": false,
+    "line": 8.0,
+    "postmortem": null
+  },
+  "ledger": [
+    {
+      "book": "paper",
+      "created_at": "2026-10-20T13:20:13.284Z",
+      "hash": "bd220a93167f1ecd596b0c1e8348830098a6692f18b6a2faf8c025a286f695a6",
+      "id": 1,
+      "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "price": 343.6317,
+      "side": "open",
+      "size_dollars": 2.5,
+      "source": "process",
+      "ticker": "AAPL",
+      "trade_date": "2026-10-19"
+    }
+  ],
+  "live": {
+    "closed_trades": 0,
+    "equity": 10.0,
+    "position": null,
+    "win_rate": null
+  },
+  "paper": {
+    "closed_trades": 0,
+    "equity": 10.0,
+    "position": {
+      "days_held": 2,
+      "entry_date": "2026-10-19",
+      "entry_price": 343.6317,
+      "size_dollars": 2.5,
+      "ticker": "AAPL"
+    },
+    "win_rate": null
+  }
+}
