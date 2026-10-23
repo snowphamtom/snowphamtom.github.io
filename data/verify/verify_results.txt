@@ -1,0 +1,275 @@
+
+--- MD S3.1 filed [55,8] (exhaustive battery, may take a minute) ---
+    battery ran in 0.4s
+[PASS] MD S3.1 filed [55,8] :: 48 distinct masks :: measured=48 expected=48
+[PASS] MD S3.1 filed [55,8] :: row sums :: measured=[48, 24, 24, 24, 24, 17, 17] expected=[48, 24, 24, 24, 24, 17, 17]
+[PASS] MD S3.1 filed [55,8] :: total bits :: measured=178 expected=178
+[PASS] MD S3.1 filed [55,8] :: min Hamming distance :: measured=1 expected=1
+[PASS] MD S3.1 filed [55,8] :: XOR pair sums distinct /1128 :: measured=63 expected=63
+[PASS] MD S3.1 filed [55,8] :: integer ++ distinct /1128 :: measured=464 expected=464
+[PASS] MD S3.1 filed [55,8] :: ordered +- distinct /2256 :: measured=592 expected=592
+[PASS] MD S3.1 filed [55,8] :: +++ distinct /17296 :: measured=2392 expected=2392
+[PASS] MD S3.1 filed [55,8] :: ++- distinct /51888 :: measured=3173 expected=3173
+[PASS] MD S3.1 filed [55,8] :: triple syndromes distinct /69184 :: measured=5565 expected=5565
+[PASS] MD S3.1 filed [55,8] :: syndromes shared by +++ and ++- :: measured=0 expected=0
+[PASS] MD S3.1 filed [55,8] :: distinct triple syndromes equal to a pair syndrome :: measured=0 expected=0
+[PASS] MD S3.1 filed [55,8] :: weight-3 patterns accepted under Model A :: measured=7296 expected=7296
+[PASS] MD S3.1 filed [55,8] :: weight-3 patterns accepted under Model A+ :: measured=7296 expected=7296
+[PASS] MD S3.1 filed [55,8] :: weight-3 patterns accepted under Model B :: measured=7296 expected=7296
+[PASS] MD S3.1 filed [55,8] :: weight-3 patterns refused under every model (69184 - 7296) :: measured=61888 expected=61888
+
+--- MD S3.2 F64 spec set (exhaustive battery, may take a minute) ---
+    battery ran in 0.7s
+[PASS] MD S3.2 F64 spec set :: 48 distinct masks :: measured=48 expected=48
+[PASS] MD S3.2 F64 spec set :: row sums :: measured=[48, 48, 23, 24, 23, 22, 19, 18, 25, 32, 20, 28, 30, 21] expected=[48, 48, 23, 24, 23, 22, 19, 18, 25, 32, 20, 28, 30, 21]
+[PASS] MD S3.2 F64 spec set :: total bits :: measured=381 expected=381
+[PASS] MD S3.2 F64 spec set :: min Hamming distance :: measured=2 expected=2
+[PASS] MD S3.2 F64 spec set :: XOR pair sums distinct /1128 :: measured=1128 expected=1128
+[PASS] MD S3.2 F64 spec set :: integer ++ distinct /1128 :: measured=1128 expected=1128
+[PASS] MD S3.2 F64 spec set :: ordered +- distinct /2256 :: measured=2256 expected=2256
+[PASS] MD S3.2 F64 spec set :: +++ distinct /17296 :: measured=17165 expected=17165
+[PASS] MD S3.2 F64 spec set :: ++- distinct /51888 :: measured=50761 expected=50761
+[PASS] MD S3.2 F64 spec set :: triple syndromes distinct /69184 :: measured=67926 expected=67926
+[PASS] MD S3.2 F64 spec set :: syndromes shared by +++ and ++- :: measured=0 expected=0
+[PASS] MD S3.2 F64 spec set :: distinct triple syndromes equal to a pair syndrome :: measured=0 expected=0
+[PASS] MD S3.2 F64 spec set :: weight-3 patterns accepted under Model A :: measured=0 expected=0
+[PASS] MD S3.2 F64 spec set :: weight-3 patterns accepted under Model A+ :: measured=0 expected=0
+[PASS] MD S3.2 F64 spec set :: weight-3 patterns accepted under Model B :: measured=0 expected=0
+[PASS] MD S3.2 F64 spec set :: common bits (AND of all 48 masks) :: measured=2 expected=2
+--- MD S3.2 F64 quadruple pairing scan (583,740 syndromes) ---
+[PASS] MD S3.2 F64 spec set :: quad ++-- TAIL_EDIT (axis) pairing hits :: measured=81 expected=81
+[PASS] MD S3.2 F64 spec set :: quad ++-- column-parallel pairing hits :: measured=0 expected=0
+
+--- MD S3.3 seed6 (label withdrawn) (exhaustive battery, may take a minute) ---
+    battery ran in 0.4s
+[PASS] MD S3.3 seed6 (label withdrawn) :: 48 distinct masks :: measured=48 expected=48
+[PASS] MD S3.3 seed6 (label withdrawn) :: row sums :: measured=[31, 25, 22, 28, 20, 26, 27, 28, 23, 25, 25, 26, 22, 19] expected=[31, 25, 22, 28, 20, 26, 27, 28, 23, 25, 25, 26, 22, 19]
+[PASS] MD S3.3 seed6 (label withdrawn) :: total bits :: measured=347 expected=347
+[PASS] MD S3.3 seed6 (label withdrawn) :: min Hamming distance :: measured=2 expected=2
+[PASS] MD S3.3 seed6 (label withdrawn) :: XOR pair sums distinct /1128 :: measured=1128 expected=1128
+[PASS] MD S3.3 seed6 (label withdrawn) :: integer ++ distinct /1128 :: measured=1128 expected=1128
+[PASS] MD S3.3 seed6 (label withdrawn) :: ordered +- distinct /2256 :: measured=2256 expected=2256
+[PASS] MD S3.3 seed6 (label withdrawn) :: +++ distinct /17296 :: measured=17286 expected=17286
+[PASS] MD S3.3 seed6 (label withdrawn) :: ++- distinct /51888 :: measured=51798 expected=51798
+[PASS] MD S3.3 seed6 (label withdrawn) :: triple syndromes distinct /69184 :: measured=69084 expected=69084
+[PASS] MD S3.3 seed6 (label withdrawn) :: syndromes shared by +++ and ++- :: measured=0 expected=0
+[PASS] MD S3.3 seed6 (label withdrawn) :: distinct triple syndromes equal to a pair syndrome :: measured=10 expected=10
+[PASS] MD S3.3 seed6 (label withdrawn) :: weight-3 patterns accepted under Model A :: measured=0 expected=0
+[PASS] MD S3.3 seed6 (label withdrawn) :: weight-3 patterns accepted under Model A+ :: measured=0 expected=0
+[PASS] MD S3.3 seed6 (label withdrawn) :: weight-3 patterns accepted under Model B :: measured=10 expected=10
+[PASS] MD S3.3 seed6 (label withdrawn) :: +++ collisions (17296 - 17286) :: measured=10 expected=10
+[PASS] MD S3.3 seed6 (label withdrawn) :: ++- collisions (51888 - 51798) :: measured=90 expected=90
+
+--- MD S3.4 closed GF(2^7) set (exhaustive battery, may take a minute) ---
+    battery ran in 0.4s
+[PASS] MD S3.4 closed GF(2^7) set :: 48 distinct masks :: measured=48 expected=48
+[PASS] MD S3.4 closed GF(2^7) set :: row sums :: measured=[28, 27, 23, 26, 23, 24, 26, 28, 23, 25, 27, 26, 23, 19] expected=[28, 27, 23, 26, 23, 24, 26, 28, 23, 25, 27, 26, 23, 19]
+[PASS] MD S3.4 closed GF(2^7) set :: total bits :: measured=348 expected=348
+[PASS] MD S3.4 closed GF(2^7) set :: min Hamming distance :: measured=2 expected=2
+[PASS] MD S3.4 closed GF(2^7) set :: XOR pair sums distinct /1128 :: measured=1128 expected=1128
+[PASS] MD S3.4 closed GF(2^7) set :: integer ++ distinct /1128 :: measured=1128 expected=1128
+[PASS] MD S3.4 closed GF(2^7) set :: ordered +- distinct /2256 :: measured=2256 expected=2256
+[PASS] MD S3.4 closed GF(2^7) set :: +++ distinct /17296 :: measured=17296 expected=17296
+[PASS] MD S3.4 closed GF(2^7) set :: ++- distinct /51888 :: measured=51888 expected=51888
+[PASS] MD S3.4 closed GF(2^7) set :: triple syndromes distinct /69184 :: measured=69184 expected=69184
+[PASS] MD S3.4 closed GF(2^7) set :: syndromes shared by +++ and ++- :: measured=0 expected=0
+[PASS] MD S3.4 closed GF(2^7) set :: distinct triple syndromes equal to a pair syndrome :: measured=0 expected=0
+[PASS] MD S3.4 closed GF(2^7) set :: weight-3 patterns accepted under Model A :: measured=0 expected=0
+[PASS] MD S3.4 closed GF(2^7) set :: weight-3 patterns accepted under Model A+ :: measured=0 expected=0
+[PASS] MD S3.4 closed GF(2^7) set :: weight-3 patterns accepted under Model B :: measured=0 expected=0
+[PASS] MD S3.4 closed GF(2^7) set :: columns differing from seed6 (indices) :: measured=[8, 12, 16, 28, 36] expected=[8, 12, 16, 28, 36]
+[PASS] MD S3.4 closed GF(2^7) set :: substituted values at those indices :: measured=[3996, 1167, 7829, 4626, 9494] expected=[3996, 1167, 7829, 4626, 9494]
+
+--- MD S3.5 r=10 set (exhaustive battery, may take a minute) ---
+    battery ran in 0.5s
+[PASS] MD S3.5 r=10 set :: 48 distinct masks :: measured=48 expected=48
+[PASS] MD S3.5 r=10 set :: row sums :: measured=[27, 26, 26, 27, 25, 27, 25, 28, 24, 24] expected=[27, 26, 26, 27, 25, 27, 25, 28, 24, 24]
+[PASS] MD S3.5 r=10 set :: total bits :: measured=259 expected=259
+[PASS] MD S3.5 r=10 set :: min Hamming distance :: measured=2 expected=2
+[PASS] MD S3.5 r=10 set :: XOR pair sums distinct /1128 :: measured=743 expected=743
+[PASS] MD S3.5 r=10 set :: integer ++ distinct /1128 :: measured=1128 expected=1128
+[PASS] MD S3.5 r=10 set :: ordered +- distinct /2256 :: measured=2256 expected=2256
+[PASS] MD S3.5 r=10 set :: +++ distinct /17296 :: measured=16499 expected=16499
+[PASS] MD S3.5 r=10 set :: ++- distinct /51888 :: measured=45601 expected=45601
+[PASS] MD S3.5 r=10 set :: triple syndromes distinct /69184 :: measured=62100 expected=62100
+[PASS] MD S3.5 r=10 set :: syndromes shared by +++ and ++- :: measured=0 expected=0
+[PASS] MD S3.5 r=10 set :: distinct triple syndromes equal to a pair syndrome :: measured=381 expected=381
+[PASS] MD S3.5 r=10 set :: weight-3 patterns accepted under Model A :: measured=0 expected=0
+[PASS] MD S3.5 r=10 set :: weight-3 patterns accepted under Model A+ :: measured=0 expected=0
+[PASS] MD S3.5 r=10 set :: weight-3 patterns accepted under Model B :: measured=490 expected=490
+[PASS] MD S3.5 r=10 set :: column weights min :: measured=2 expected=2
+[PASS] MD S3.5 r=10 set :: column weights max :: measured=8 expected=8
+[PASS] MD S3.5 r=10 set :: common bits (AND of all masks) :: measured=0 expected=0
+[PASS] MD S3.5 r=10 set :: row sums min (no dead rows) :: measured=24 expected=24
+[PASS] MD S3.5 r=10 set :: row sums max :: measured=28 expected=28
+[PASS] MD S3.5 r=10 set :: overlap pair++ x triple+++ (distinct syndromes) :: measured=44 expected=44
+[PASS] MD S3.5 r=10 set :: overlap pair++ x triple++- (distinct syndromes) :: measured=116 expected=116
+[PASS] MD S3.5 r=10 set :: overlap pair+- x triple+++ (distinct syndromes) :: measured=0 expected=0
+[PASS] MD S3.5 r=10 set :: overlap pair+- x triple++- (distinct syndromes) :: measured=221 expected=221
+[PASS] MD S3.5 r=10 set :: weight-3 syndromes that are zero :: measured=0 expected=0
+[PASS] MD S3.5 r=10 set :: weight-3 syndromes axis-aligned (any amplitude) :: measured=0 expected=0
+[PASS] MD S3.5 r=10 set :: weight-3 syndromes parallel to a column (any amplitude) :: measured=0 expected=0
+
+--- MD S3.6 dual-mirror regenerated set (Variant A battery) ---
+[PASS] MD S3.6 :: 48 distinct masks :: measured=48 expected=48
+[PASS] MD S3.6 :: every column constant weight 8 :: measured={8} expected={8}
+[PASS] MD S3.6 :: rows 0 and 7 all-ones (bit0 and bit7 set in all 48) :: measured=True expected=True
+[PASS] MD S3.6 :: mirror rule H[7+k] = 1 - H[k] for k=1..6, all columns :: measured=True expected=True
+[PASS] MD S3.6 :: 14-bit distance distribution :: measured={4: 282, 2: 124, 8: 253, 6: 352, 10: 100, 12: 17} expected={2: 124, 4: 282, 6: 352, 8: 253, 10: 100, 12: 17}
+[PASS] MD S3.6 :: accepted pairs (zero/axis/column, both signs) :: measured=0 expected=0
+[PASS] MD S3.6 :: triple syndromes zero :: measured=0 expected=0
+[PASS] MD S3.6 :: triple syndromes axis :: measured=0 expected=0
+[PASS] MD S3.6 :: triple faults accepted as column repairs (the 7,140 doors) :: measured=7140 expected=7140
+
+--- MD S3.7 HDL decoders (published package) ---
+[PASS] MD S3.7 HDL :: f64 golden vectors (142977 + 28) :: measured=143005 expected=143005
+[PASS] MD S3.7 HDL :: f64 published sim log: 0 errors + TB RESULT PASS :: measured=True expected=True
+[PASS] MD S3.7 HDL :: gf128 golden vectors (142977 + 28) :: measured=143005 expected=143005
+[PASS] MD S3.7 HDL :: gf128 published sim log: 0 errors + TB RESULT PASS :: measured=True expected=True
+[PASS] MD S3.7 HDL :: fmax_record carries 21.98 / 23.24 MHz on LFE5U-85F :: measured=True expected=True
+[PASS] MD S3.7 HDL :: f64 nextpnr log states 21.98 MHz :: measured=True expected=True
+[PASS] MD S3.7 HDL :: gf128 nextpnr log states 23.24 MHz :: measured=True expected=True
+[RECORD] MD S3.7 HDL :: Fmax figures are place-and-route outputs of the recorded flow (shortened ABC script) — a flow record, not a computation this suite redoes :: evidence: hdl-decoders drop fmax_record.md + fmax/ logs; Master Document S3.7 caveat
+
+--- MD S4.1 GENESIS census ---
+[PASS] MD S4.1 GENESIS :: pair rows :: measured=1128 expected=1128
+[PASS] MD S4.1 GENESIS :: class counts (DOOR/ALIAS/NEVER) :: measured={'NEVER': 60, 'ALIAS': 124, 'DOOR': 944} expected={'DOOR': 944, 'ALIAS': 124, 'NEVER': 60}
+[PASS] MD S4.1 GENESIS :: ALIAS iff Hamming distance 1 (every row) :: measured=True expected=True
+[PASS] MD S4.1 GENESIS :: DOOR iff doors_on_pair > 0 (every row) :: measured=True expected=True
+[PASS] MD S4.1 GENESIS :: distance distribution :: measured={1: 124, 2: 282, 3: 352, 4: 253, 5: 100, 6: 17} expected={1: 124, 2: 282, 3: 352, 4: 253, 5: 100, 6: 17}
+[PASS] MD S4.1 GENESIS :: total doors over pairs :: measured=7140 expected=7140
+[PASS] MD S4.1 GENESIS :: doors.csv data rows :: measured=7140 expected=7140
+[PASS] MD S4.1 GENESIS :: distinct midpoints :: measured=83 expected=83
+[PASS] MD S4.1 GENESIS :: midpoint (pair_sum) range :: measured=(16, 184) expected=(16, 184)
+[PASS] MD S4.1 GENESIS :: doors summed over midpoints :: measured=7140 expected=7140
+[PASS] MD S4.1 GENESIS :: W shape :: measured=(48, 48) expected=(48, 48)
+[PASS] MD S4.1 GENESIS :: W symmetric, zero diagonal :: measured=True expected=True
+[PASS] MD S4.1 GENESIS :: W sum of squares (= sum lambda^2) :: measured=191808 expected=191808
+[PASS] MD S4.1 GENESIS :: W lambda_max :: measured=299.3580076868376 expected=299.358 ±0.001
+[PASS] MD S4.1 GENESIS :: W lambda_min :: measured=-129.8713544156117 expected=-129.871 ±0.001
+[PASS] MD S4.1 GENESIS :: W lambda_min multiplicity :: measured=3 expected=3
+[PASS] MD S4.1 GENESIS :: W distinct eigenvalues (3dp) :: measured=27 expected=27
+[PASS] MD S4.1 GENESIS :: spectra.txt carries the T line as printed (598.650 / -86.262 / 685584) :: measured=True expected=True
+[RECORD] MD S4.1 GENESIS :: T (transition operator) spectrum — matrix not in the published drop; figures as computed at export from core_engine_proof.py :: evidence: genesis-census drop spectra.txt; ~/workspace/your_files/core/core_engine_proof.py
+
+--- MD S4.4 Kimberling Problem 2 ---
+[PASS] MD S4.4 Kimberling :: located pairs :: measured=30 expected=30
+[PASS] MD S4.4 Kimberling :: distinct values :: measured=30 expected=30
+[PASS] MD S4.4 Kimberling :: distinct indices :: measured=30 expected=30
+[PASS] MD S4.4 Kimberling :: anchor pair (68, 181393) present :: measured=True expected=True
+[PASS] MD S4.4 Kimberling :: anchor pair (669, 653494691) present :: measured=True expected=True
+[PASS] MD S4.4 Kimberling :: anchor pair (502, 118850522) present :: measured=True expected=True
+[PASS] MD S4.4 Kimberling :: row-triple targets for i*=4..200 (arithmetic) :: measured=591 expected=591
+[PASS] MD S4.4 Kimberling :: a(104468) forward-traced (steps=104318, 0.0s, terminal row 150) :: measured=447 expected=447
+[PASS] MD S4.4 Kimberling :: a(107844) forward-traced (steps=107639, 0.0s, terminal row 205) :: measured=613 expected=613
+[PASS] MD S4.4 Kimberling :: a(113570) forward-traced (steps=113419, 0.1s, terminal row 151) :: measured=451 expected=451
+[PASS] MD S4.4 Kimberling :: a(118183) forward-traced (steps=118006, 0.0s, terminal row 177) :: measured=529 expected=529
+[PASS] MD S4.4 Kimberling :: a(127309) forward-traced (steps=127167, 0.0s, terminal row 142) :: measured=424 expected=424
+[PASS] MD S4.4 Kimberling :: a(129272) forward-traced (steps=129061, 0.1s, terminal row 211) :: measured=630 expected=630
+[PASS] MD S4.4 Kimberling :: a(138065) forward-traced (steps=137882, 0.1s, terminal row 183) :: measured=545 expected=545
+[PASS] MD S4.4 Kimberling :: a(146434) forward-traced (steps=146336, 0.1s, terminal row 98) :: measured=292 expected=292
+[PASS] MD S4.4 Kimberling :: a(168343) forward-traced (steps=168292, 0.1s, terminal row 51) :: measured=150 expected=150
+[PASS] MD S4.4 Kimberling :: a(181393) forward-traced (steps=181369, 0.0s, terminal row 24) :: measured=68 expected=68
+[PASS] MD S4.4 Kimberling :: a(199171) forward-traced (steps=198955, 0.1s, terminal row 216) :: measured=645 expected=645
+[PASS] MD S4.4 Kimberling :: a(220572) forward-traced (steps=220391, 0.1s, terminal row 181) :: measured=539 expected=539
+[PASS] MD S4.4 Kimberling :: a(233139) forward-traced (steps=232913, 0.1s, terminal row 226) :: measured=675 expected=675
+[PASS] MD S4.4 Kimberling :: a(270186) forward-traced (steps=270150, 0.1s, terminal row 36) :: measured=106 expected=106
+[PASS] MD S4.4 Kimberling :: a(270477) forward-traced (steps=270316, 0.1s, terminal row 161) :: measured=479 expected=479
+[PASS] MD S4.4 Kimberling :: a(299241) forward-traced (steps=299087, 0.1s, terminal row 154) :: measured=460 expected=460
+[PASS] MD S4.4 Kimberling :: a(367066) forward-traced (steps=366875, 0.1s, terminal row 191) :: measured=571 expected=571
+[PASS] MD S4.4 Kimberling :: a(416275) forward-traced (steps=416117, 0.1s, terminal row 158) :: measured=471 expected=471
+[PASS] MD S4.4 Kimberling :: a(471122) forward-traced (steps=470993, 0.2s, terminal row 129) :: measured=384 expected=384
+[PASS] MD S4.4 Kimberling :: a(618814) forward-traced (steps=618596, 0.1s, terminal row 218) :: measured=652 expected=652
+[PASS] MD S4.4 Kimberling :: a(1292005) forward-traced (steps=1291820, 0.4s, terminal row 185) :: measured=552 expected=552
+[PASS] MD S4.4 Kimberling :: a(3576334) forward-traced (steps=3576275, 1.6s, terminal row 59) :: measured=173 expected=173
+[PASS] MD S4.4 Kimberling :: a(4574186) forward-traced (steps=4574043, 1.4s, terminal row 143) :: measured=427 expected=427
+[PASS] MD S4.4 Kimberling :: a(5118890) forward-traced (steps=5118674, 1.0s, terminal row 216) :: measured=646 expected=646
+[PASS] MD S4.4 Kimberling :: a(8398697) forward-traced (steps=8398567, 1.9s, terminal row 130) :: measured=388 expected=388
+[PASS] MD S4.4 Kimberling :: a(8765242) forward-traced (steps=8765192, 1.9s, terminal row 50) :: measured=147 expected=147
+[PASS] MD S4.4 Kimberling :: a(16509502) forward-traced (steps=16509420, 3.3s, terminal row 82) :: measured=242 expected=242
+[PASS] MD S4.4 Kimberling :: a(38293016) forward-traced (steps=38292908, 7.4s, terminal row 108) :: measured=322 expected=322
+[PASS] MD S4.4 Kimberling :: a(118850522) forward-traced (steps=118850354, 25.3s, terminal row 168) :: measured=502 expected=502
+[PASS] MD S4.4 Kimberling :: a(653494691) forward-traced (steps=653494467, 135.5s, terminal row 224) :: measured=669 expected=669
+[RECORD] MD S4.4 Kimberling :: Injectivity proof and the 591-target hit verification are mathematics / paper records; surjectivity (the $300 question) is OPEN and claimed nowhere as proved :: evidence: kimberling drop: kimberling_complete_paper.md, kimberling_injectivity_paper.md, surjectivity_framework.md
+
+--- MD S8 monetization arithmetic ---
+[PASS] MD S8.2 packets :: Lockheed Martin ask = 6% of documented exposure (3-yr, 2%/yr) :: measured=14.4 expected=14.4 ±0.001
+[PASS] MD S8.2 packets :: Intelsat ask = 6% of documented exposure (3-yr, 2%/yr) :: measured=34.68 expected=34.68 ±0.001
+[PASS] MD S8.2 packets :: Viasat ask = 6% of documented exposure (3-yr, 2%/yr) :: measured=46.2 expected=46.2 ±0.001
+[PASS] MD S8.2 packets :: combined asks :: measured=95.28 expected=95.28 ±0.001
+[PASS] MD S8.1 model :: 2025 savings low = 30% of 6855 (decimal, half-up) :: measured=2056.5 expected=2056.5
+[PASS] MD S8.1 model :: 2025 savings high = 30% of 7020 (decimal, half-up) :: measured=2106.0 expected=2106.0
+[PASS] MD S8.1 model :: 2027 savings low = 30% of 8898.5 (decimal, half-up) :: measured=2669.6 expected=2669.6
+[PASS] MD S8.1 model :: 2027 savings high = 30% of 9084.9 (decimal, half-up) :: measured=2725.5 expected=2725.5
+[PASS] MD S8.2 packets :: brief carries the three asks and exposures :: measured=True expected=True
+[PASS] MD S8.2 packets :: no instance of the word 'pitch' in any deck :: measured=[] expected=[]
+[RECORD] MD S8.1 model :: Cost-of-inaction totals and 2027 scale factors rest on the LibreOffice recalculation + formula audit of 2026-10-22 and the published analyses; exposure figures are published-source figures :: evidence: pricing_packets_2026-10-22/model/ + goals/monetize-the-position-strengthen-the-position/files/DATA_MONETIZATION_DERIVATION_2026-10-22.md
+
+--- MD S9.1 Drive census ---
+[PASS] MD S9.1 census :: manifest rows (files) :: measured=5858 expected=5858
+[PASS] MD S9.1 census :: total bytes :: measured=11187444553 expected=11187444553
+[PASS] MD S9.1 census :: created-by-month equals census summary.json :: measured={'2024-05': 1, '2024-06': 2, '2024-08': 1, '2025-02': 1, '2025-08': 1, '2026-02': 1, '2026-05': 282, '2026-06': 157, '2026-07': 693, '2026-08': 637, '2026-09': 1051, '2026-10': 3031} expected={'2024-05': 1, '2024-06': 2, '2024-08': 1, '2025-02': 1, '2025-08': 1, '2026-02': 1, '2026-05': 282, '2026-06': 157, '2026-07': 693, '2026-08': 637, '2026-09': 1051, '2026-10': 3031}
+[PASS] MD S9.1 census :: files predating May 2026 :: measured=7 expected=7
+[PASS] MD S9.1 census :: Google Drive shortcut files :: measured=887 expected=887
+[PASS] MD S9.1 census :: Windows .lnk files (the 888th 'shortcut' by substring) :: measured=1 expected=1
+    archive-class breakdown: {'Workbench exports': 896, 'Manuscripts': 612, 'ARCHIVE_DUPLICATES': 556, 'Misc loose files': 214, 'Prompt-saved': 70, '08_ARCHIVAL_CARRIERS': 48, 'ARCHIVE_SUPERSEDED': 25, 'Seraphim Organizer': 20, 'MASTERPIECE': 6, 'archive_old_hud': 1}
+[PASS] MD S9.1 census :: archive-class files (ten archive-named folders) :: measured=2448 expected=2448
+[PASS] MD S9.1 census :: October 2026 share of files :: measured=3031 expected=3031
+[RECORD] MD S9.1 census :: Folder count 256 is the census record (full API enumeration); the manifest lists files, not folders :: evidence: drive_census_2026/summary.json + evidence_receipt.json
+
+--- MD S9.2 content sweep ---
+[PASS] MD S9.2 sweep :: targets :: measured=3329 expected=3329
+[PASS] MD S9.2 sweep :: measured OK :: measured=3320 expected=3320
+[PASS] MD S9.2 sweep :: errors :: measured=9 expected=9
+[PASS] MD S9.2 sweep :: total characters :: measured=161560577 expected=161560577
+[PASS] MD S9.2 sweep :: total words :: measured=19062266 expected=19062266
+[PASS] MD S9.2 sweep :: digit share of characters :: measured=0.1004 expected=0.1004
+[PASS] MD S9.2 sweep :: domain hit totals :: measured={'codec_c2': 5348, 'te_assurance': 1079, 'maritime': 2901, 'space': 1450, 'ai_safety': 1964, 'spatial_vr': 9339} expected={'codec_c2': 5348, 'te_assurance': 1079, 'maritime': 2901, 'space': 1450, 'ai_safety': 1964, 'spatial_vr': 9339}
+[PASS] MD S9.2 sweep :: all domain hits :: measured=22081 expected=22081
+[PASS] MD S9.2 sweep :: hit shares (spatial_vr / codec_c2 / te_assurance) :: measured=(0.4229, 0.2422, 0.0489) expected=(0.4229, 0.2422, 0.0489)
+[PASS] MD S9.2 sweep :: zero-domain files :: measured=1474 expected=1474
+[PASS] MD S9.2 sweep :: zero-domain words :: measured=1591821 expected=1591821
+[PASS] MD S9.2 sweep :: LAYERED_DRIVE_SWEEP copies :: measured=122 expected=122
+[PASS] MD S9.2 sweep :: words in those copies :: measured=11918325 expected=11918325
+[PASS] MD S9.2 sweep :: register totals (measured / grandiose) :: measured=(74966, 24208) expected=(74966, 24208)
+[PASS] MD S9.2 sweep :: corpus register ratio :: measured=3.1 expected=3.1
+[PASS] MD S9.2 sweep :: register totals excluding the 122 copies :: measured=(15847, 8284) expected=(15847, 8284)
+[PASS] MD S9.2 sweep :: ex-copies ratio :: measured=1.91 expected=1.91
+[PASS] MD S9.2 sweep :: monthly register ratios May-Oct 2026 :: measured={'2026-05': 0.06, '2026-06': 0.15, '2026-07': 0.85, '2026-08': 1.6, '2026-09': 3.74, '2026-10': 4.55} expected={'2026-05': 0.06, '2026-06': 0.15, '2026-07': 0.85, '2026-08': 1.6, '2026-09': 3.74, '2026-10': 4.55}
+
+--- MD S1/S13 file integrity ---
+[PASS] MD S13 integrity :: HIVE_GRIMM verification record PDF :: measured='49929a6c094cefd2a0b3721583b9d6c6cb6937f62e7cd3e896cb9ed0cb1faf67' expected='49929a6c094cefd2a0b3721583b9d6c6cb6937f62e7cd3e896cb9ed0cb1faf67'
+[PASS] MD S13 integrity :: v3 spec PDF export (Yes.pdf_2.pdf) :: measured='9a5f8df02f119f10058cadac4c81fb3aed18e7701821a42e1bb02f9508c5c086' expected='9a5f8df02f119f10058cadac4c81fb3aed18e7701821a42e1bb02f9508c5c086'
+[PASS] MD S13 integrity :: Drive evidence manifest :: measured='e95ec6dc00a1630219eada26af48928bf1355fabca28ad5343c4b91d8d0ef278' expected='e95ec6dc00a1630219eada26af48928bf1355fabca28ad5343c4b91d8d0ef278'
+[PASS] MD S13 integrity :: published closed-set CSV :: measured='911864148a837e182416b3fe2edec8e96e652d83cc9a42408b72bb9a19410b02' expected='911864148a837e182416b3fe2edec8e96e652d83cc9a42408b72bb9a19410b02'
+[PASS] MD S8.4 drops :: codec-sets: SHA256SUMS verify :: measured=(7, []) expected=(7, [])
+[PASS] MD S8.4 drops :: genesis-census: SHA256SUMS verify :: measured=(7, []) expected=(7, [])
+[PASS] MD S8.4 drops :: hdl-decoders: SHA256SUMS verify :: measured=(20, []) expected=(20, [])
+[PASS] MD S8.4 drops :: kimberling: SHA256SUMS verify :: measured=(6, []) expected=(6, [])
+[PASS] MD S8.4 drops :: spectral: SHA256SUMS verify :: measured=(9, []) expected=(9, [])
+[PASS] MD S8.4 drops :: v4-sidon: SHA256SUMS verify :: measured=(7, []) expected=(7, [])
+
+--- MD S10.1 swarm register ---
+[PASS] MD S10.1 register :: hash chain valid end-to-end :: measured=True expected=True
+[PASS] MD S10.1 register :: row 58 hash (tip at Master Document compile time) :: measured='6fe92ee1226a3bd0' expected='6fe92ee1226a3bd0'
+[PASS] MD S10.1 register :: register has only grown since (rows >= 59) :: measured=True expected=True
+
+--- MD S4.2 spectral ---
+[SKIP] MD S4.2 spectral :: phase-twist / zeta / spectral-class figures :: published scripts + outputs live in the spectral drop (snowphamtom.github.io/data/spectral/); re-run them there, or run this suite with --spectral
+
+--- RECORD claims — accounted for, verified by evidence, not by code ---
+[RECORD] MD S1 :: Eight patent applications, filing dates, Patent Center numbers, SAM.gov Active / UEI / CAGE :: evidence: ~/workspace/your_files/patent_receipts/ + Gmail receipts (Patent Center); SAM.gov entity record
+[RECORD] MD S2 :: Members Gate demonstration figure (64 of 169,264) :: evidence: public repo snowphamtom/members-gate (verify.yml, 7 test vectors) + PRIM3 entry
+[RECORD] MD S3.5/S3.6 :: Counting bounds r>=8/9/10 and the r=10 two-common-bit exclusion (Delsarte step) are proof claims; spec S7.2/S7.3 set batteries are review records :: evidence: ~/workspace/r10_verify_2026-10-21/RESULTS.md (bound re-derived); ~/workspace/filing_prep/V3_SPEC_REVIEW_2026-10-21.md + ~/workspace/v3_review_2026-10-21/verify_v3_sets.py (runnable)
+[RECORD] MD S5/S6 :: Submission inventory, statuses, DIU correspondence, ATEC non-select and debrief state, xTech/PRIM3/VR submission states :: evidence: Gmail threads of record; Devpost entries (prim3, vr-gatekeeper); DIU_Deep_Analysis_2026-10-22.md; Submission_Portfolio_Analysis_2026-10-22.md
+[RECORD] MD S7 :: APEX Oct 28 meeting facts and prep state :: evidence: Gmail APEX corpus (30 messages); meeting prep sheet in ~/workspace/your_files/meeting_prep/
+[RECORD] MD S10.4 :: Greek Living Habitat design figures (areas, ratios, site screening) :: evidence: design book + deck in ~/workspace/your_files/; ratio scripts in ~/workspace/greek_habitat/ (physical_grant: false — design claims only)
+[RECORD] MD S10.1 :: HIVE/GRIMM Lean compile state (ResidualGates PASS; Gates.lean 3 named defects) :: evidence: ~/workspace/lean_compile_2026-10-20/ build outputs; HIVE_GRIMM_Complete_Verification_Record_2026-10-20.pdf (hash-checked above)
+[RECORD] MD S4.3 :: Millennium excavation verdicts (documents read in full; YETI functional check is a computation) :: evidence: ~/workspace/your_files/Millennium_Drive_Excavation_2026-10-22.md; ~/workspace/millennium/yeti_functional_check.py (runnable, mpmath)
+
+================ SUMMARY ================
+PASS: 215
+FAIL: 0
+SKIP: 1
+RECORD: 13
+VERIFY_ALL DONE
