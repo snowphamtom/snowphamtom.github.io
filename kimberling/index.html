@@ -7,6 +7,11 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <title>The Kimberling Observatory — Sequestered Yeti</title>
+<meta name="description" content="The Kimberling sequence (OEIS A007063) is built by a simple folding rule. It is proved that no value can appear twice. Whether every value appears at all is an open problem — a $300 prize, offered with the problem, stands unclaimed. This page is the state of the attack: what is proved, what is computed, and the search itself, running in your browser.">
+<meta property="og:title" content="The Kimberling Observatory — Sequestered Yeti">
+<meta property="og:description" content="The Kimberling sequence (OEIS A007063) is built by a simple folding rule. It is proved that no value can appear twice. Whether every value appears at all is an open problem — a $300 prize, offered with the problem, stands unclaimed. This page is the state of the attack: what is proved, what is computed, and the search itself, running in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://sequesteredyeti.art/kimberling/">
 <style>
 :root{--ink:#171a1f;--dim:#5b6470;--accent:#0f4c81;--accent-ink:#0f4c81;--bg:#f5f6f8;--surface:#ffffff;--line:#dde1e6;--ok:#177245;--bad:#b3261e}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -43,6 +48,11 @@ select,input{background:var(--surface);color:var(--ink);border:1px solid var(--l
 .walk{margin-top:44px;border-top:1px solid var(--line);padding-top:18px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .walk a{color:var(--accent-ink);text-decoration:none;font-size:14.5px;font-weight:500}
 .walk a:hover{text-decoration:underline}
+.frontier{margin-top:22px;border:1px solid var(--line);background:var(--surface);padding:16px 18px;font-size:14.5px;line-height:1.9;color:var(--dim)}
+.frontier .fhead{display:block;color:var(--accent);letter-spacing:.24em;font-size:11px;font-weight:600;text-transform:uppercase;margin-bottom:6px}
+.frontier a{color:var(--accent-ink);text-decoration:none;font-weight:500}
+.frontier a:hover{text-decoration:underline}
+.frontier .here{color:var(--ink);font-weight:600}
 .stamp{color:var(--dim);font-size:12.5px;margin-top:26px}
 .bar{display:flex;height:14px;border:1px solid var(--line);margin:10px 0;overflow:hidden;background:var(--surface)}
 .bar div{height:100%}
@@ -122,7 +132,8 @@ stuck.</p>
 <div class="panel" id="cert" style="display:none"></div>
 
   <div class="walk"><a href="../census/">Next on the walk: the GENESIS census &rarr;</a></div>
-  <p class="stamp">Position as of October 23, 2026, 13:41 CDT. Every figure on this page is recomputed in your browser from the data served with it, or is stated with the instrument that measured it.</p>
+<div class="frontier"><span class="fhead">The Frontier</span> The newer chambers, in the order they were cut: <a href="/stage/">The Demo Stage</a> · <a href="/seraphim/">Seraphim — the full map</a> · <a href="/value/">Value, Measured</a> · <a href="/fidelity/">The Measured Mind</a> · <span class="here">The Kimberling Observatory · you are here</span> · <a href="/kimberling/walks/">Every Walk</a> · <a href="/crossings/">The Crossings</a> · <a href="/decoder/">The Decoder Bench</a> · <a href="/census/">The GENESIS Census</a> · <a href="/lattice/">My Lattice on Earth</a>. One site, one walk — the frontier is part of it.</div>
+  <p class="stamp">Position as of October 23, 2026, 13:46 CDT. Every figure on this page is recomputed in your browser from the data served with it, or is stated with the instrument that measured it.</p>
 </main>
 
 <script>
