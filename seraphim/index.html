@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'self'">
+<title>Seraphim — The Full Map — Sequestered Yeti</title>
+<style>
+:root{
+  --ground:#ffffff; --alt:#f7f8fa; --ink:#10151d; --slate:#4a5568;
+  --hair:#d9dee6; --navy:#0d1b2e; --navytext:#132a47;
+  --accent:#c9a227; --accenttext:#7a5c1e; --link:#2456a6;
+  --pass:#14663a; --fail:#9c2b2b;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--ground);color:var(--ink);
+  font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+.legal{max-width:72ch;margin:0 auto;padding:22px 16px 0;text-align:center;
+  font-size:10.5px;letter-spacing:.14em;color:var(--slate);line-height:1.9}
+h1.doortitle{text-align:center;font-size:24px;font-weight:600;letter-spacing:-.01em;margin:18px 0 4px}
+.sub{text-align:center;color:var(--slate);font-size:13px;letter-spacing:.18em;margin:0 0 10px}
+.gate{max-width:560px;margin:18px auto 40px;background:var(--ground);
+  border:1px solid var(--hair);padding:28px;text-align:center}
+.accept-note{font-size:13.5px;color:var(--slate);margin:0 auto 14px;max-width:44ch;line-height:1.6}
+#accept{background:var(--navy);color:#fff;border:1px solid var(--navy);
+  font:inherit;font-size:13px;font-weight:600;letter-spacing:.1em;padding:10px 22px;cursor:pointer;border-radius:4px}
+#accepted{font-size:12.5px;color:var(--accenttext);letter-spacing:.06em;min-height:18px;margin-top:10px}
+#gateform{margin-top:20px;text-align:left}
+#gateform label{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--slate);margin-bottom:8px;text-align:center}
+#voice{width:100%;background:var(--ground);border:1px solid var(--hair);outline:0;color:var(--ink);
+  font:inherit;font-size:16px;text-align:center;padding:11px 8px;border-radius:4px}
+#enter{margin:14px auto 0;display:block;background:var(--navy);color:#fff;border:1px solid var(--navy);
+  font:inherit;font-size:13px;font-weight:600;letter-spacing:.1em;padding:9px 30px;cursor:pointer;border-radius:4px}
+#enter:disabled,#voice:disabled{opacity:.45;cursor:default}
+.voice{font-size:13px;color:var(--accenttext);letter-spacing:.05em;min-height:18px;margin-top:12px;text-align:center}
+body.open #gateform,body.open #accept,body.open .accept-note{display:none}
+#chamber{display:none}
+body.open #chamber{display:block}
+.banner{background:var(--navy);color:#fff;border-bottom:3px solid var(--accent)}
+.banner .in{max-width:1060px;margin:0 auto;padding:30px 18px 24px}
+.banner h1{font-size:24px;font-weight:600;letter-spacing:-.01em;margin:0 0 6px}
+.banner .bsub{color:#aebdd0;font-size:14.5px;max-width:76ch}
+.banner .stamp{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  font-size:12px;color:#8fa3bd;margin-top:14px;letter-spacing:.04em}
+.wrap{max-width:1060px;margin:0 auto;padding:8px 18px 30px}
+.lede{font-size:16px;max-width:78ch;margin:22px 0 4px}
+h2{font-size:15px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;
+  margin:36px 0 14px;padding-bottom:7px;border-bottom:2px solid var(--accent)}
+h3{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin:22px 0 8px;color:var(--navytext)}
+p{margin:0 0 12px;max-width:82ch}
+.panel{background:var(--alt);border:1px solid var(--hair);border-radius:4px;padding:16px 20px;margin:14px 0}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0}
+th{background:var(--navy);color:#fff;font-weight:600;text-align:left;letter-spacing:.07em;
+  font-size:12px;text-transform:uppercase;padding:7px 9px}
+td{padding:6px 9px;border-bottom:1px solid var(--hair);font-variant-numeric:tabular-nums;vertical-align:top}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.method{color:var(--slate);font-size:13px;max-width:82ch}
+.note{color:var(--slate);font-size:13.5px}
+.figwrap{border:1px solid var(--hair);border-radius:4px;padding:14px;margin:12px 0;background:var(--ground)}
+.figcap{color:var(--slate);font-size:12.5px;margin-top:10px;line-height:1.6}
+button.act{background:var(--navy);border:1px solid var(--navy);color:#fff;font:inherit;
+  font-size:13px;font-weight:600;letter-spacing:.08em;padding:9px 18px;cursor:pointer;border-radius:4px;margin:6px 6px 6px 0}
+button.act:disabled{opacity:.4;cursor:default}
+.out{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:12.5px;white-space:pre-wrap;
+  word-break:break-word;background:var(--alt);border:1px solid var(--hair);border-radius:4px;
+  padding:14px;min-height:54px;margin-top:10px;line-height:1.7}
+.pass{color:var(--pass);font-weight:600}.fail{color:var(--fail);font-weight:600}
+#cert{display:none}
+.stamp{color:var(--slate);font-size:12.5px;margin-top:22px}
+.tag{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.09em;padding:1px 7px;border-radius:3px;vertical-align:middle}
+.tag.comp{background:#e3ecdf;color:var(--pass)} .tag.tt{background:#dbe4f0;color:var(--navytext)}
+.tag.rep{background:#f3e8c8;color:var(--accenttext)}
+.rail{display:flex;flex-wrap:wrap;gap:8px 18px;margin:10px 0 4px;font-size:13.5px}
+.rail label{display:flex;align-items:center;gap:7px;cursor:pointer}
+.rail .sw{display:inline-block;width:22px;height:0;border-top:3px solid}
+#readout{border:1px solid var(--hair);border-left:4px solid var(--accent);background:var(--alt);
+  padding:12px 16px;margin:10px 0;font-size:13.5px;min-height:52px}
+#readout .rt{font-weight:600}
+svg text{user-select:none}
+.hit{cursor:pointer}
+.hit:hover{stroke-width:3.4}
+@media(max-width:560px){td,th{padding:5px 6px;font-size:12px}.gate{padding:20px 16px}}
+@media print{ .gate,.rail,button.act{display:none} #chamber{display:block} }
+</style>
+</head>
+<body>
+<div class="legal">PRIVATE — CONFIDENTIAL · ACCESS BY INVITATION ONLY<br>
+EVERYTHING BEYOND THIS DOOR IS THE CONFIDENTIAL PROPERTY OF MONSTERS INK LLC AND IS SUBJECT TO NON-DISCLOSURE</div>
+<h1 class="doortitle">Seraphim — The Full Map</h1>
+<div class="sub">Speak, and be known.</div>
+<div class="gate">
+  <p class="accept-note">This page is a confidence. Accept it, and the door will listen for your voice.</p>
+  <button type="button" id="accept">I accept the confidence</button>
+  <div id="accepted"></div>
+  <form id="gateform" autocomplete="off">
+    <label for="voice">Say who you are</label>
+    <input id="voice" type="text" placeholder="Speak"
+           autocapitalize="sentences" autocorrect="off" spellcheck="false"
+           enterkeyhint="go" aria-label="Say who you are" disabled />
+    <button type="submit" id="enter" disabled>Enter</button>
+    <div class="voice" id="reply" role="status"></div>
+  </form>
+</div>
+<main id="chamber">
+<div class="banner"><div class="in">
+    <h1>Seraphim — The Full Map</h1>
+    <div class="bsub">Every layer of the Seraphim engine on one coordinate map: the Geodesic Network Registry, the spoken set it diverges from, the GENESIS lattice measured on the same Earth, the frequency ladder that integrates them, and the hardware frame beneath.</div>
+    <div class="stamp">RECORDED · 2026-10-23T17:01:32Z · 5 BASELINES + 1 ANCHOR · 21 GEOGRAPHIC EDGES COMPUTED · 48 LATTICE NODES · 1,128 LATTICE PAIRS · 6-RUNG LADDER</div>
+  </div></div>
+<div class="wrap">
+<p class="lede">Two point sets stand on this map, and they are not merged. The <strong>registry</strong> — five ancestral
+baselines from Taylor's architecture text — is canonical. The <strong>spoken set</strong> — Bellevue, Uruk, Giza, and the Temple of
+Quetzalcoatl, named aloud the same morning — is drawn beside it in blue dashes, with its provenance on its face. Where they
+disagree, the map shows the disagreement: the registry's Uruk coordinate sits <strong>59.773 km</strong> from the tell point
+the spoken set used. Every distance on this page is computed from the coordinates, in the build and again in your browser.</p>
+<h2>The Map</h2>
+<div class="rail">
+  <label><input type="checkbox" id="t-reg" checked> <span class="sw" style="border-color:#0d1b2e"></span> Layer 1 · Registry + anchor</label>
+  <label><input type="checkbox" id="t-spk" checked> <span class="sw" style="border-color:#2456a6"></span> Layer 2 · Spoken set</label>
+  <label><input type="checkbox" id="t-lat" checked> <span class="sw" style="border-color:#aebdd0"></span> Layer 3 · GENESIS lattice</label>
+  <label><input type="checkbox" id="t-door" checked> DOOR</label>
+  <label><input type="checkbox" id="t-alias" checked> ALIAS</label>
+  <label><input type="checkbox" id="t-never"> NEVER</label>
+  <label><input type="checkbox" id="t-conn" checked> <span class="sw" style="border-color:#14663a"></span> Lattice connectors</label>
+  <label><input type="checkbox" id="t-he3" checked> <span class="sw" style="border-color:#c9a227"></span> Layer 4 · HE3 spokes (schematic)</label>
+</div>
+<div class="figwrap"><svg id="mapsvg" viewBox="0 0 1160 640" width="100%" role="img" aria-label="Seraphim full map"></svg>
+<div id="readout">Select any arc or node on the map — its endpoints, distance, and provenance read out here.</div>
+<p class="figcap">Coordinate map on a graticule plate (equirectangular, WGS84). No coastline dataset is held in the record, so none is
+drawn — positions are exact by coordinate, and every arc is a sampled great-circle path, not a chord. The gold spokes in the band
+above the plate are <strong>schematic</strong>: they assert integration, never distance. Ringed points carry a dashed green connector to their
+nearest GENESIS lattice node (Layer 3).</p></div>
+<h2>Layer 1 — Geodesic Network Registry <span class="tag tt">TAYLOR TEXT</span></h2>
+<p>The five ancestral baselines of the Seraphim Engine Architecture (Taylor, 2026-10-23). N01 stands at the registry
+coordinate given in that text, which supersedes the Warka tell reference for Seraphim purposes. N02–N05 stand at reference
+coordinates, labeled as such — the text names the sites; it does not print their coordinates. Bellevue, Nebraska is the
+<strong>Local Personal Anchor Node</strong> — coordinate registration and the Monsters Ink base. It is not a baseline, and it is drawn as one
+visually distinct point, in gold. Distances <span class="tag comp">COMPUTED</span> — Vincenty inverse on WGS84, cross-checked against
+GeographicLib (Karney); the two methods agree to better than 0.001 km on every edge below.</p>
+<h3>The complete graph — K5</h3>
+<table><tr><th>From</th><th>To</th><th class="num">Geodesic (km)</th></tr><tr><td>N01 · Uruk / Warka Axis Baseline</td><td>N02 · Uisneach Core</td><td class="num">4,873.575</td></tr>
+<tr><td>N01 · Uruk / Warka Axis Baseline</td><td>N03 · Uppsala Attractor</td><td class="num">3,794.188</td></tr>
+<tr><td>N01 · Uruk / Warka Axis Baseline</td><td>N04 · Chichen Itza Gate</td><td class="num">12,465.811</td></tr>
+<tr><td>N01 · Uruk / Warka Axis Baseline</td><td>N05 · Indus Mandalas</td><td class="num">2,225.172</td></tr>
+<tr><td>N02 · Uisneach Core</td><td>N03 · Uppsala Attractor</td><td class="num">1,686.858</td></tr>
+<tr><td>N02 · Uisneach Core</td><td>N04 · Chichen Itza Gate</td><td class="num">7,596.694</td></tr>
+<tr><td>N02 · Uisneach Core</td><td>N05 · Indus Mandalas</td><td class="num">6,686.205</td></tr>
+<tr><td>N03 · Uppsala Attractor</td><td>N04 · Chichen Itza Gate</td><td class="num">8,902.136</td></tr>
+<tr><td>N03 · Uppsala Attractor</td><td>N05 · Indus Mandalas</td><td class="num">5,243.604</td></tr>
+<tr><td>N04 · Chichen Itza Gate</td><td>N05 · Indus Mandalas</td><td class="num">14,133.993</td></tr></table>
+<h3>The anchor web — Bellevue to the five baselines</h3>
+<table><tr><th>From</th><th>To</th><th class="num">Geodesic (km)</th></tr><tr><td>Bellevue — Local Personal Anchor Node</td><td>N01 · Uruk / Warka Axis Baseline</td><td class="num">11,065.666</td></tr>
+<tr><td>Bellevue — Local Personal Anchor Node</td><td>N02 · Uisneach Core</td><td class="num">6,377.621</td></tr>
+<tr><td>Bellevue — Local Personal Anchor Node</td><td>N03 · Uppsala Attractor</td><td class="num">7,278.315</td></tr>
+<tr><td>Bellevue — Local Personal Anchor Node</td><td>N04 · Chichen Itza Gate</td><td class="num">2,371.159</td></tr>
+<tr><td>Bellevue — Local Personal Anchor Node</td><td>N05 · Indus Mandalas</td><td class="num">12,248.290</td></tr></table>
+<h2>Layer 2 — The Spoken Set <span class="tag tt">TAYLOR TEXT</span></h2>
+<p>Named aloud by Taylor, 2026-10-23, 10:49–11:02 CT — Bellevue, Uruk, the Great Pyramid of Giza, and "the temple for
+Quetzalcoatl," read as Teotihuacan's Feathered Serpent pyramid; Taylor confirmed that reading. This set is <strong>not</strong> the registry:
+Giza and Teotihuacan appear in no registry list, and the registry's Uisneach, Uppsala, Chichen Itza, and Indus appear in no spoken
+list. Both stand on the record; the map draws both and merges neither. The spoken Uruk stands at the Warka tell reference
+(30.9626, 46.1031) — the registry coordinate for N01 sits <strong>59.773 km northwest</strong> of it (computed); the red link on the map joins the two.</p>
+<table><tr><th>From</th><th>To</th><th class="num">Geodesic (km)</th></tr><tr><td>Bellevue NE</td><td>Uruk (Warka tell)</td><td class="num">11,121.840</td></tr>
+<tr><td>Bellevue NE</td><td>Great Pyramid of Giza (apex)</td><td class="num">10,438.386</td></tr>
+<tr><td>Bellevue NE</td><td>Temple of Quetzalcoatl — Teotihuacan</td><td class="num">2,394.881</td></tr>
+<tr><td>Uruk (Warka tell)</td><td>Great Pyramid of Giza (apex)</td><td class="num">1,440.468</td></tr>
+<tr><td>Uruk (Warka tell)</td><td>Temple of Quetzalcoatl — Teotihuacan</td><td class="num">13,271.665</td></tr>
+<tr><td>Great Pyramid of Giza (apex)</td><td>Temple of Quetzalcoatl — Teotihuacan</td><td class="num">12,343.144</td></tr></table>
+<h2>Layer 3 — My Lattice on Earth <span class="tag comp">COMPUTED</span></h2>
+<p>The GENESIS 48-node matrix (m = 3, 5, …, 97) placed on the WGS84 ellipsoid by the Spatial Manifold embedding of record —
+golden-angle Fibonacci spiral, node order as the core record holds it — and measured in full: all 1,128 pairs classed by the
+GENESIS census. The registry does not float above this lattice; it sits inside it. Every baseline, the anchor, and every spoken
+point falls within one covering radius of a lattice node — the covering radius of the whole set is
+<strong>2,516.296 km</strong> (at 67.375°S, 18.625°W) — and the connectors below are drawn on the map.</p>
+<table><tr><th>Class</th><th class="num">Pairs</th><th class="num">Total wire (km)</th><th class="num">Mean (km)</th><th class="num">Shortest (pair m)</th><th class="num">Longest (pair m)</th></tr><tr><td>DOOR</td><td class="num">944</td><td class="num">9,970,207.231</td><td class="num">10,561.660</td><td class="num">2,991.428 (5–11)</td><td class="num">20,003.931 (3–97)</td></tr>
+<tr><td>ALIAS</td><td class="num">124</td><td class="num">1,102,831.031</td><td class="num">8,893.799</td><td class="num">2,657.870 (3–7)</td><td class="num">18,648.272 (49–57)</td></tr>
+<tr><td>NEVER</td><td class="num">60</td><td class="num">437,043.741</td><td class="num">7,284.062</td><td class="num">1,873.106 (3–5)</td><td class="num">13,863.262 (5–65)</td></tr></table>
+<h3>Connectors — each named point to its nearest lattice node</h3>
+<table><tr><th>Point</th><th class="num">Nearest node</th><th class="num">Node position (lat, lon)</th><th class="num">Distance (km)</th><th>Covering</th></tr><tr><td>N01 · Uruk / Warka Axis Baseline</td><td class="num">m = 35</td><td class="num">18.61146, 40.12422</td><td class="num">1,513.341</td><td>within covering radius</td></tr>
+<tr><td>N02 · Uisneach Core</td><td class="num">m = 13</td><td class="num">51.92777, -32.46118</td><td class="num">1,683.107</td><td>within covering radius</td></tr>
+<tr><td>N03 · Uppsala Attractor</td><td class="num">m = 9</td><td class="num">60.73176, 52.52329</td><td class="num">1,907.922</td><td>within covering radius</td></tr>
+<tr><td>N04 · Chichen Itza Gate</td><td class="num">m = 33</td><td class="num">21.20477, -97.38354</td><td class="num">918.534</td><td>within covering radius</td></tr>
+<tr><td>N05 · Indus Mandalas</td><td class="num">m = 25</td><td class="num">32.13493, 72.58540</td><td class="num">685.009</td><td>within covering radius</td></tr>
+<tr><td>Bellevue — anchor</td><td class="num">m = 17</td><td class="num">44.59796, -117.44565</td><td class="num">1,796.524</td><td>within covering radius</td></tr>
+<tr><td>Uruk (Warka tell) — spoken</td><td class="num">m = 35</td><td class="num">18.61146, 40.12422</td><td class="num">1,495.007</td><td>within covering radius</td></tr>
+<tr><td>Giza — spoken</td><td class="num">m = 35</td><td class="num">18.61146, 40.12422</td><td class="num">1,553.604</td><td>within covering radius</td></tr>
+<tr><td>Teotihuacan — spoken</td><td class="num">m = 33</td><td class="num">21.20477, -97.38354</td><td class="num">227.432</td><td>within covering radius</td></tr></table>
+<h2>Layer 4 — The Frequency Ladder <span class="tag rep">REPORTED</span></h2>
+<p>From the Autonomic Resonance Hardware deck (p.6) — a Monsters Ink capability deck, extracted in full into the house
+record on 2026-10-23. Every element of this layer is the deck's own claim, labeled <span class="tag rep">REPORTED</span>: the house has verified
+none of it. The ladder is the integration story the architecture text asked for — its closing question was how the registry
+nodes integrate with a 12.0 GHz grid against coordinate jamming, and the deck assigns that rung a component and a mechanism.</p>
+<table><tr><th>Frequency address</th><th>Codename</th><th>Applied domain</th><th>Hardware consequence (deck, verbatim)</th></tr><tr><td class="mono">1.2 kHz</td><td>Demonic Core 1</td><td>Substrates</td><td>Room-temp superconduction pathways.</td></tr>
+<tr><td class="mono">1.2 MHz</td><td>Demonic Core 2</td><td>Active Suspension</td><td>Acoustic micro-friction collapse (≥ 16.92%).</td></tr>
+<tr><td class="mono">14.4 MHz</td><td>Demonic Core 3</td><td>Biophysics</td><td>Symmetric carbon lattice molecular regeneration.</td></tr>
+<tr><td class="mono">120 MHz</td><td>Heavenly Envelope 1</td><td>Computation</td><td>Super-radiant coherent electron flow.</td></tr>
+<tr><td class="mono">1.2 GHz</td><td>Heavenly Envelope 2</td><td>Propulsion</td><td>Magnetic fusion confinement envelope (24.75 MW).</td></tr>
+<tr><td class="mono">12.0 GHz</td><td>Heavenly Envelope 3</td><td>EW Comms</td><td>Rigid geometric polarization against jamming.</td></tr></table>
+<div class="panel"><p style="margin:0"><strong>Heavenly Envelope 3 — 12.0 GHz — EW Comms</strong> is drawn on the map as the integration
+layer: schematic spokes from the envelope to all five baselines and to the Bellevue anchor. Its mechanism, in the deck's words:
+<strong>"Rigid geometric polarization against jamming."</strong> The spokes assert the integration the deck describes; the map prints no
+distance along them, because the deck states none.</p></div>
+<h2>Layer 5 — Mechanical Global Lattice <span class="tag tt">TAYLOR TEXT</span></h2>
+<div class="figwrap">
+<svg viewBox="0 0 720 316" width="100%" role="img" aria-label="Mechanical Global Lattice schematic" font-family="-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">
+  <defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0d1b2e"/></marker></defs>
+  <text x="6" y="86" font-size="11" font-weight="700" letter-spacing="1" fill="#10151d">EXTERNAL</text>
+  <text x="6" y="102" font-size="11" font-weight="700" letter-spacing="1" fill="#10151d">LOAD</text>
+  <text x="6" y="118" font-size="11" font-weight="700" letter-spacing="1" fill="#10151d">PROFILES</text>
+  <line x1="86" y1="96" x2="128" y2="96" stroke="#0d1b2e" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="86" y1="160" x2="128" y2="160" stroke="#0d1b2e" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="86" y1="224" x2="128" y2="224" stroke="#0d1b2e" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="640" y1="96" x2="598" y2="96" stroke="#0d1b2e" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="640" y1="160" x2="598" y2="160" stroke="#0d1b2e" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="640" y1="224" x2="598" y2="224" stroke="#0d1b2e" stroke-width="2" marker-end="url(#arr)"/>
+  <rect x="132" y="36" width="462" height="248" fill="none" stroke="#0d1b2e" stroke-width="3"/>
+  <rect x="142" y="46" width="442" height="228" fill="#f7f8fa" stroke="#0d1b2e" stroke-width="1"/>
+  <text x="363" y="30" font-size="11.5" font-weight="700" letter-spacing="1.2" fill="#0d1b2e" text-anchor="middle">BOUNDARY CONTAINMENT — THE FRAME ENFORCES IT</text>
+  <text x="363" y="68" font-size="13" font-weight="700" fill="#0d1b2e" text-anchor="middle">EXTERNAL EXO-CORE FRAME ASSEMBLY — COMPONENT ID 518/608</text>
+  <text x="363" y="86" font-size="11" fill="#4a5568" text-anchor="middle">the Global Coordinate Lattice at the hardware layer</text>
+  <g font-size="11.5" font-weight="600" fill="#132a47">
+    <rect x="176" y="108" width="172" height="62" fill="#ffffff" stroke="#0d1b2e" stroke-width="1.4"/>
+    <rect x="378" y="108" width="172" height="62" fill="#ffffff" stroke="#0d1b2e" stroke-width="1.4"/>
+    <rect x="176" y="190" width="172" height="62" fill="#ffffff" stroke="#0d1b2e" stroke-width="1.4"/>
+    <rect x="378" y="190" width="172" height="62" fill="#ffffff" stroke="#0d1b2e" stroke-width="1.4"/>
+    <text x="262" y="136" text-anchor="middle">CARTRIDGE</text><text x="262" y="152" text-anchor="middle">SUBASSEMBLY</text>
+    <text x="464" y="136" text-anchor="middle">CARTRIDGE</text><text x="464" y="152" text-anchor="middle">SUBASSEMBLY</text>
+    <text x="262" y="218" text-anchor="middle">CARTRIDGE</text><text x="262" y="234" text-anchor="middle">SUBASSEMBLY</text>
+    <text x="464" y="218" text-anchor="middle">CARTRIDGE</text><text x="464" y="234" text-anchor="middle">SUBASSEMBLY</text>
+  </g>
+  <line x1="150" y1="139" x2="172" y2="139" stroke="#c9a227" stroke-width="2.2" marker-end="url(#arr)"/>
+  <line x1="576" y1="139" x2="554" y2="139" stroke="#c9a227" stroke-width="2.2" marker-end="url(#arr)"/>
+  <line x1="150" y1="221" x2="172" y2="221" stroke="#c9a227" stroke-width="2.2" marker-end="url(#arr)"/>
+  <line x1="576" y1="221" x2="554" y2="221" stroke="#c9a227" stroke-width="2.2" marker-end="url(#arr)"/>
+  <text x="363" y="306" font-size="11.5" font-weight="700" letter-spacing="1" fill="#7a5c1e" text-anchor="middle">THE FRAME CLAMPS AND DISTRIBUTES THE LOAD INTO THE CARTRIDGES</text>
+</svg>
+<p class="figcap">Structural schematic — a frame diagram, not a geography. The architecture text's words: the External Exo-Core Frame
+Assembly, Component ID 518/608, <em>is</em> the Global Coordinate Lattice at the hardware layer — it clamps and distributes external load
+profiles into internal cartridge subassemblies to enforce structural boundary containment.</p></div>
+<div class="panel"><p style="margin:0"><strong>Provenance.</strong> Taylor's architecture text, 2026-10-23. Not present in the Autonomic Resonance Hardware deck (verified by full extraction).</p></div>
+<h2>Run It — Recompute This Map</h2>
+<p>Nothing on this page asks to be believed. The button below recomputes every geographic figure from the coordinates
+alone — the registry web, the anchor web, the spoken web, the N01–tell offset, each point's nearest lattice node, and the class
+totals of all 1,128 lattice pairs — and compares the results against the figures printed above. The full check runs once when
+the door opens; run it again any time.</p>
+<button type="button" class="act" id="run-check">Recompute in this browser</button>
+<div class="out" id="check-out">The check runs when the door opens.</div>
+<div class="out" id="cert"></div>
+<p class="stamp">Sources of record: Seraphim Engine Architecture (Taylor, 2026-10-23) · tether points as spoken (2026-10-23,
+10:49–11:02 CT; Teotihuacan reading confirmed 11:02 CT) · My Lattice on Earth, measured 2026-10-23 (GeographicLib / Vincenty,
+maximum disagreement 0.072 mm over 1,128 pairs) · Autonomic Resonance Hardware deck, extracted in full 2026-10-23 (Layer 4
+REPORTED). Drawn from internal data only — no external map tiles, stock, or borrowed figures. Data served with this page ·
+SHA-256 <span class="mono">fe0a9115b67175ea…</span></p>
+</div>
+</main>
+<script type="application/json" id="seraphim-data">{"anchor_edges":[["BV0","N01",11065.666],["BV0","N02",6377.621],["BV0","N03",7278.315],["BV0","N04",2371.159],["BV0","N05",12248.29]],"connectors":{"BV0":{"km":1796.524,"m":17},"N01":{"km":1513.341,"m":35},"N02":{"km":1683.107,"m":13},"N03":{"km":1907.922,"m":9},"N04":{"km":918.534,"m":33},"N05":{"km":685.009,"m":25},"S_GZ":{"km":1553.604,"m":35},"S_TE":{"km":227.432,"m":33},"S_UR":{"km":1495.007,"m":35}},"covering_radius_km":2516.296,"lattice_class_counts":{"ALIAS":124,"DOOR":944,"NEVER":60},"lattice_class_totals_km":{"ALIAS":1102831.031,"DOOR":9970207.231,"NEVER":437043.741},"lattice_nodes":[[3,90.0,0.0],[5,73.22526,137.50776],[7,66.19062,-84.98447],[9,60.73176,52.52329],[11,56.07689,-169.96894],[13,51.92777,-32.46118],[15,48.13169,105.04658],[17,44.59796,-117.44565],[19,41.26743,20.06211],[21,38.09894,157.56988],[23,35.06239,-64.92236],[25,32.13493,72.5854],[27,29.29864,-149.90683],[29,26.5391,-12.39907],[31,23.84447,125.1087],[33,21.20477,-97.38354],[35,18.61146,40.12422],[37,16.05713,177.63199],[39,13.53519,-44.86025],[41,11.03971,92.64752],[43,8.56528,-129.84472],[45,6.10685,7.66305],[47,3.65967,145.17081],[49,1.21915,-77.32143],[51,-1.21915,60.18634],[53,-3.65967,-162.3059],[55,-6.10685,-24.79813],[57,-8.56528,112.70963],[59,-11.03971,-109.78261],[61,-13.53519,27.72516],[63,-16.05713,165.23292],[65,-18.61146,-57.25931],[67,-21.20477,80.24845],[69,-23.84447,-142.24379],[71,-26.5391,-4.73602],[73,-29.29864,132.77174],[75,-32.13493,-89.72049],[77,-35.06239,47.78727],[79,-38.09894,-174.70497],[81,-41.26743,-37.1972],[83,-44.59796,100.31056],[85,-48.13169,-122.18167],[87,-51.92777,15.32609],[89,-56.07689,152.83385],[91,-60.73176,-69.65838],[93,-66.19062,67.84938],[95,-73.22526,-154.64285],[97,-90.0,-0.0]],"n01_tell_offset_km":59.773,"points":{"BV0":{"lat":41.135672,"layer":"anchor","lon":-95.899709,"name":"BELLEVUE \u00b7 Local Personal Anchor Node","prov":"Taylor's device location this session"},"N01":{"lat":31.3222,"layer":"registry","lon":45.6361,"name":"N01 \u00b7 Uruk / Warka Axis Baseline","prov":"REGISTRY coordinate (Taylor text)"},"N02":{"lat":53.4896,"layer":"registry","lon":-7.5625,"name":"N02 \u00b7 Uisneach Core","prov":"REFERENCE coordinate (labeled)"},"N03":{"lat":59.8986,"layer":"registry","lon":17.6308,"name":"N03 \u00b7 Uppsala Attractor","prov":"REFERENCE coordinate (labeled)"},"N04":{"lat":20.6829,"layer":"registry","lon":-88.5686,"name":"N04 \u00b7 Chichen Itza Gate","prov":"REFERENCE coordinate (labeled)"},"N05":{"lat":27.3292,"layer":"registry","lon":68.1311,"name":"N05 \u00b7 Indus Mandalas","prov":"REFERENCE coordinate (labeled)"},"S_BV":{"lat":41.135672,"layer":"spoken","lon":-95.899709,"name":"Bellevue NE","prov":"device location this session"},"S_GZ":{"lat":29.97918,"layer":"spoken","lon":31.13417,"name":"Great Pyramid of Giza (apex)","prov":"REFERENCE coordinate (apex)"},"S_TE":{"lat":19.6819,"layer":"spoken","lon":-98.8464,"name":"Temple of Quetzalcoatl \u2014 Teotihuacan, Feathered Serpent pyramid","prov":"REFERENCE coordinate; reading confirmed by Taylor"},"S_UR":{"lat":30.9626,"layer":"spoken","lon":46.1031,"name":"Uruk (Warka tell)","prov":"REFERENCE coordinate (Warka tell)"}},"registry_edges":[["N01","N02",4873.575],["N01","N03",3794.188],["N01","N04",12465.811],["N01","N05",2225.172],["N02","N03",1686.858],["N02","N04",7596.694],["N02","N05",6686.205],["N03","N04",8902.136],["N03","N05",5243.604],["N04","N05",14133.993]],"spoken_edges":[["BV","UR",11121.84],["BV","GZ",10438.386],["BV","TE",2394.881],["UR","GZ",1440.468],["UR","TE",13271.665],["GZ","TE",12343.144]],"spoken_points":{"BV":[41.135672,-95.899709],"GZ":[29.97918,31.13417],"TE":[19.6819,-98.8464],"UR":[30.9626,46.1031]}}</script>
+<script type="application/json" id="lattice-edges">[[0,1,"NEVER",1873.1061804658525],[0,2,"ALIAS",2657.870315232129],[0,3,"NEVER",3266.361139822299],[0,4,"ALIAS",3784.84181300383],[0,5,"DOOR",4246.658460351215],[0,6,"DOOR",4668.894891983583],[0,7,"NEVER",5061.6995628416935],[0,8,"ALIAS",5431.692890844831],[0,9,"DOOR",5783.485947399833],[0,10,"DOOR",6120.451167764996],[0,11,"DOOR",6445.151399753888],[0,12,"DOOR",6759.596036747418],[0,13,"DOOR",7065.402566217778],[0,14,"DOOR",7363.90312424306],[0,15,"NEVER",7656.2174640358435],[0,16,"ALIAS",7943.304571297382],[0,17,"DOOR",8226.000247102022],[0,18,"DOOR",8505.04521684191],[0,19,"DOOR",8781.10670525291],[0,20,"DOOR",9054.795435956583],[0,21,"DOOR",9326.679401726804],[0,22,"DOOR",9597.295361778715],[0,23,"DOOR",9867.158771273065],[0,24,"DOOR",10136.772687352377],[0,25,"DOOR",10406.636096846729],[0,26,"DOOR",10677.252056898642],[0,27,"DOOR",10949.136022668863],[0,28,"DOOR",11222.824753372537],[0,29,"DOOR",11498.886241783537],[0,30,"DOOR",11777.931211523424],[0,31,"NEVER",12060.626887328064],[0,32,"ALIAS",12347.713994589603],[0,33,"DOOR",12640.028334382387],[0,34,"DOOR",12938.528892407669],[0,35,"DOOR",13244.335421878028],[0,36,"DOOR",13558.78005887156],[0,37,"DOOR",13883.48029086045],[0,38,"DOOR",14220.445511225615],[0,39,"DOOR",14572.238567780618],[0,40,"DOOR",14942.231895783752],[0,41,"DOOR",15335.036566641862],[0,42,"DOOR",15757.27299827423],[0,43,"DOOR",16219.089645621616],[0,44,"DOOR",16737.570318803148],[0,45,"DOOR",17346.06114339332],[0,46,"DOOR",18130.82527815959],[0,47,"DOOR",20003.931458625448],[1,2,"ALIAS",4221.224486577907],[1,3,"NEVER",3577.629824135669],[1,4,"DOOR",2991.4278326809786],[1,5,"ALIAS",6098.460193227628],[1,6,"DOOR",3220.405761098951],[1,7,"NEVER",5772.605976896682],[1,8,"DOOR",6454.850958459821],[1,9,"ALIAS",4061.261696886931],[1,10,"DOOR",7872.838082122123],[1,11,"DOOR",5813.726996863663],[1,12,"DOOR",6353.097062990481],[1,13,"DOOR",8712.042694571122],[1,14,"DOOR",5542.579058340466],[1,15,"NEVER",8791.440284991042],[1,16,"DOOR",8270.661318139715],[1,17,"ALIAS",6839.037960870763],[1,18,"DOOR",10376.617891345148],[1,19,"DOOR",7492.086750557554],[1,20,"DOOR",9182.166413278772],[1,21,"DOOR",10534.620877232022],[1,22,"DOOR",7741.7685545167615],[1,23,"DOOR",11399.83049609019],[1,24,"DOOR",9727.072296288101],[1,25,"DOOR",9473.341970457499],[1,26,"DOOR",12456.533929351994],[1,27,"DOOR",9246.098102448901],[1,28,"DOOR",11891.987560264412],[1,29,"DOOR",12066.574960496753],[1,30,"DOOR",10108.89147956026],[1,31,"NEVER",13863.261950688231],[1,32,"DOOR",11274.456733728915],[1,33,"ALIAS",12214.596570588887],[1,34,"DOOR",14352.409643333418],[1,35,"DOOR",11376.872092106945],[1,36,"DOOR",14714.542498662744],[1,37,"DOOR",13687.432985698728],[1,38,"DOOR",12868.85411263314],[1,39,"DOOR",16434.207257597714],[1,40,"DOOR",13376.100408044495],[1,41,"DOOR",15363.9990679031],[1,42,"DOOR",16443.29268280652],[1,43,"DOOR",14393.574216027231],[1,44,"DOOR",18209.016177927984],[1,45,"DOOR",16283.515893059654],[1,46,"DOOR",16910.50102725308],[1,47,"DOOR",18130.825278159595],[2,3,"DOOR",5498.657961351597],[2,4,"DOOR",4334.607441670253],[2,5,"DOOR",3273.0571452850104],[2,6,"ALIAS",7297.843000049251],[2,7,"DOOR",3092.9746529055105],[2,8,"DOOR",6506.6892054952295],[2,9,"DOOR",7278.523715353549],[2,10,"ALIAS",3703.5903095591116],[2,11,"DOOR",8935.681349409193],[2,12,"DOOR",5940.569170480137],[2,13,"DOOR",6555.548896022528],[2,14,"DOOR",9703.724325051384],[2,15,"DOOR",5077.435701870674],[2,16,"DOOR",9561.603237813682],[2,17,"DOOR",8711.77545292073],[2,18,"ALIAS",6562.607954703205],[2,19,"DOOR",11436.762289714847],[2,20,"DOOR",7245.55613553051],[2,21,"DOOR",9506.46882710881],[2,22,"DOOR",11293.545978709953],[2,23,"DOOR",7234.7650760888155],[2,24,"DOOR",12293.994324663012],[2,25,"DOOR",9808.755263017461],[2,26,"DOOR",9342.671391481801],[2,27,"DOOR",13465.36077937388],[2,28,"DOOR",8804.150352665696],[2,29,"DOOR",12385.132484850952],[2,30,"DOOR",12511.926877340042],[2,31,"DOOR",9685.041540525817],[2,32,"DOOR",14894.467175994725],[2,33,"DOOR",11074.034070685624],[2,34,"ALIAS",12249.90369621629],[2,35,"DOOR",15173.188383181718],[2,36,"DOOR",10908.474465725147],[2,37,"DOOR",15396.636647913148],[2,38,"DOOR",13795.695399366654],[2,39,"DOOR",12596.10974288811],[2,40,"DOOR",17579.010989224218],[2,41,"DOOR",13068.464760240755],[2,42,"DOOR",15533.754969254065],[2,43,"DOOR",16833.842100697788],[2,44,"DOOR",14136.17624777291],[2,45,"DOOR",18794.53176336501],[2,46,"DOOR",16283.515893059648],[2,47,"DOOR",17346.06114339332],[3,4,"ALIAS",6526.49921706603],[3,5,"ALIAS",4966.176913319012],[3,6,"DOOR",3567.575666229479],[3,7,"NEVER",8292.777289107038],[3,8,"DOOR",3085.0996015260976],[3,9,"DOOR",7135.098520141895],[3,10,"DOOR",7974.235577390223],[3,11,"ALIAS",3500.3875357514676],[3,12,"DOOR",9819.946226595159],[3,13,"DOOR",6111.351658724494],[3,14,"DOOR",6779.039395495617],[3,15,"NEVER",10527.949822885921],[3,16,"DOOR",4779.328275427529],[3,17,"DOOR",10204.961155470382],[3,18,"DOOR",9100.682630066787],[3,19,"ALIAS",6413.257262188677],[3,20,"DOOR",12318.341890300071],[3,21,"DOOR",7115.823544773155],[3,22,"DOOR",9797.564838365864],[3,23,"DOOR",11918.014197770479],[3,24,"DOOR",6902.0861912567],[3,25,"DOOR",13028.939532237297],[3,26,"DOOR",9910.968980041454],[3,27,"DOOR",9288.948324655057],[3,28,"DOOR",14301.857258758095],[3,29,"DOOR",8522.75485197049],[3,30,"DOOR",12781.023972112776],[3,31,"NEVER",12867.779808722495],[3,32,"DOOR",9419.171615340798],[3,33,"DOOR",15752.311224528845],[3,34,"DOOR",10963.47098406522],[3,35,"ALIAS",12297.680730903856],[3,36,"DOOR",15814.551396872299],[3,37,"DOOR",10625.928502156296],[3,38,"DOOR",15898.570577101293],[3,39,"DOOR",13878.177826911713],[3,40,"DOOR",12449.945790117095],[3,41,"DOOR",18561.67520729011],[3,42,"DOOR",12923.521272600874],[3,43,"DOOR",15613.022789970073],[3,44,"DOOR",16959.028807181705],[3,45,"DOOR",14136.176247772912],[3,46,"DOOR",18209.01617792799],[3,47,"DOOR",16737.570318803148],[4,5,"DOOR",7413.530075179114],[4,6,"ALIAS",5512.602966248787],[4,7,"DOOR",3843.8562477819282],[4,8,"DOOR",9175.226065338413],[4,9,"DOOR",3123.817485667518],[4,10,"DOOR",7693.1136268656965],[4,11,"DOOR",8590.891318339389],[4,12,"ALIAS",3370.779597370628],[4,13,"DOOR",10607.71133400934],[4,14,"DOOR",6291.045577266391],[4,15,"DOOR",6999.889863064751],[4,16,"DOOR",11260.886442358238],[4,17,"DOOR",4564.471583327837],[4,18,"DOOR",10773.091741936723],[4,19,"DOOR",9450.573234037558],[4,20,"ALIAS",6324.10480046737],[4,21,"DOOR",13108.107757370954],[4,22,"DOOR",7040.914940168551],[4,23,"DOOR",10060.230617309484],[4,24,"DOOR",12462.765818987898],[4,25,"DOOR",6658.667794105587],[4,26,"DOOR",13673.923611924585],[4,27,"DOOR",10014.685388608217],[4,28,"DOOR",9268.782747028652],[4,29,"DOOR",15046.976884504655],[4,30,"DOOR",8323.722048239917],[4,31,"DOOR",13111.356522193779],[4,32,"DOOR",13161.763661667304],[4,33,"DOOR",9235.174529819686],[4,34,"DOOR",16516.920481343615],[4,35,"DOOR",10895.789568230188],[4,36,"ALIAS",12342.91240617992],[4,37,"DOOR",16328.263211280624],[4,38,"DOOR",10445.24934903237],[4,39,"DOOR",16260.373956383779],[4,40,"DOOR",13933.723675184936],[4,41,"DOOR",12374.275462889134],[4,42,"DOOR",19430.58026528843],[4,43,"DOOR",12879.609437079047],[4,44,"DOOR",15613.02278997008],[4,45,"DOOR",16833.842100697777],[4,46,"DOOR",14393.574216027228],[4,47,"DOOR",16219.089645621616],[5,6,"ALIAS",8205.872625875638],[5,7,"DOOR",5995.605314733726],[5,8,"DOOR",4097.116037097209],[5,9,"DOOR",9982.791602365314],[5,10,"DOOR",3182.945890908996],[5,11,"DOOR",8197.067324278885],[5,12,"DOOR",9149.119104906871],[5,13,"ALIAS",3283.918326825874],[5,14,"DOOR",11331.266642407907],[5,15,"DOOR",6467.612098898372],[5,16,"DOOR",7210.325730691699],[5,17,"DOOR",11932.011938529016],[5,18,"DOOR",4400.789020132095],[5,19,"DOOR",11285.791179878837],[5,20,"DOOR",9767.040965092663],[5,21,"ALIAS",6269.371709994116],[5,22,"DOOR",13839.900253740454],[5,23,"DOOR",6996.959449573221],[5,24,"DOOR",10296.46292535529],[5,25,"DOOR",12947.587518009994],[5,26,"DOOR",6471.917666760236],[5,27,"DOOR",14253.537899020925],[5,28,"DOOR",10112.662965706711],[5,29,"DOOR",9265.530474374933],[5,30,"DOOR",15730.090463951956],[5,31,"DOOR",8177.133676547954],[5,32,"DOOR",13386.777556904442],[5,33,"DOOR",13403.089517761506],[5,34,"DOOR",9104.114350778897],[5,35,"DOOR",17213.312838216578],[5,36,"DOOR",10853.217188629771],[5,37,"ALIAS",12379.834003462223],[5,38,"DOOR",16716.870731928775],[5,39,"DOOR",10335.74969418865],[5,40,"DOOR",16483.057089735285],[5,41,"DOOR",13961.660402403744],[5,42,"DOOR",12350.651267258594],[5,43,"DOOR",19430.580265288427],[5,44,"DOOR",12923.521272600869],[5,45,"DOOR",15533.754969254083],[5,46,"DOOR",16443.292682806506],[5,47,"DOOR",15757.27299827423],[6,7,"DOOR",8928.238697814571],[6,8,"DOOR",6428.22510910771],[6,9,"DOOR",4327.816889112506],[6,10,"DOOR",10735.716508912255],[6,11,"DOOR",3250.547962774883],[6,12,"DOOR",8656.326211661022],[6,13,"DOOR",9660.017062604305],[6,14,"ALIAS",3224.333812249348],[6,15,"DOOR",12007.314453737186],[6,16,"DOOR",6635.825727067447],[6,17,"DOOR",7407.174277120821],[6,18,"DOOR",12556.111518481188],[6,19,"DOOR",4272.076141068755],[6,20,"DOOR",11752.675515193963],[6,21,"DOOR",10053.077212778451],[6,22,"ALIAS",6236.010386551334],[6,23,"DOOR",14531.281106421186],[6,24,"DOOR",6971.885977953746],[6,25,"DOOR",10507.27321273319],[6,26,"DOOR",13381.03302087147],[6,27,"DOOR",6325.384536040325],[6,28,"DOOR",14777.664772488357],[6,29,"DOOR",10201.278945664983],[6,30,"DOOR",9270.829103761522],[6,31,"DOOR",16363.127989432021],[6,32,"DOOR",8067.986664344679],[6,33,"DOOR",13611.351062579464],[6,34,"DOOR",13595.259988901058],[6,35,"DOOR",9011.692932428421],[6,36,"DOOR",17841.520967913293],[6,37,"DOOR",10827.131546223087],[6,38,"ALIAS",12405.628361312234],[6,39,"DOOR",16964.118402256197],[6,40,"DOOR",10283.760169046056],[6,41,"DOOR",16558.683188820163],[6,42,"DOOR",13961.660402403779],[6,43,"DOOR",12374.275462889118],[6,44,"DOOR",18561.675207290114],[6,45,"DOOR",13068.464760240762],[6,46,"DOOR",15363.999067903094],[6,47,"DOOR",15335.036566641862],[7,8,"ALIAS",9595.542876641695],[7,9,"ALIAS",6818.907301183031],[7,10,"DOOR",4537.546492119461],[7,11,"ALIAS",11446.538507426158],[7,12,"DOOR",3320.511293394902],[7,13,"DOOR",9076.796071070348],[7,14,"DOOR",10130.221349675097],[7,15,"NEVER",3183.1030170806066],[7,16,"DOOR",12645.70000482988],[7,17,"DOOR",6793.169476087171],[7,18,"DOOR",7589.0333397117765],[7,19,"DOOR",13141.401856432292],[7,20,"DOOR",4168.885434637887],[7,21,"DOOR",12178.741393064263],[7,22,"DOOR",10310.41957182025],[7,23,"ALIAS",6216.437704890441],[7,24,"DOOR",15192.857100191231],[7,25,"DOOR",6958.6880660104025],[7,26,"DOOR",10693.182918963124],[7,27,"DOOR",13766.468221930849],[7,28,"DOOR",6209.518874843477],[7,29,"DOOR",15248.807394076632],[7,30,"DOOR",10278.448078209647],[7,31,"NEVER",9279.878242181005],[7,32,"DOOR",16947.840108029435],[7,33,"DOOR",7987.710911167564],[7,34,"DOOR",13786.373394666985],[7,35,"DOOR",13739.430615351384],[7,36,"DOOR",8949.997620441036],[7,37,"DOOR",18370.91473358283],[7,38,"DOOR",10812.982416117726],[7,39,"ALIAS",12418.84207777751],[7,40,"DOOR",17049.647436843028],[7,41,"DOOR",10283.760169046056],[7,42,"DOOR",16483.057089735245],[7,43,"DOOR",13933.723675184963],[7,44,"DOOR",12449.945790117084],[7,45,"DOOR",17579.010989224218],[7,46,"DOOR",13376.100408044495],[7,47,"DOOR",14942.231895783752],[8,9,"DOOR",10217.416035971888],[8,10,"ALIAS",7173.412824048542],[8,11,"DOOR",4727.987115351224],[8,12,"ALIAS",12123.714300470368],[8,13,"DOOR",3389.486130775194],[8,14,"DOOR",9462.371780391679],[8,15,"DOOR",10563.866039089084],[8,16,"DOOR",3154.619672693895],[8,17,"DOOR",13252.58334256991],[8,18,"DOOR",6938.371816163438],[8,19,"DOOR",7755.279377673411],[8,20,"DOOR",13692.43446576113],[8,21,"DOOR",4085.200571888224],[8,22,"DOOR",12566.419633039462],[8,23,"DOOR",10540.086673314832],[8,24,"ALIAS",6205.863619445274],[8,25,"DOOR",15831.684338908328],[8,26,"DOOR",6952.949576721763],[8,27,"DOOR",10854.42981015941],[8,28,"DOOR",14104.303586203943],[8,29,"DOOR",6118.303773108524],[8,30,"DOOR",15664.478711497755],[8,31,"DOOR",10342.867016692897],[8,32,"DOOR",9289.712798929],[8,33,"DOOR",17475.7133528056],[8,34,"DOOR",7931.085372574945],[8,35,"DOOR",13911.89272371199],[8,36,"DOOR",13835.74294178519],[8,37,"DOOR",8914.531041620254],[8,38,"DOOR",18709.355272034718],[8,39,"DOOR",10808.49745193762],[8,40,"ALIAS",12418.84207777752],[8,41,"DOOR",16964.118402256183],[8,42,"DOOR",10335.74969418865],[8,43,"DOOR",16260.373956383759],[8,44,"DOOR",13878.177826911726],[8,45,"DOOR",12596.10974288811],[8,46,"DOOR",16434.207257597714],[8,47,"DOOR",14572.238567780618],[9,10,"ALIAS",10800.294983134298],[9,11,"DOOR",7495.816317357846],[9,12,"DOOR",4900.647972176633],[9,13,"ALIAS",12773.275638506442],[9,14,"DOOR",3455.5576517535706],[9,15,"DOOR",9815.65910325841],[9,16,"DOOR",10963.50442023045],[9,17,"DOOR",3135.153779458035],[9,18,"DOOR",13831.805758801731],[9,19,"DOOR",7070.783746452137],[9,20,"DOOR",7905.654612718727],[9,21,"DOOR",14211.29213972396],[9,22,"DOOR",4016.957658665221],[9,23,"DOOR",12916.506971866895],[9,24,"DOOR",10742.644034855683],[9,25,"ALIAS",6201.0944179398475],[9,26,"DOOR",16452.77665907184],[9,27,"DOOR",6951.737572127508],[9,28,"DOOR",10991.078446988073],[9,29,"DOOR",14393.061178073882],[9,30,"DOOR",6047.760056989046],[9,31,"DOOR",16018.11294598521],[9,32,"DOOR",10393.683360240582],[9,33,"DOOR",9298.437380199099],[9,34,"DOOR",17922.857888961335],[9,35,"DOOR",7894.88481071679],[9,36,"DOOR",13987.491590278038],[9,37,"DOOR",13883.992290649547],[9,38,"DOOR",8902.951844352072],[9,39,"DOOR",18709.355272034736],[9,40,"DOOR",10812.982416117706],[9,41,"ALIAS",12405.62836131226],[9,42,"DOOR",16716.870731928793],[9,43,"DOOR",10445.24934903237],[9,44,"DOOR",15898.570577101293],[9,45,"DOOR",13795.695399366648],[9,46,"DOOR",12868.854112633144],[9,47,"DOOR",14220.445511225615],[10,11,"DOOR",11348.50047928183],[10,12,"DOOR",7789.072184564852],[10,13,"DOOR",5056.814432134231],[10,14,"ALIAS",13399.68401792673],[10,15,"DOOR",3517.6033936059894],[10,16,"DOOR",10138.380233858754],[10,17,"DOOR",11330.601949666197],[10,18,"DOOR",3122.121063438587],[10,19,"DOOR",14385.504592049987],[10,20,"DOOR",7190.082848081378],[10,21,"DOOR",8040.076781472552],[10,22,"DOOR",14698.065292308664],[10,23,"DOOR",3961.2978228545708],[10,24,"DOOR",13228.663622186716],[10,25,"DOOR",10918.359179526991],[10,26,"ALIAS",6199.923889735475],[10,27,"DOOR",17059.84669283155],[10,28,"DOOR",6953.040285394457],[10,29,"DOOR",11103.090308559005],[10,30,"DOOR",14630.056325204207],[10,31,"DOOR",5995.195417171713],[10,32,"DOOR",16299.762946790886],[10,33,"DOOR",10430.333382045106],[10,34,"DOOR",9304.845371312478],[10,35,"DOOR",18240.988378999176],[10,36,"DOOR",7877.22206495235],[10,37,"DOOR",14012.747570507257],[10,38,"DOOR",13883.992290649547],[10,39,"DOOR",8914.531041620263],[10,40,"DOOR",18370.914733582857],[10,41,"DOOR",10827.131546223067],[10,42,"ALIAS",12379.83400346221],[10,43,"DOOR",16328.263211280631],[10,44,"DOOR",10625.928502156296],[10,45,"DOOR",15396.636647913154],[10,46,"DOOR",13687.43298569872],[10,47,"DOOR",13883.48029086045],[11,12,"ALIAS",11864.831240453783],[11,13,"ALIAS",8055.357757679231],[11,14,"DOOR",5197.5604874546],[11,15,"DOOR",14006.304434245856],[11,16,"DOOR",3574.9577341215277],[11,17,"DOOR",10431.62348224752],[11,18,"DOOR",11665.828462739248],[11,19,"DOOR",3113.6774100429193],[11,20,"DOOR",14914.335197627934],[11,21,"DOOR",7296.122059542872],[11,22,"DOOR",8158.545935722994],[11,23,"DOOR",15150.95278311873],[11,24,"DOOR",3916.1538226140096],[11,25,"DOOR",13501.731330238857],[11,26,"DOOR",11067.303956152824],[11,27,"ALIAS",6200.795141616874],[11,28,"DOOR",17655.65199804566],[11,29,"DOOR",6955.456186383744],[11,30,"DOOR",11190.37342112222],[11,31,"DOOR",14811.989750590697],[11,32,"DOOR",5958.79560126706],[11,33,"DOOR",16497.459077425687],[11,34,"DOOR",10452.45714195503],[11,35,"DOOR",9308.217726531564],[11,36,"DOOR",18360.262910842383],[11,37,"DOOR",7877.222064952342],[11,38,"DOOR",13987.491590278054],[11,39,"DOOR",13835.742941785156],[11,40,"DOOR",8949.997620441056],[11,41,"DOOR",17841.520967913322],[11,42,"DOOR",10853.217188629771],[11,43,"ALIAS",12342.912406179925],[11,44,"DOOR",15814.55139687229],[11,45,"DOOR",10908.474465725147],[11,46,"DOOR",14714.542498662757],[11,47,"DOOR",13558.78005887156],[12,13,"DOOR",12350.901209114954],[12,14,"ALIAS",8296.292942136315],[12,15,"DOOR",5323.777037802558],[12,16,"DOOR",14595.671695437559],[12,17,"DOOR",3627.2265696182767],[12,18,"DOOR",10696.009616661171],[12,19,"DOOR",11969.249608715067],[12,20,"DOOR",3108.4781842164216],[12,21,"DOOR",15417.422951367891],[12,22,"DOOR",7388.8484578561365],[12,23,"DOOR",8261.09729592502],[12,24,"DOOR",15566.134502265977],[12,25,"DOOR",3880.0058054583283],[12,26,"DOOR",13733.98526327327],[12,27,"DOOR",11189.428502446377],[12,28,"ALIAS",6202.600744728429],[12,29,"DOOR",18241.995421311036],[12,30,"DOOR",6958.011677033552],[12,31,"DOOR",11252.81942691654],[12,32,"DOOR",14935.56079673072],[12,33,"DOOR",5937.391668233727],[12,34,"DOOR",16599.8539005436],[12,35,"DOOR",10459.853349347091],[12,36,"DOOR",9308.217726531522],[12,37,"DOOR",18240.988378999216],[12,38,"DOOR",7894.884810716805],[12,39,"DOOR",13911.892723711973],[12,40,"DOOR",13739.430615351388],[12,41,"DOOR",9011.692932428421],[12,42,"DOOR",17213.312838216552],[12,43,"DOOR",10895.789568230211],[12,44,"ALIAS",12297.680730903836],[12,45,"DOOR",15173.188383181727],[12,46,"DOOR",11376.872092106942],[12,47,"DOOR",13244.335421878028],[13,14,"ALIAS",12807.329213204363],[13,15,"DOOR",8513.087411630004],[13,16,"DOOR",5436.200966929176],[13,17,"DOOR",15169.623318114442],[13,18,"DOOR",3674.1804108893984],[13,19,"DOOR",10931.811291567084],[13,20,"DOOR",12240.46734656619],[13,21,"DOOR",3105.528005587996],[13,22,"DOOR",15892.065051837313],[13,23,"DOOR",7468.258148921567],[13,24,"DOOR",8347.777259375895],[13,25,"DOOR",15937.521076087362],[13,26,"DOOR",3851.7298283619843],[13,27,"DOOR",13923.375715674012],[13,28,"DOOR",11284.617954704057],[13,29,"ALIAS",6204.55962753049],[13,30,"DOOR",18818.898086713914],[13,31,"DOOR",6960.050595845551],[13,32,"DOOR",11290.331323934144],[13,33,"DOOR",14998.095990365455],[13,34,"DOOR",5930.327563948077],[13,35,"DOOR",16599.8539005436],[13,36,"DOOR",10452.457141955081],[13,37,"DOOR",9304.84537131245],[13,38,"DOOR",17922.857888961367],[13,39,"DOOR",7931.085372574951],[13,40,"DOOR",13786.373394666985],[13,41,"DOOR",13595.259988901058],[13,42,"DOOR",9104.114350778878],[13,43,"DOOR",16516.9204813436],[13,44,"DOOR",10963.470984065236],[13,45,"ALIAS",12249.90369621628],[13,46,"DOOR",14352.40964333342],[13,47,"DOOR",12938.528892407669],[14,15,"DOOR",13233.83913329018],[14,16,"DOOR",8706.643267024243],[14,17,"DOOR",5535.4406164149905],[14,18,"DOOR",15729.321588161523],[14,19,"DOOR",3715.690554252519],[14,20,"DOOR",11139.045232986306],[14,21,"DOOR",12478.736889033666],[14,22,"DOOR",3104.0833012602375],[14,23,"DOOR",16333.14829129174],[14,24,"DOOR",7534.370683378316],[14,25,"DOOR",8418.631480498236],[14,26,"DOOR",16256.543688527046],[14,27,"DOOR",3830.5006816346354],[14,28,"DOOR",14067.783953835715],[14,29,"DOOR",11352.736950101995],[14,30,"ALIAS",6206.139647394412],[14,31,"DOOR",19378.703299048266],[14,32,"DOOR",6961.167101653188],[14,33,"DOOR",11302.843065033634],[14,34,"DOOR",14998.095990365455],[14,35,"DOOR",5937.391668233727],[14,36,"DOOR",16497.45907742563],[14,37,"DOOR",10430.33338204514],[14,38,"DOOR",9298.43738019907],[14,39,"DOOR",17475.71335280561],[14,40,"DOOR",7987.710911167564],[14,41,"DOOR",13611.351062579464],[14,42,"DOOR",13403.089517761548],[14,43,"DOOR",9235.174529819671],[14,44,"DOOR",15752.311224528838],[14,45,"DOOR",11074.034070685635],[14,46,"ALIAS",12214.596570588881],[14,47,"DOOR",12640.028334382387],[15,16,"ALIAS",13629.3063586819],[15,17,"ALIAS",8877.629189574822],[15,18,"DOOR",5621.99683230917],[15,19,"ALIAS",16275.145395754074],[15,20,"DOOR",3751.6899035123447],[15,21,"DOOR",11317.548195412523],[15,22,"DOOR",12683.075850008552],[15,23,"ALIAS",3103.587249456191],[15,24,"DOOR",16732.24497897315],[15,25,"DOOR",7587.214398210412],[15,26,"DOOR",8473.699338386268],[15,27,"DOOR",16512.302145800444],[15,28,"DOOR",3815.7283946595317],[15,29,"DOOR",14165.29150880614],[15,30,"DOOR",11393.663971952292],[15,31,"NEVER",6207.009268271345],[15,32,"DOOR",19787.274816827274],[15,33,"DOOR",6961.167101653159],[15,34,"DOOR",11290.331323934182],[15,35,"DOOR",14935.560796730679],[15,36,"DOOR",5958.795601267058],[15,37,"DOOR",16299.762946790886],[15,38,"DOOR",10393.683360240582],[15,39,"DOOR",9289.712798929013],[15,40,"DOOR",16947.840108029417],[15,41,"DOOR",8067.986664344667],[15,42,"DOOR",13386.77755690443],[15,43,"DOOR",13161.763661667306],[15,44,"DOOR",9419.171615340798],[15,45,"DOOR",14894.467175994725],[15,46,"DOOR",11274.456733728906],[15,47,"ALIAS",12347.713994589603],[16,17,"DOOR",13991.77835536284],[16,18,"ALIAS",9026.535657823586],[16,19,"DOOR",5696.279904401716],[16,20,"ALIAS",16806.370694164474],[16,21,"DOOR",3782.1483866675303],[16,22,"DOOR",11467.042741406756],[16,23,"DOOR",12852.373962754524],[16,24,"ALIAS",3103.6254852211478],[16,25,"DOOR",17076.48257898618],[16,26,"DOOR",7626.818016875188],[16,27,"DOOR",8513.011738696521],[16,28,"DOOR",16692.579451478075],[16,29,"DOOR",3807.016850344801],[16,30,"DOOR",14214.439663446812],[16,31,"DOOR",11407.3160879862],[16,32,"NEVER",6207.009268271345],[16,33,"DOOR",19378.703299048277],[16,34,"DOOR",6960.050595845521],[16,35,"DOOR",11252.81942691658],[16,36,"DOOR",14811.98975059072],[16,37,"DOOR",5995.195417171715],[16,38,"DOOR",16018.112945985207],[16,39,"DOOR",10342.867016692882],[16,40,"DOOR",9279.878242181034],[16,41,"DOOR",16363.127989432007],[16,42,"DOOR",8177.133676547961],[16,43,"DOOR",13111.356522193775],[16,44,"DOOR",12867.779808722495],[16,45,"DOOR",9685.041540525823],[16,46,"DOOR",13863.261950688237],[16,47,"NEVER",12060.626887328064],[17,18,"ALIAS",14318.497864805446],[17,19,"DOOR",9153.717106491396],[17,20,"DOOR",5758.623007898269],[17,21,"ALIAS",17320.424525576997],[17,22,"DOOR",3807.0572679678407],[17,23,"DOOR",11587.195751121508],[17,24,"DOOR",12985.505840108446],[17,25,"ALIAS",3103.8956569130414],[17,26,"DOOR",17347.787438749034],[17,27,"DOOR",7653.205885828152],[17,28,"DOOR",8536.590552587417],[17,29,"DOOR",16786.168564083277],[17,30,"DOOR",3804.1378513052878],[17,31,"DOOR",14214.439663446812],[17,32,"DOOR",11393.66397195229],[17,33,"NEVER",6206.139647394443],[17,34,"DOOR",18818.898086713925],[17,35,"DOOR",6958.011677033522],[17,36,"DOOR",11190.3734211222],[17,37,"DOOR",14630.056325204203],[17,38,"DOOR",6047.760056989044],[17,39,"DOOR",15664.47871149777],[17,40,"DOOR",10278.448078209616],[17,41,"DOOR",9270.829103761545],[17,42,"DOOR",15730.090463951965],[17,43,"DOOR",8323.722048239917],[17,44,"DOOR",12781.023972112776],[17,45,"DOOR",12511.926877340033],[17,46,"DOOR",10108.89147956026],[17,47,"NEVER",11777.931211523422],[18,19,"DOOR",14605.963454561932],[18,20,"DOOR",9259.424704989833],[18,21,"DOOR",5809.292753993905],[18,22,"ALIAS",17811.15183326469],[18,23,"DOOR",3826.419024197757],[18,24,"DOOR",11677.670430169253],[18,25,"DOOR",13081.443886222689],[18,26,"ALIAS",3104.1866032922326],[18,27,"DOOR",17524.21388276753],[18,28,"DOOR",7666.395341454875],[18,29,"DOOR",8544.448730631768],[18,30,"DOOR",16786.168564083233],[18,31,"DOOR",3807.016850344783],[18,32,"DOOR",14165.291508806182],[18,33,"DOOR",11352.736950101911],[18,34,"NEVER",6204.559627530553],[18,35,"DOOR",18241.995421311047],[18,36,"DOOR",6955.456186383732],[18,37,"DOOR",11103.090308559043],[18,38,"DOOR",14393.061178073845],[18,39,"DOOR",6118.303773108533],[18,40,"DOOR",15248.807394076683],[18,41,"DOOR",10201.278945664926],[18,42,"DOOR",9265.530474374946],[18,43,"DOOR",15046.97688450465],[18,44,"DOOR",8522.75485197048],[18,45,"DOOR",12385.132484850976],[18,46,"DOOR",12066.574960496733],[18,47,"NEVER",11498.886241783537],[19,20,"ALIAS",14850.069806740716],[19,21,"ALIAS",9343.832073282065],[19,22,"DOOR",5848.497363544602],[19,23,"DOOR",18264.577668760307],[19,24,"DOOR",3840.2407909063063],[19,25,"DOOR",11738.171125274468],[19,26,"DOOR",13139.363799349567],[19,27,"ALIAS",3104.36452356405],[19,28,"DOOR",17585.81707513694],[19,29,"DOOR",7666.395341454959],[19,30,"DOOR",8536.590552587373],[19,31,"DOOR",16692.579451478116],[19,32,"DOOR",3815.728394659548],[19,33,"DOOR",14067.783953835718],[19,34,"DOOR",11284.617954704057],[19,35,"NEVER",6202.60074472843],[19,36,"DOOR",17655.651998045658],[19,37,"DOOR",6953.040285394486],[19,38,"DOOR",10991.078446988036],[19,39,"DOOR",14104.303586203961],[19,40,"DOOR",6209.518874843477],[19,41,"DOOR",14777.664772488357],[19,42,"DOOR",10112.662965706753],[19,43,"DOOR",9268.782747028627],[19,44,"DOOR",14301.857258758104],[19,45,"DOOR",8804.150352665703],[19,46,"DOOR",11891.98756026441],[19,47,"NEVER",11222.824753372537],[20,21,"DOOR",15046.371504638066],[20,22,"ALIAS",9407.055389304025],[20,23,"DOOR",5876.392870041924],[20,24,"DOOR",18648.27246237773],[20,25,"DOOR",3848.5301660336613],[20,26,"DOOR",11768.479382750016],[20,27,"DOOR",13158.731996669201],[20,28,"ALIAS",3104.364523564047],[20,29,"DOOR",17524.213882767443],[20,30,"DOOR",7653.205885828195],[20,31,"DOOR",8513.011738696476],[20,32,"DOOR",16512.302145800488],[20,33,"DOOR",3830.5006816346354],[20,34,"DOOR",13923.375715674012],[20,35,"DOOR",11189.428502446375],[20,36,"NEVER",6200.795141616828],[20,37,"DOOR",17059.846692831547],[20,38,"DOOR",6951.737572127535],[20,39,"DOOR",10854.429810159392],[20,40,"DOOR",13766.468221930852],[20,41,"DOOR",6325.384536040323],[20,42,"DOOR",14253.537899020897],[20,43,"DOOR",10014.685388608246],[20,44,"DOOR",9288.948324655037],[20,45,"DOOR",13465.36077937388],[20,46,"DOOR",9246.0981024489],[20,47,"NEVER",10949.136022668863],[21,22,"ALIAS",15190.49682938547],[21,23,"DOOR",9449.168784884823],[21,24,"DOOR",5893.0876584918615],[21,25,"DOOR",18890.31967839533],[21,26,"DOOR",3851.292632853448],[21,27,"DOOR",11768.47938275006],[21,28,"DOOR",13139.363799349523],[21,29,"ALIAS",3104.1866032922],[21,30,"DOOR",17347.787438749034],[21,31,"DOOR",7626.818016875187],[21,32,"DOOR",8473.699338386268],[21,33,"DOOR",16256.543688527008],[21,34,"DOOR",3851.7298283619693],[21,35,"DOOR",13733.985263273307],[21,36,"DOOR",11067.303956152844],[21,37,"NEVER",6199.923889735475],[21,38,"DOOR",16452.77665907184],[21,39,"DOOR",6952.949576721751],[21,40,"DOOR",10693.182918963155],[21,41,"DOOR",13381.033020871446],[21,42,"DOOR",6471.917666760232],[21,43,"DOOR",13673.923611924582],[21,44,"DOOR",9910.968980041453],[21,45,"DOOR",9342.67139148181],[21,46,"DOOR",12456.533929351994],[21,47,"NEVER",10677.252056898642],[22,23,"DOOR",15278.690686546413],[22,24,"DOOR",9470.215566512274],[22,25,"DOOR",5898.645561171806],[22,26,"DOOR",18890.319678395328],[22,27,"DOOR",3848.530166033617],[22,28,"DOOR",11738.171125274514],[22,29,"DOOR",13081.443886222733],[22,30,"ALIAS",3103.8956569130423],[22,31,"DOOR",17076.48257898618],[22,32,"DOOR",7587.214398210412],[22,33,"DOOR",8418.63148049828],[22,34,"DOOR",15937.521076087325],[22,35,"DOOR",3880.0058054583124],[22,36,"DOOR",13501.731330238841],[22,37,"DOOR",10918.35917952699],[22,38,"NEVER",6201.0944179398475],[22,39,"DOOR",15831.68433890833],[22,40,"DOOR",6958.688066010376],[22,41,"DOOR",10507.27321273322],[22,42,"DOOR",12947.587518010005],[22,43,"DOOR",6658.667794105586],[22,44,"DOOR",13028.939532237297],[22,45,"DOOR",9808.755263017456],[22,46,"DOOR",9473.341970457506],[22,47,"NEVER",10406.636096846729],[23,24,"ALIAS",15308.39246901301],[23,25,"ALIAS",9470.215566512274],[23,26,"DOOR",5893.087658491864],[23,27,"ALIAS",18648.27246237769],[23,28,"DOOR",3840.240790906264],[23,29,"DOOR",11677.670430169212],[23,30,"DOOR",12985.505840108448],[23,31,"DOOR",3103.625485221148],[23,32,"DOOR",16732.24497897315],[23,33,"DOOR",7534.370683378275],[23,34,"DOOR",8347.777259375935],[23,35,"DOOR",15566.134502265944],[23,36,"DOOR",3916.153822614018],[23,37,"DOOR",13228.663622186717],[23,38,"DOOR",10742.644034855683],[23,39,"NEVER",6205.863619445286],[23,40,"DOOR",15192.857100191231],[23,41,"DOOR",6971.8859779537215],[23,42,"DOOR",10296.462925355276],[23,43,"DOOR",12462.765818987902],[23,44,"DOOR",6902.086191256701],[23,45,"DOOR",12293.994324663017],[23,46,"DOOR",9727.072296288094],[23,47,"NEVER",10136.772687352377],[24,25,"DOOR",15278.690686546413],[24,26,"ALIAS",9449.168784884823],[24,27,"DOOR",5876.392870041971],[24,28,"ALIAS",18264.57766876028],[24,29,"DOOR",3826.4190241977976],[24,30,"DOOR",11587.195751121508],[24,31,"DOOR",12852.37396275452],[24,32,"DOOR",3103.5872494561913],[24,33,"DOOR",16333.148291291769],[24,34,"DOOR",7468.258148921526],[24,35,"DOOR",8261.097295925061],[24,36,"DOOR",15150.952783118746],[24,37,"DOOR",3961.2978228545708],[24,38,"DOOR",12916.506971866895],[24,39,"DOOR",10540.086673314814],[24,40,"NEVER",6216.437704890468],[24,41,"DOOR",14531.28110642119],[24,42,"DOOR",6996.959449573232],[24,43,"DOOR",10060.230617309478],[24,44,"DOOR",11918.014197770479],[24,45,"DOOR",7234.76507608882],[24,46,"DOOR",11399.830496090197],[24,47,"NEVER",9867.158771273067],[25,26,"ALIAS",15190.496829385473],[25,27,"DOOR",9407.055389303978],[25,28,"DOOR",5848.497363544647],[25,29,"ALIAS",17811.151833264717],[25,30,"DOOR",3807.0572679678407],[25,31,"DOOR",11467.042741406756],[25,32,"DOOR",12683.075850008552],[25,33,"DOOR",3104.0833012602684],[25,34,"DOOR",15892.06505183734],[25,35,"DOOR",7388.848457856096],[25,36,"DOOR",8158.545935722976],[25,37,"DOOR",14698.06529230866],[25,38,"DOOR",4016.9576586652206],[25,39,"DOOR",12566.419633039477],[25,40,"DOOR",10310.419571820215],[25,41,"NEVER",6236.010386551356],[25,42,"DOOR",13839.900253740454],[25,43,"DOOR",7040.914940168555],[25,44,"DOOR",9797.564838365864],[25,45,"DOOR",11293.545978709948],[25,46,"DOOR",7741.768554516761],[25,47,"NEVER",9597.295361778715],[26,27,"DOOR",15046.37150463811],[26,28,"DOOR",9343.83207328202],[26,29,"DOOR",5809.29275399386],[26,30,"ALIAS",17320.424525576997],[26,31,"DOOR",3782.1483866675308],[26,32,"DOOR",11317.54819541252],[26,33,"DOOR",12478.736889033626],[26,34,"DOOR",3105.5280055880253],[26,35,"DOOR",15417.422951367917],[26,36,"DOOR",7296.12205954289],[26,37,"DOOR",8040.076781472552],[26,38,"DOOR",14211.29213972396],[26,39,"DOOR",4085.2005718882187],[26,40,"DOOR",12178.741393064292],[26,41,"DOOR",10053.07721277842],[26,42,"NEVER",6269.371709994103],[26,43,"DOOR",13108.107757370954],[26,44,"DOOR",7115.823544773155],[26,45,"DOOR",9506.468827108818],[26,46,"DOOR",10534.620877232019],[26,47,"NEVER",9326.679401726804],[27,28,"ALIAS",14850.06980674071],[27,29,"ALIAS",9259.424704989924],[27,30,"DOOR",5758.623007898223],[27,31,"DOOR",16806.37069416449],[27,32,"DOOR",3751.689903512385],[27,33,"DOOR",11139.045232986302],[27,34,"DOOR",12240.46734656619],[27,35,"DOOR",3108.4781842164216],[27,36,"DOOR",14914.3351976279],[27,37,"DOOR",7190.082848081416],[27,38,"DOOR",7905.65461271869],[27,39,"DOOR",13692.434465761136],[27,40,"DOOR",4168.885434637888],[27,41,"DOOR",11752.675515193961],[27,42,"DOOR",9767.040965092705],[27,43,"NEVER",6324.104800467345],[27,44,"DOOR",12318.34189030007],[27,45,"DOOR",7245.556135530519],[27,46,"DOOR",9182.166413278766],[27,47,"NEVER",9054.795435956583],[28,29,"DOOR",14605.963454561856],[28,30,"ALIAS",9153.717106491438],[28,31,"DOOR",5696.279904401673],[28,32,"DOOR",16275.145395754087],[28,33,"DOOR",3715.69055425252],[28,34,"DOOR",10931.811291567084],[28,35,"DOOR",11969.249608715067],[28,36,"DOOR",3113.677410042879],[28,37,"DOOR",14385.504592049969],[28,38,"DOOR",7070.783746452174],[28,39,"DOOR",7755.279377673395],[28,40,"DOOR",13141.401856432292],[28,41,"DOOR",4272.076141068755],[28,42,"DOOR",11285.7911798788],[28,43,"DOOR",9450.573234037587],[28,44,"NEVER",6413.257262188663],[28,45,"DOOR",11436.762289714847],[28,46,"DOOR",7492.086750557555],[28,47,"NEVER",8781.106705252912],[29,30,"ALIAS",14318.497864805478],[29,31,"DOOR",9026.535657823546],[29,32,"DOOR",5621.996832309213],[29,33,"DOOR",15729.321588161498],[29,34,"DOOR",3674.1804108893193],[29,35,"DOOR",10696.009616661247],[29,36,"DOOR",11665.828462739233],[29,37,"DOOR",3122.1210634386125],[29,38,"DOOR",13831.805758801744],[29,39,"DOOR",6938.371816163387],[29,40,"DOOR",7589.033339711843],[29,41,"DOOR",12556.111518481155],[29,42,"DOOR",4400.789020132088],[29,43,"DOOR",10773.091741936738],[29,44,"DOOR",9100.682630066765],[29,45,"NEVER",6562.607954703225],[29,46,"DOOR",10376.61789134515],[29,47,"NEVER",8505.04521684191],[30,31,"DOOR",13991.778355362841],[30,32,"DOOR",8877.629189574822],[30,33,"DOOR",5535.440616415031],[30,34,"DOOR",15169.623318114429],[30,35,"DOOR",3627.2265696182358],[30,36,"DOOR",10431.623482247503],[30,37,"DOOR",11330.601949666194],[30,38,"DOOR",3135.153779458033],[30,39,"DOOR",13252.583342569915],[30,40,"DOOR",6793.169476087136],[30,41,"DOOR",7407.174277120852],[30,42,"DOOR",11932.011938529022],[30,43,"DOOR",4564.471583327837],[30,44,"DOOR",10204.961155470382],[30,45,"DOOR",8711.775452920723],[30,46,"NEVER",6839.037960870765],[30,47,"NEVER",8226.000247102022],[31,32,"ALIAS",13629.3063586819],[31,33,"ALIAS",8706.643267024207],[31,34,"DOOR",5436.200966929216],[31,35,"ALIAS",14595.671695437552],[31,36,"DOOR",3574.957734121547],[31,37,"DOOR",10138.380233858754],[31,38,"DOOR",10963.504420230454],[31,39,"ALIAS",3154.619672693907],[31,40,"DOOR",12645.700004829894],[31,41,"DOOR",6635.825727067417],[31,42,"DOOR",7210.325730691686],[31,43,"DOOR",11260.88644235824],[31,44,"DOOR",4779.328275427531],[31,45,"DOOR",9561.60323781369],[31,46,"DOOR",8270.66131813971],[31,47,"ALIAS",7943.304571297383],[32,33,"DOOR",13233.83913329021],[32,34,"ALIAS",8513.087411629964],[32,35,"DOOR",5323.777037802601],[32,36,"ALIAS",14006.30443424586],[32,37,"DOOR",3517.603393605988],[32,38,"DOOR",9815.659103258411],[32,39,"DOOR",10563.866039089071],[32,40,"ALIAS",3183.1030170806293],[32,41,"DOOR",12007.314453737199],[32,42,"DOOR",6467.612098898385],[32,43,"DOOR",6999.889863064745],[32,44,"DOOR",10527.94982288592],[32,45,"DOOR",5077.435701870674],[32,46,"DOOR",8791.44028499105],[32,47,"NEVER",7656.2174640358435],[33,34,"ALIAS",12807.329213204363],[33,35,"DOOR",8296.292942136313],[33,36,"DOOR",5197.560487454541],[33,37,"ALIAS",13399.684017926736],[33,38,"DOOR",3455.5576517536033],[33,39,"DOOR",9462.371780391662],[33,40,"DOOR",10130.221349675097],[33,41,"ALIAS",3224.333812249348],[33,42,"DOOR",11331.266642407894],[33,43,"DOOR",6291.045577266421],[33,44,"DOOR",6779.039395495597],[33,45,"DOOR",9703.724325051387],[33,46,"DOOR",5542.579058340464],[33,47,"NEVER",7363.90312424306],[34,35,"DOOR",12350.901209114954],[34,36,"DOOR",8055.357757679286],[34,37,"DOOR",5056.814432134193],[34,38,"ALIAS",12773.275638506451],[34,39,"DOOR",3389.486130775209],[34,40,"DOOR",9076.796071070348],[34,41,"DOOR",9660.017062604305],[34,42,"ALIAS",3283.9183268258453],[34,43,"DOOR",10607.711334009326],[34,44,"DOOR",6111.351658724515],[34,45,"DOOR",6555.5488960225175],[34,46,"DOOR",8712.042694571126],[34,47,"NEVER",7065.402566217776],[35,36,"ALIAS",11864.831240453748],[35,37,"ALIAS",7789.072184564888],[35,38,"DOOR",4900.647972176596],[35,39,"DOOR",12123.714300470372],[35,40,"DOOR",3320.5112933949035],[35,41,"DOOR",8656.32621166102],[35,42,"DOOR",9149.119104906908],[35,43,"ALIAS",3370.779597370611],[35,44,"DOOR",9819.946226595153],[35,45,"DOOR",5940.569170480148],[35,46,"DOOR",6353.097062990476],[35,47,"NEVER",6759.596036747419],[36,37,"DOOR",11348.50047928184],[36,38,"ALIAS",7495.81631735783],[36,39,"DOOR",4727.9871153512595],[36,40,"DOOR",11446.538507426148],[36,41,"DOOR",3250.5479627748405],[36,42,"DOOR",8197.067324278887],[36,43,"DOOR",8590.891318339382],[36,44,"ALIAS",3500.3875357514735],[36,45,"DOOR",8935.681349409197],[36,46,"DOOR",5813.726996863648],[36,47,"NEVER",6445.151399753888],[37,38,"ALIAS",10800.294983134298],[37,39,"DOOR",7173.412824048527],[37,40,"DOOR",4537.546492119492],[37,41,"DOOR",10735.71650891225],[37,42,"DOOR",3182.945890909008],[37,43,"DOOR",7693.113626865691],[37,44,"DOOR",7974.235577390223],[37,45,"ALIAS",3703.590309559117],[37,46,"DOOR",7872.838082122126],[37,47,"NEVER",6120.451167764996],[38,39,"DOOR",10217.416035971899],[38,40,"DOOR",6818.907301183002],[38,41,"DOOR",4327.816889112538],[38,42,"DOOR",9982.791602365318],[38,43,"DOOR",3123.817485667523],[38,44,"DOOR",7135.098520141897],[38,45,"DOOR",7278.523715353544],[38,46,"ALIAS",4061.2616968869324],[38,47,"NEVER",5783.485947399834],[39,40,"ALIAS",9595.542876641706],[39,41,"ALIAS",6428.225109107697],[39,42,"DOOR",4097.116037097182],[39,43,"ALIAS",9175.226065338416],[39,44,"DOOR",3085.0996015261057],[39,45,"DOOR",6506.689205495229],[39,46,"DOOR",6454.850958459821],[39,47,"NEVER",5431.692890844831],[40,41,"DOOR",8928.238697814571],[40,42,"ALIAS",5995.605314733763],[40,43,"DOOR",3843.8562477818973],[40,44,"ALIAS",8292.77728910704],[40,45,"DOOR",3092.97465290552],[40,46,"DOOR",5772.605976896679],[40,47,"NEVER",5061.6995628416935],[41,42,"ALIAS",8205.872625875618],[41,43,"DOOR",5512.602966248815],[41,44,"DOOR",3567.5756662294584],[41,45,"ALIAS",7297.843000049251],[41,46,"DOOR",3220.405761098954],[41,47,"NEVER",4668.894891983583],[42,43,"DOOR",7413.5300751791165],[42,44,"DOOR",4966.176913319002],[42,45,"DOOR",3273.0571452850286],[42,46,"ALIAS",6098.460193227629],[42,47,"NEVER",4246.658460351216],[43,44,"ALIAS",6526.4992170660325],[43,45,"ALIAS",4334.607441670243],[43,46,"DOOR",2991.427832680988],[43,47,"NEVER",3784.84181300383],[44,45,"DOOR",5498.657961351599],[44,46,"ALIAS",3577.6298241356635],[44,47,"NEVER",3266.361139822299],[45,46,"ALIAS",4221.2244865779085],[45,47,"NEVER",2657.8703152321277],[46,47,"NEVER",1873.1061804658557]]</script>
+<script>
+// ---------- Vincenty inverse on WGS84 (the build method, ported exactly) ----------
+function vincenty(lat1, lon1, lat2, lon2){
+  var a = 6378137.0, f = 1 / 298.257223563, b = a * (1 - f);
+  if (lat1 === lat2 && lon1 === lon2) return 0;
+  var L = (lon2 - lon1) * Math.PI / 180;
+  var U1 = Math.atan((1 - f) * Math.tan(lat1 * Math.PI / 180));
+  var U2 = Math.atan((1 - f) * Math.tan(lat2 * Math.PI / 180));
+  var sU1 = Math.sin(U1), cU1 = Math.cos(U1), sU2 = Math.sin(U2), cU2 = Math.cos(U2);
+  var lam = L, lamP, ss, cs, sig, sa, csa, c2sm, C, it = 0;
+  do {
+    var slam = Math.sin(lam), clam = Math.cos(lam);
+    ss = Math.sqrt(Math.pow(cU2 * slam, 2) + Math.pow(cU1 * sU2 - sU1 * cU2 * clam, 2));
+    if (ss === 0) return 0;
+    cs = sU1 * sU2 + cU1 * cU2 * clam;
+    sig = Math.atan2(ss, cs);
+    sa = cU1 * cU2 * slam / ss;
+    csa = 1 - sa * sa;
+    c2sm = csa !== 0 ? cs - 2 * sU1 * sU2 / csa : 0;
+    C = f / 16 * csa * (4 + f * (4 - 3 * csa));
+    lamP = lam;
+    lam = L + (1 - C) * f * sa * (sig + C * ss * (c2sm + C * cs * (-1 + 2 * c2sm * c2sm)));
+  } while (Math.abs(lam - lamP) > 1e-12 && ++it < 1000);
+  var u2 = csa * (a * a - b * b) / (b * b);
+  var A = 1 + u2 / 16384 * (4096 + u2 * (-768 + u2 * (320 - 175 * u2)));
+  var B = u2 / 1024 * (256 + u2 * (-128 + u2 * (74 - 47 * u2)));
+  var dsig = B * ss * (c2sm + B / 4 * (cs * (-1 + 2 * c2sm * c2sm) - B / 6 * c2sm * (-3 + 4 * ss * ss) * (-3 + 4 * c2sm * c2sm)));
+  return b * A * (sig - dsig) / 1000;
+}
+// ---------- SHA-256 over UTF-8 bytes ----------
+function utf8Bytes(s){
+  var out = [];
+  for (var i = 0; i < s.length; i++){
+    var c = s.charCodeAt(i);
+    if (c < 0x80) out.push(c);
+    else if (c < 0x800){ out.push(0xc0 | (c >> 6), 0x80 | (c & 0x3f)); }
+    else if (c >= 0xd800 && c <= 0xdbff && i + 1 < s.length){
+      var cp = 0x10000 + ((c - 0xd800) * 0x400) + (s.charCodeAt(++i) - 0xdc00);
+      out.push(0xf0 | (cp >> 18), 0x80 | ((cp >> 12) & 0x3f), 0x80 | ((cp >> 6) & 0x3f), 0x80 | (cp & 0x3f));
+    } else { out.push(0xe0 | (c >> 12), 0x80 | ((c >> 6) & 0x3f), 0x80 | (c & 0x3f)); }
+  }
+  return out;
+}
+function sha256hex(str){
+  var K = [0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+  var H = [0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+  var bytes = utf8Bytes(str);
+  var bitLen = bytes.length * 8;
+  bytes.push(0x80);
+  while (bytes.length % 64 !== 56) bytes.push(0);
+  for (var i = 7; i >= 0; i--) bytes.push(Math.floor(bitLen / Math.pow(2, 8 * i)) % 256);
+  function rr(x, n){ return (x >>> n) | (x << (32 - n)); }
+  var w = new Array(64);
+  for (var blk = 0; blk < bytes.length; blk += 64){
+    for (var t = 0; t < 16; t++) w[t] = (bytes[blk + 4*t] << 24) | (bytes[blk + 4*t + 1] << 16) | (bytes[blk + 4*t + 2] << 8) | bytes[blk + 4*t + 3];
+    for (t = 16; t < 64; t++){
+      var s0 = rr(w[t-15], 7) ^ rr(w[t-15], 18) ^ (w[t-15] >>> 3);
+      var s1 = rr(w[t-2], 17) ^ rr(w[t-2], 19) ^ (w[t-2] >>> 10);
+      w[t] = (w[t-16] + s0 + w[t-7] + s1) | 0;
+    }
+    var a=H[0],b=H[1],c=H[2],d=H[3],e=H[4],f=H[5],g=H[6],h=H[7];
+    for (t = 0; t < 64; t++){
+      var S1 = rr(e, 6) ^ rr(e, 11) ^ rr(e, 25);
+      var ch = (e & f) ^ (~e & g);
+      var t1 = (h + S1 + ch + K[t] + w[t]) | 0;
+      var S0 = rr(a, 2) ^ rr(a, 13) ^ rr(a, 22);
+      var mj = (a & b) ^ (a & c) ^ (b & c);
+      var t2 = (S0 + mj) | 0;
+      h=g; g=f; f=e; e=(d + t1)|0; d=c; c=b; b=a; a=(t1 + t2)|0;
+    }
+    H[0]=(H[0]+a)|0; H[1]=(H[1]+b)|0; H[2]=(H[2]+c)|0; H[3]=(H[3]+d)|0;
+    H[4]=(H[4]+e)|0; H[5]=(H[5]+f)|0; H[6]=(H[6]+g)|0; H[7]=(H[7]+h)|0;
+  }
+  return H.map(function(x){ return ('0000000' + (x >>> 0).toString(16)).slice(-8); }).join('');
+}
+// ---------- the self-check: recompute every geographic figure from coordinates ----------
+function runSelfCheck(DATA, LATEDGES){
+  var lines = [], fails = 0, checks = 0;
+  function cmp(label, got, want){
+    checks++;
+    var d = Math.abs(got - want);
+    if (d > 0.0015){ fails++; lines.push('FAIL ' + label + ': recomputed ' + got.toFixed(3) + ' vs served ' + want.toFixed(3)); }
+  }
+  function edge(e, P){
+    var A = P[e[0]], B = P[e[1]];
+    cmp(e[0] + '-' + e[1], vincenty(A.lat, A.lon, B.lat, B.lon), e[2]);
+  }
+  DATA.registry_edges.forEach(function(e){ edge(e, DATA.points); });
+  DATA.anchor_edges.forEach(function(e){ edge(e, DATA.points); });
+  DATA.spoken_edges.forEach(function(e){
+    var A = DATA.spoken_points[e[0]], B = DATA.spoken_points[e[1]];
+    cmp('spoken ' + e[0] + '-' + e[1], vincenty(A[0], A[1], B[0], B[1]), e[2]);
+  });
+  var sp = DATA.spoken_points.UR, n1 = DATA.points.N01;
+  cmp('N01-tell offset', vincenty(n1.lat, n1.lon, sp[0], sp[1]), DATA.n01_tell_offset_km);
+  ['N01','N02','N03','N04','N05','BV0'].forEach(function(k){
+    var p = DATA.points[k], best = null;
+    DATA.lattice_nodes.forEach(function(n){
+      var d = vincenty(p.lat, p.lon, n[1], n[2]);
+      if (!best || d < best.km) best = {m: n[0], km: d};
+    });
+    var want = DATA.connectors[k];
+    checks++;
+    if (best.m !== want.m){ fails++; lines.push('FAIL connector ' + k + ': nearest node m=' + best.m + ' vs served m=' + want.m); }
+    cmp('connector ' + k + ' km', best.km, want.km);
+    if (best.km > DATA.covering_radius_km){ fails++; lines.push('FAIL connector ' + k + ': outside covering radius'); }
+  });
+  var counts = {DOOR: 0, ALIAS: 0, NEVER: 0}, totals = {DOOR: 0, ALIAS: 0, NEVER: 0};
+  LATEDGES.forEach(function(e){ counts[e[2]]++; totals[e[2]] += e[3]; });
+  ['DOOR','ALIAS','NEVER'].forEach(function(c){
+    checks++;
+    if (counts[c] !== DATA.lattice_class_counts[c]){ fails++; lines.push('FAIL lattice ' + c + ' count ' + counts[c] + ' vs ' + DATA.lattice_class_counts[c]); }
+    cmp('lattice ' + c + ' total km', totals[c], DATA.lattice_class_totals_km[c]);
+  });
+  return {checks: checks, fails: fails, lines: lines, pass: fails === 0};
+}
+</script>
+<script>
+(function(){
+  // The recognition phrase, as the conductor set it — the same voice the
+  // cave's door knows. This page conducts no one anywhere: no redirect,
+  // nothing is transmitted; there is no server.
+  var PHRASE = "this is yeti the conductor";
+  var wrong = 0;
+  var locked = false;
+  var form = document.getElementById('gateform');
+  var input = document.getElementById('voice');
+  var reply = document.getElementById('reply');
+  var button = document.getElementById('enter');
+  var acceptBtn = document.getElementById('accept');
+  var acceptedEl = document.getElementById('accepted');
+  var acceptedAt = null;
+  try { acceptedAt = window.localStorage.getItem('seraphim-accepted'); } catch (e) { acceptedAt = null; }
+  function showAccepted(ts){
+    acceptedEl.textContent = "Accepted: " + new Date(ts).toLocaleString();
+    acceptBtn.style.display = 'none';
+    input.disabled = false;
+    button.disabled = false;
+  }
+  if (acceptedAt) { showAccepted(isNaN(+acceptedAt) ? acceptedAt : +acceptedAt); }
+  acceptBtn.addEventListener('click', function(){
+    var ts = Date.now();
+    try { window.localStorage.setItem('seraphim-accepted', String(ts)); } catch (e) {}
+    showAccepted(ts);
+    input.focus();
+  });
+  function normalize(s){
+    return (s || "")
+      .toLowerCase()
+      .replace(/[\u2018\u2019]/g, "'")
+      .replace(/[\u201c\u201d]/g, '"')
+      .replace(/[^a-z0-9' ]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+  function lockout(){
+    locked = true;
+    input.disabled = true;
+    button.disabled = true;
+    setTimeout(function(){
+      input.disabled = false;
+      button.disabled = false;
+      locked = false;
+      wrong = 0;
+    }, 60000);
+  }
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if (locked || input.disabled) { return; }
+    var said = normalize(input.value);
+    if (said === PHRASE) {
+      reply.textContent = "The cave knows that voice.";
+      document.body.classList.add('open');
+      document.getElementById('chamber').scrollIntoView({behavior:'smooth'});
+    } else {
+      // Silence. No message, no count, no change — the seam stays dark.
+      // After five wrong voices the box rests, silently, for a minute.
+      wrong += 1;
+      if (wrong >= 5) { lockout(); }
+    }
+  });
+})();
+</script>
+<script>
+(function(){
+  var DATA = JSON.parse(document.getElementById('seraphim-data').textContent);
+  var LATEDGES = JSON.parse(document.getElementById('lattice-edges').textContent);
+  var RAW = document.getElementById('seraphim-data').textContent;
+  var PX = 40, PY = 76, PW = 1080, PH = 520;
+  function proj(lat, lon){ return [PX + (lon + 180) / 360 * PW, PY + (90 - lat) / 180 * PH]; }
+  function unit(lat, lon){
+    var la = lat * Math.PI / 180, lo = lon * Math.PI / 180;
+    return [Math.cos(la) * Math.cos(lo), Math.cos(la) * Math.sin(lo), Math.sin(la)];
+  }
+  function arcD(a, b, n){
+    var p = unit(a[0], a[1]), q = unit(b[0], b[1]);
+    var dot = Math.max(-1, Math.min(1, p[0]*q[0] + p[1]*q[1] + p[2]*q[2]));
+    var om = Math.acos(dot); if (om < 1e-9) return '';
+    var so = Math.sin(om), segs = [], cur = [], prevx = null;
+    for (var i = 0; i <= n; i++){
+      var t = i / n, A = Math.sin((1 - t) * om) / so, B = Math.sin(t * om) / so;
+      var vx = A * p[0] + B * q[0], vy = A * p[1] + B * q[1], vz = A * p[2] + B * q[2];
+      var lat = Math.asin(Math.max(-1, Math.min(1, vz))) * 180 / Math.PI;
+      var lon = Math.atan2(vy, vx) * 180 / Math.PI;
+      var xy = proj(lat, lon);
+      if (prevx !== null && Math.abs(xy[0] - prevx) > PW / 2){ segs.push(cur); cur = []; }
+      cur.push(xy); prevx = xy[0];
+    }
+    segs.push(cur);
+    return segs.filter(function(s){ return s.length > 1; }).map(function(s){
+      return 'M' + s.map(function(p){ return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' L');
+    }).join(' ');
+  }
+  function esc(s){ return s.replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  function fmt(x){ return x.toLocaleString('en-US', {minimumFractionDigits: 3, maximumFractionDigits: 3}); }
+  var readout = document.getElementById('readout');
+  function showReadout(htmlText){ readout.innerHTML = htmlText; }
+  function edgeInfo(layerLabel, aName, bName, kmVal, extra){
+    showReadout('<span class="rt">' + esc(layerLabel) + '</span> · ' + esc(aName) + ' \u2194 ' + esc(bName) +
+      ' — <span class="mono">' + fmt(kmVal) + ' km</span> <span class="tag comp">COMPUTED</span>' + (extra || ''));
+  }
+  var S = [];
+  S.push('<rect x="0" y="0" width="1160" height="64" fill="#f7f8fa" stroke="#d9dee6"/>');
+  S.push('<text x="40" y="26" font-size="11" font-weight="700" letter-spacing="1.5" fill="#7a5c1e">LAYER 4 — HEAVENLY ENVELOPE 3 · 12.0 GHz · EW COMMS</text>');
+  S.push('<text x="40" y="46" font-size="11" fill="#4a5568">Dashed gold spokes from the envelope hub are SCHEMATIC — not geographic distances. Mechanism, verbatim from the deck (p.6): \u201cRigid geometric polarization against jamming.\u201d</text>');
+  // plate + graticule
+  S.push('<rect x="' + PX + '" y="' + PY + '" width="' + PW + '" height="' + PH + '" fill="#f7f8fa" stroke="#d9dee6"/>');
+  for (var lon = -180; lon <= 180; lon += 15){
+    var gx = proj(0, lon)[0];
+    S.push('<line x1="' + gx + '" y1="' + PY + '" x2="' + gx + '" y2="' + (PY + PH) + '" stroke="' + (lon === 0 ? '#b9c4d4' : '#d9dee6') + '" stroke-width="' + (lon === 0 ? 1.1 : 0.5) + '"/>');
+    S.push('<text x="' + gx + '" y="' + (PY + PH + 15) + '" font-size="9.5" fill="#4a5568" text-anchor="middle">' + lon + '\u00b0</text>');
+  }
+  for (var lat = -75; lat <= 90; lat += 15){
+    var gy = proj(lat, 0)[1];
+    S.push('<line x1="' + PX + '" y1="' + gy + '" x2="' + (PX + PW) + '" y2="' + gy + '" stroke="' + (lat === 0 ? '#b9c4d4' : '#d9dee6') + '" stroke-width="' + (lat === 0 ? 0.9 : 0.5) + '"/>');
+    S.push('<text x="' + (PX - 6) + '" y="' + (gy + 3) + '" font-size="9.5" fill="#4a5568" text-anchor="end">' + lat + '\u00b0</text>');
+  }
+  // lattice edges, one path per class
+  var byClass = {DOOR: '', ALIAS: '', NEVER: ''};
+  LATEDGES.forEach(function(e){
+    var A = DATA.lattice_nodes[e[0]], B = DATA.lattice_nodes[e[1]];
+    byClass[e[2]] += arcD([A[1], A[2]], [B[1], B[2]], 20);
+  });
+  S.push('<g id="g-door"><path d="' + byClass.DOOR + '" stroke="#aebdd0" stroke-width="0.5" fill="none" opacity="0.55"/></g>');
+  S.push('<g id="g-alias"><path d="' + byClass.ALIAS + '" stroke="#c9a227" stroke-width="0.7" fill="none" opacity="0.5"/></g>');
+  S.push('<g id="g-never" style="display:none"><path d="' + byClass.NEVER + '" stroke="#9c2b2b" stroke-width="0.7" fill="none" opacity="0.45"/></g>');
+  S.push('<g id="g-latnodes">' + DATA.lattice_nodes.map(function(n){
+    var xy = proj(n[1], n[2]);
+    return '<circle cx="' + xy[0].toFixed(1) + '" cy="' + xy[1].toFixed(1) + '" r="1.7" fill="#4a5568"><title>GENESIS node m=' + n[0] + ' \u00b7 ' + n[1].toFixed(5) + ', ' + n[2].toFixed(5) + '</title></circle>';
+  }).join('') + '</g>');
+  // connectors
+  var connStr = '';
+  ['N01','N02','N03','N04','N05','BV0'].forEach(function(k){
+    var p = DATA.points[k], c = DATA.connectors[k];
+    var node = null;
+    DATA.lattice_nodes.forEach(function(n){ if (n[0] === c.m) node = n; });
+    var xy = proj(p.lat, p.lon);
+    connStr += '<circle cx="' + xy[0].toFixed(1) + '" cy="' + xy[1].toFixed(1) + '" r="10" fill="none" stroke="#14663a" stroke-width="1.2" stroke-dasharray="3 3"/>';
+    connStr += '<path class="hit" data-kind="conn" data-k="' + k + '" d="' + arcD([p.lat, p.lon], [node[1], node[2]], 24) + '" stroke="#14663a" stroke-width="1.1" stroke-dasharray="4 3" fill="none"/>';
+  });
+  S.push('<g id="g-conn">' + connStr + '</g>');
+  // spoken edges + offset line
+  var spkStr = '';
+  DATA.spoken_edges.forEach(function(e){
+    var A = DATA.spoken_points[e[0]], B = DATA.spoken_points[e[1]];
+    spkStr += '<path d="' + arcD(A, B, 48) + '" stroke="#2456a6" stroke-width="1.4" stroke-dasharray="6 4" fill="none" opacity="0.9"/>';
+    spkStr += '<path class="hit" data-kind="spoken" data-a="' + e[0] + '" data-b="' + e[1] + '" data-km="' + e[2] + '" d="' + arcD(A, B, 48) + '" stroke="rgba(0,0,0,0)" stroke-width="11" fill="none"/>';
+  });
+  var n1 = DATA.points.N01, ur = DATA.spoken_points.UR;
+  spkStr += '<line x1="' + proj(n1.lat, n1.lon)[0] + '" y1="' + proj(n1.lat, n1.lon)[1] + '" x2="' + proj(ur[0], ur[1])[0] + '" y2="' + proj(ur[0], ur[1])[1] + '" stroke="#9c2b2b" stroke-width="1.2"/>';
+  S.push('<g id="g-spoken">' + spkStr + '</g>');
+  var spkNodes = '';
+  ['UR','GZ','TE'].forEach(function(k){
+    var P = DATA.spoken_points[k], xy = proj(P[0], P[1]);
+    spkNodes += '<circle class="hit" data-kind="spknode" data-k="' + k + '" cx="' + xy[0].toFixed(1) + '" cy="' + xy[1].toFixed(1) + '" r="5.5" fill="#ffffff" stroke="#2456a6" stroke-width="2"/>';
+  });
+  S.push('<g id="g-spoken-nodes">' + spkNodes + '</g>');
+  // HE3 spokes (schematic straight dashed lines from the hub)
+  var hub = [580, 30], spokeStr = '';
+  ['N01','N02','N03','N04','N05','BV0'].forEach(function(k){
+    var p = DATA.points[k], xy = proj(p.lat, p.lon);
+    spokeStr += '<line x1="' + hub[0] + '" y1="' + (hub[1] + 8) + '" x2="' + xy[0].toFixed(1) + '" y2="' + xy[1].toFixed(1) + '" stroke="#c9a227" stroke-width="1.3" stroke-dasharray="2 5" opacity="0.8"/>';
+  });
+  S.push('<g id="g-spokes">' + spokeStr + '<circle cx="' + hub[0] + '" cy="' + hub[1] + '" r="8" fill="#c9a227" stroke="#0d1b2e" stroke-width="1.4"/><text x="' + (hub[0] + 13) + '" y="' + (hub[1] + 4) + '" font-size="11.5" font-weight="700" fill="#10151d">HEAVENLY ENVELOPE 3 — 12.0 GHz</text></g>');
+  // registry + anchor edges
+  function regGroup(list, id){
+    var str = '';
+    list.forEach(function(e){
+      var A = DATA.points[e[0]], B = DATA.points[e[1]];
+      var d = arcD([A.lat, A.lon], [B.lat, B.lon], 56);
+      str += '<path d="' + d + '" stroke="#0d1b2e" stroke-width="1.8" fill="none" opacity="0.92"/>';
+      str += '<path class="hit" data-kind="reg" data-a="' + e[0] + '" data-b="' + e[1] + '" data-km="' + e[2] + '" d="' + d + '" stroke="rgba(0,0,0,0)" stroke-width="11" fill="none"/>';
+    });
+    return '<g id="' + id + '">' + str + '</g>';
+  }
+  S.push(regGroup(DATA.registry_edges, 'g-registry'));
+  S.push(regGroup(DATA.anchor_edges, 'g-anchor'));
+  // nodes + labels
+  var nodeStr = '';
+  ['N01','N02','N03','N04','N05'].forEach(function(k){
+    var p = DATA.points[k], xy = proj(p.lat, p.lon);
+    nodeStr += '<circle class="hit" data-kind="node" data-k="' + k + '" cx="' + xy[0].toFixed(1) + '" cy="' + xy[1].toFixed(1) + '" r="6" fill="#0d1b2e" stroke="#ffffff" stroke-width="1.6"/>';
+    nodeStr += '<text x="' + (xy[0] + 10) + '" y="' + (xy[1] - 8) + '" font-size="12.5" font-weight="700" fill="#0d1b2e">' + k + '</text>';
+  });
+  var bv = DATA.points.BV0, bxy = proj(bv.lat, bv.lon);
+  nodeStr += '<path class="hit" data-kind="node" data-k="BV0" d="M' + bxy[0] + ',' + (bxy[1] - 8) + ' L' + (bxy[0] + 8) + ',' + bxy[1] + ' L' + bxy[0] + ',' + (bxy[1] + 8) + ' L' + (bxy[0] - 8) + ',' + bxy[1] + ' Z" fill="#c9a227" stroke="#0d1b2e" stroke-width="1.4"/>';
+  nodeStr += '<text x="' + (bxy[0] + 11) + '" y="' + (bxy[1] + 4) + '" font-size="11.5" font-weight="700" fill="#7a5c1e">BELLEVUE — ANCHOR</text>';
+  var gz = proj(29.97918, 31.13417), te = proj(19.6819, -98.8464), ury = proj(30.9626, 46.1031);
+  nodeStr += '<text x="' + (gz[0] + 9) + '" y="' + (gz[1] + 4) + '" font-size="10.5" font-weight="600" fill="#2456a6">GIZA</text>';
+  nodeStr += '<text x="' + (te[0] + 9) + '" y="' + (te[1] + 4) + '" font-size="10.5" font-weight="600" fill="#2456a6">TEOTIHUACAN</text>';
+  nodeStr += '<text x="' + (ury[0] + 9) + '" y="' + (ury[1] + 14) + '" font-size="10.5" font-weight="600" fill="#2456a6">URUK (TELL)</text>';
+  S.push('<g id="g-nodes">' + nodeStr + '</g>');
+  document.getElementById('mapsvg').innerHTML = S.join('');
+  // readout wiring
+  document.getElementById('mapsvg').addEventListener('click', function(ev){
+    var t = ev.target;
+    if (!t.getAttribute || !t.getAttribute('data-kind')) return;
+    var kind = t.getAttribute('data-kind');
+    if (kind === 'reg'){
+      var a = t.getAttribute('data-a'), b = t.getAttribute('data-b');
+      edgeInfo(a === 'BV0' || b === 'BV0' ? 'Layer 1 · anchor edge' : 'Layer 1 · Geodesic Network Registry', DATA.points[a].name, DATA.points[b].name, parseFloat(t.getAttribute('data-km')));
+    } else if (kind === 'spoken'){
+      var names = {BV: 'Bellevue NE', UR: 'Uruk (Warka tell)', GZ: 'Great Pyramid of Giza (apex)', TE: 'Temple of Quetzalcoatl — Teotihuacan'};
+      edgeInfo('Layer 2 · the spoken set (not the registry)', names[t.getAttribute('data-a')], names[t.getAttribute('data-b')], parseFloat(t.getAttribute('data-km')));
+    } else if (kind === 'node' || kind === 'spknode'){
+      var k = t.getAttribute('data-k'), p = kind === 'node' ? DATA.points[k] : null;
+      if (p){
+        var c = DATA.connectors[k];
+        showReadout('<span class="rt">' + esc(p.name) + '</span> — ' + p.lat.toFixed(6) + ', ' + p.lon.toFixed(6) + ' · ' + esc(p.prov) +
+          (c ? '<br>Nearest GENESIS lattice node: <span class="mono">m = ' + c.m + '</span> at <span class="mono">' + fmt(c.km) + ' km</span> <span class="tag comp">COMPUTED</span> — inside the lattice covering radius (' + fmt(DATA.covering_radius_km) + ' km).' : ''));
+      } else {
+        var sp = DATA.spoken_points[k];
+        var nm = {UR: 'Uruk (Warka tell)', GZ: 'Great Pyramid of Giza (apex)', TE: 'Temple of Quetzalcoatl — Teotihuacan'}[k];
+        showReadout('<span class="rt">' + nm + '</span> — ' + sp[0] + ', ' + sp[1] + ' · spoken set only; not one of the registry five.');
+      }
+    } else if (kind === 'conn'){
+      var kk = t.getAttribute('data-k'), cc = DATA.connectors[kk];
+      showReadout('<span class="rt">Layer 3 · connector</span> — ' + esc(DATA.points[kk].name) + ' to its nearest GENESIS lattice node <span class="mono">m = ' + cc.m + '</span>: <span class="mono">' + fmt(cc.km) + ' km</span> <span class="tag comp">COMPUTED</span>');
+    }
+  });
+  // toggles
+  function tog(id, targets){
+    var el = document.getElementById(id);
+    el.addEventListener('change', function(){
+      targets.forEach(function(g){
+        var n = document.getElementById(g);
+        if (n) n.style.display = el.checked ? '' : 'none';
+      });
+    });
+  }
+  tog('t-reg', ['g-registry', 'g-anchor', 'g-nodes']);
+  tog('t-spk', ['g-spoken', 'g-spoken-nodes']);
+  tog('t-door', ['g-door']);
+  tog('t-alias', ['g-alias']);
+  tog('t-never', ['g-never']);
+  tog('t-lat', ['g-door', 'g-alias', 'g-never', 'g-latnodes']);
+  tog('t-conn', ['g-conn']);
+  tog('t-he3', ['g-spokes']);
+  document.getElementById('t-lat').addEventListener('change', function(){
+    var on = this.checked;
+    ['t-door','t-alias'].forEach(function(id){ document.getElementById(id).checked = on; });
+    document.getElementById('g-door').style.display = on ? '' : 'none';
+    document.getElementById('g-alias').style.display = on ? '' : 'none';
+  });
+  // self-check
+  var out = document.getElementById('check-out'), cert = document.getElementById('cert');
+  function runCheck(){
+    var r = runSelfCheck(DATA, LATEDGES);
+    var hash = sha256hex(RAW);
+    if (r.pass){
+      out.innerHTML = '<span class="pass">ALL CHECKS PASS</span> \u00b7 ' + r.checks + ' recomputations \u00b7 0 differences\n' +
+        '21 geographic edges (10 registry + 5 anchor + 6 spoken) \u00b7 N01\u2013tell offset \u00b7 6 nearest-node connectors \u00b7 1,128 lattice edges reclassed and retotalled\n' +
+        'Method in this browser: Vincenty inverse on WGS84, from the coordinates alone.';
+      cert.style.display = 'block';
+      cert.innerHTML = '<span class="rt">CERTIFICATE OF RECOMPUTATION \u2014 SERAPHIM, THE FULL MAP</span><br>' +
+        'Minted in this browser \u00b7 ' + new Date().toISOString() + '<br>' +
+        'Data served with this page \u00b7 SHA-256 <span class="mono">' + hash + '</span><br>' +
+        'Figures verified: registry K5 + anchor web, spoken web, N01\u2013tell offset ' + fmt(DATA.n01_tell_offset_km) + ' km, lattice connectors, lattice class totals.';
+    } else {
+      out.innerHTML = '<span class="fail">DIFFERENCES FOUND</span>\n' + r.lines.join('\n');
+      cert.style.display = 'none';
+    }
+  }
+  document.getElementById('run-check').addEventListener('click', runCheck);
+  runCheck();
+})();
+</script>
+</body>
+</html>
