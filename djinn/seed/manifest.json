@@ -1,0 +1,124 @@
+{
+ "exported_at": "2026-10-23T10:26:59Z",
+ "exporter": "djinn_mind/engine.py via export_for_living_site.py",
+ "canon": 25,
+ "corpus": 5681,
+ "raw_bytes": 197132296,
+ "raw_sha256": "7f7cf2d64ed3ef0725bb4a27ad5ec5a9c8944d7de174e13a8b066c8fff8cdc7a",
+ "codec": "zstd",
+ "encoding": "base64",
+ "compressed_bytes": 40300839,
+ "slice_bytes": 3000000,
+ "chunk_size": 3000000,
+ "chunk_count": 14,
+ "chunks": [
+  {
+   "index": 0,
+   "name": "seed-0000.b64",
+   "bytes": 4000000,
+   "sha256": "dae62ba04751350138406d000e2ad6f9e730386f58ce934bb7a0e9f75c230ea7",
+   "slice_bytes": 3000000
+  },
+  {
+   "index": 1,
+   "name": "seed-0001.b64",
+   "bytes": 4000000,
+   "sha256": "d218bc81165e0e0ba7a17c8f1bda9eec51adce96057f1a0d866b9cec34e7da27",
+   "slice_bytes": 3000000
+  },
+  {
+   "index": 2,
+   "name": "seed-0002.b64",
+   "bytes": 4000000,
+   "sha256": "39c110b9bbe45c6b5eb914cd042a5964aa07dbf34ae5be6c51cf7719593e4c21",
+   "slice_bytes": 3000000
+  },
+  {
+   "index": 3,
+   "name": "seed-0003.b64",
+   "bytes": 4000000,
+   "sha256": "587f196ed34cb0e0e2564d72e20dd3ea43ea2a137fe720f69b336fcecfcb8d9c",
+   "slice_bytes": 3000000
+  },
+  {
+   "index": 4,
+   "name": "seed-0004.b64",
+   "bytes": 4000000,
+   "sha256": "9152082b60a6abe4b142b8bb3f3afc1c0992ace025f1fcc4184f7aa83681a1ff",
+   "slice_bytes": 3000000
+  },
+  {
+   "index": 5,
+   "name": "seed-0005.b64",
+   "bytes": 4000000,
+   "sha256": "cc878040f5ffb84af951623e0e9386ab6457a2bf1958ebdbe3673f078462eb6a",
+   "slice_bytes": 3000000
+  },
+  {
+   "index": 6,
+   "name": "seed-0006.b64",
+   "bytes": 4000000,
+   "sha256": "e055248b7bd53bdcb4246b85a28a5f48e1e199f37938f121a63da778dba3bfe4",
+   "slice_bytes": 3000000
+  },
+  {
+   "index": 7,
+   "name": "seed-0007.b64",
+   "bytes": 4000000,
+   "sha256": "982726663992bcbbf0fe06c0c8c1c8f252198aa92515f7f783a6ca20c399df58",
+   "slice_bytes": 3000000
+  },
+  {
+   "index": 8,
+   "name": "seed-0008.b64",
+   "bytes": 4000000,
+   "sha256": "34f408e1447a574e7c3c725d2d5501ef55b702c70614736b46aafcf378c996b5",
+   "slice_bytes": 3000000
+  },
+  {
+   "index": 9,
+   "name": "seed-0009.b64",
+   "bytes": 4000000,
+   "sha256": "b857947d87ba82c2855be535186227d0f1eb77d4216e8eacf1883ed314ac68eb",
+   "slice_bytes": 3000000
+  },
+  {
+   "index": 10,
+   "name": "seed-0010.b64",
+   "bytes": 4000000,
+   "sha256": "3d4a4e98ced91469fc90d7eb319bacd32d3296082fd0ececa4d9a282775d1087",
+   "slice_bytes": 3000000
+  },
+  {
+   "index": 11,
+   "name": "seed-0011.b64",
+   "bytes": 4000000,
+   "sha256": "7bbff60affa17aaf08c913764368c2ea7ab11b9e8bff10a5c49103767be9c6cd",
+   "slice_bytes": 3000000
+  },
+  {
+   "index": 12,
+   "name": "seed-0012.b64",
+   "bytes": 4000000,
+   "sha256": "f9abab4e9c91b49ffd8fc5c3833e397f47e371299c547a8f1f817236c11992ae",
+   "slice_bytes": 3000000
+  },
+  {
+   "index": 13,
+   "name": "seed-0013.b64",
+   "bytes": 1734452,
+   "sha256": "7e4c652e04450ed9e07965bc7adf7ce034eb95ac7740cb3b7e2e893d5cf9015c",
+   "slice_bytes": 1300839
+  }
+ ],
+ "site_base": "https://sequesteredyeti.art/djinn/seed/",
+ "engine_ledger": {
+  "rows": 76,
+  "tip": "bf13a4a1e17421ce",
+  "chain": {
+   "ok": true,
+   "rows": 76,
+   "tip": "bf13a4a1e17421ce"
+  }
+ }
+}
