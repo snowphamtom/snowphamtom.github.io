@@ -1,0 +1,2276 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark" />
+    <link rel="icon" href="data:," />
+    <title>THE VAULT — Monsters Ink LLC</title>
+    <style>
+      :root {
+        --bg: #05080f;
+        --panel: #0a1120;
+        --panel-2: #070d18;
+        --ink: #ece7d7;
+        --dim: #97a3bb;
+        --faint: #5f6c85;
+        --gold: #c9a227;
+        --gold-dim: #8a6d1f;
+        --line: #1e2c47;
+        --line-soft: #152238;
+        --pass: #93b464;
+        --fail: #c0563f;
+      }
+      * { box-sizing: border-box; }
+      html { -webkit-text-size-adjust: 100%; }
+      body {
+        margin: 0;
+        background: #05080f;
+        background-image: linear-gradient(180deg,
+          #080d18 0%, #05080f 18%, #060a13 38%, #04070d 58%,
+          #050910 78%, #03060b 100%);
+        background-attachment: fixed;
+        color: var(--ink);
+        font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
+        font-size: 17px;
+        line-height: 1.62;
+        padding: 0 1.25rem 4.5rem;
+      }
+      .wrap { max-width: 45rem; margin: 0 auto; }
+      .mono { font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace; }
+      a { color: var(--gold); text-decoration: none; border-bottom: 1px solid #4a3f22; }
+      a:hover { border-bottom-color: var(--gold); }
+
+      /* ---------- COVER / GATE ---------- */
+      .cover {
+        margin: 2.2rem 0 0;
+        border: 1px solid var(--gold);
+        outline: 1px solid var(--line);
+        outline-offset: 5px;
+        background: var(--panel-2);
+        padding: 2.4rem 1.8rem 2rem;
+      }
+      .cover .doc-id {
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.72rem; letter-spacing: 0.22em; color: var(--dim);
+        margin: 0 0 1.6rem;
+      }
+      .cover h1 {
+        font-size: 1.9rem; line-height: 1.15; font-weight: 700;
+        letter-spacing: 0.04em; margin: 0 0 1.4rem; color: var(--ink);
+      }
+      .cover p.conf { font-size: 1.06rem; line-height: 1.68; margin: 0 0 1.5rem; }
+      .cover .prepared {
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.86rem; color: var(--dim); margin: 0 0 1.8rem;
+      }
+      .cover .prepared b { color: var(--ink); font-weight: 400; border-bottom: 1px dotted var(--faint); padding-bottom: 1px; }
+      #accept-btn {
+        display: block; width: 100%;
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.95rem; letter-spacing: 0.04em;
+        background: var(--gold); color: #171204;
+        border: 1px solid var(--gold);
+        padding: 0.95rem 1rem; cursor: pointer; text-align: center;
+      }
+      #accept-btn:hover { background: #d9b23a; }
+      #accept-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+      .cover .record-note {
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.74rem; color: var(--faint); margin: 0.8rem 0 0; text-align: center;
+      }
+      #accepted-line {
+        display: none;
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.86rem; color: var(--pass);
+        border-top: 1px solid var(--line); margin-top: 1.6rem; padding-top: 1rem;
+      }
+      .cover.accepted #accepted-line { display: block; }
+
+      /* ---------- SECTIONS ---------- */
+      section { margin-top: 3.2rem; }
+      .sec-head {
+        display: flex; align-items: baseline; gap: 0.9rem;
+        border-top: 1px solid var(--line); padding-top: 1.1rem; margin-bottom: 1.2rem;
+      }
+      .sec-head .no {
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.8rem; color: var(--gold); letter-spacing: 0.15em;
+      }
+      .sec-head h2 {
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.98rem; font-weight: 700; letter-spacing: 0.18em; margin: 0; color: var(--ink);
+      }
+      .lede { color: var(--ink); margin: 0 0 1.2rem; }
+      .lede .dim, p .dim { color: var(--dim); }
+
+      /* ---------- PANELS / LINES ---------- */
+      .run-panel {
+        border: 1px solid var(--line); background: var(--panel);
+        padding: 1.2rem 1.1rem 1rem;
+      }
+      .check { padding: 0.9rem 0 1rem; border-top: 1px solid var(--line-soft); }
+      .check:first-child { border-top: none; padding-top: 0.2rem; }
+      .check-head {
+        display: flex; justify-content: space-between; align-items: baseline; gap: 1rem;
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.83rem; letter-spacing: 0.08em; margin-bottom: 0.55rem;
+      }
+      .check-head .name { color: var(--ink); }
+      .verdict {
+        font-size: 0.78rem; letter-spacing: 0.14em; padding: 0.12rem 0.5rem;
+        border: 1px solid var(--line); color: var(--faint); white-space: nowrap;
+      }
+      .verdict.pass { color: var(--pass); border-color: #3d4a2a; }
+      .verdict.fail { color: var(--fail); border-color: #5a2f24; }
+      .verdict.run { color: var(--gold); border-color: #4a3f22; }
+      .line {
+        display: flex; justify-content: space-between; gap: 1rem;
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.84rem; padding: 0.18rem 0;
+      }
+      .line .k { color: var(--dim); }
+      .line .v { color: var(--ink); text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+      .line .v .target { color: var(--faint); }
+      .run-foot {
+        display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;
+        border-top: 1px solid var(--line); margin-top: 0.4rem; padding-top: 0.9rem;
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.76rem; color: var(--faint);
+      }
+      .run-btn {
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.8rem; letter-spacing: 0.1em;
+        background: transparent; color: var(--gold);
+        border: 1px solid #4a3f22; padding: 0.5rem 0.9rem; cursor: pointer;
+      }
+      .run-btn:hover { border-color: var(--gold); }
+      .run-btn[disabled] { color: var(--faint); border-color: var(--line); cursor: default; }
+      .fineprint {
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.76rem; color: var(--faint); line-height: 1.7; margin-top: 1.6rem;
+      }
+
+      /* ---------- CHAMBERS ---------- */
+      .chamber {
+        border: 1px solid var(--line); border-top: 2px solid var(--gold-dim);
+        background: linear-gradient(180deg, #0b1322 0%, #080e1a 100%);
+        padding: 1.15rem 1.1rem 1.05rem; margin-bottom: 1.1rem;
+      }
+      .chamber-head {
+        display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap;
+        margin-bottom: 0.5rem;
+      }
+      .chamber-head h3 {
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.92rem; letter-spacing: 0.14em; margin: 0; color: var(--ink);
+      }
+      .chamber-head h3 .rn { color: var(--gold); margin-right: 0.6rem; }
+      .vehicle {
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.7rem; letter-spacing: 0.12em; color: var(--dim);
+        border: 1px solid var(--line); padding: 0.12rem 0.5rem; white-space: nowrap;
+      }
+      .chamber p { margin: 0.35rem 0 0.6rem; }
+      .chamber .state {
+        border-top: 1px solid var(--line-soft); margin-top: 0.55rem; padding-top: 0.6rem;
+        font-size: 0.97rem;
+      }
+      .chamber .state .sk {
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.7rem; letter-spacing: 0.14em; color: var(--gold); margin-right: 0.6rem;
+      }
+      .tag {
+        display: inline-block; vertical-align: 0.14em;
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.66rem; letter-spacing: 0.13em;
+        border: 1px solid var(--line); color: var(--dim);
+        padding: 0.1rem 0.42rem; margin-left: 0.55rem; white-space: nowrap;
+      }
+      .tag.open { color: var(--gold); border-color: #4a3f22; }
+      .num { font-variant-numeric: tabular-nums; }
+      .scope { color: var(--dim); }
+
+      /* ---------- WINDOWS ---------- */
+      .window {
+        border: 1px solid #24365c;
+        background: radial-gradient(130% 110% at 50% 0%, #0d1830 0%, #070d18 72%);
+        box-shadow: inset 0 1px 0 rgba(201,162,39,0.25);
+        padding: 1.05rem 1.1rem 1rem; margin-bottom: 1.1rem;
+      }
+      .win-head {
+        display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap;
+        margin-bottom: 0.45rem;
+      }
+      .win-head h3 {
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.9rem; letter-spacing: 0.14em; margin: 0; color: var(--ink);
+      }
+      .wchip {
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.68rem; letter-spacing: 0.13em; padding: 0.14rem 0.5rem; white-space: nowrap;
+        border: 1px solid var(--line); color: var(--dim);
+      }
+      .wchip.live { color: var(--pass); border-color: #3d4a2a; }
+      .wchip.link { color: var(--gold); border-color: #4a3f22; }
+      .window p { margin: 0.3rem 0 0.55rem; }
+      .window p:last-child { margin-bottom: 0.1rem; }
+      .tip {
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.76rem; color: var(--dim); word-break: break-all; line-height: 1.6;
+      }
+      .clock .line .v { color: var(--gold); }
+      .clock .line .v.done { color: var(--dim); }
+
+      /* ---------- ENTRIES (corrections) ---------- */
+      .entry { padding: 1rem 0; border-top: 1px solid var(--line-soft); }
+      .entry:first-of-type { border-top: none; padding-top: 0.2rem; }
+      .entry h3 { font-size: 1.08rem; margin: 0 0 0.35rem; font-weight: 700; }
+      .entry p { margin: 0 0 0.45rem; }
+      .entry p:last-child { margin-bottom: 0; }
+
+      /* ---------- STANDING ---------- */
+      .standing { width: 100%; border-collapse: collapse; }
+      .standing th, .standing td {
+        text-align: left; vertical-align: top; padding: 0.55rem 0;
+        border-top: 1px solid var(--line-soft); font-weight: 400;
+      }
+      .standing tr:first-child th, .standing tr:first-child td { border-top: none; }
+      .standing th {
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.8rem; letter-spacing: 0.06em; color: var(--dim);
+        width: 42%; padding-right: 1rem;
+      }
+      .standing td { font-size: 1rem; }
+
+      /* ---------- COLOPHON ---------- */
+      .cert { padding: 0.85rem 0; border-top: 1px solid var(--line-soft); }
+      .cert:first-of-type { border-top: none; padding-top: 0.2rem; }
+      .cert .nm { font-size: 1rem; }
+      .cert .hash, .window .hash {
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.74rem; color: var(--dim);
+        word-break: break-all; line-height: 1.5; margin-top: 0.25rem;
+      }
+      .window .cert { padding: 0.6rem 0; }
+      .window .cert .nm { font-size: 0.95rem; }
+
+      /* ---------- MIRROR ---------- */
+      .mirror-row { display: flex; gap: 0.7rem; flex-wrap: wrap; margin: 1.1rem 0 0.4rem; }
+      #mirror-line {
+        flex: 1 1 16rem;
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.95rem; color: var(--ink);
+        background: var(--panel-2); border: 1px solid var(--line);
+        padding: 0.8rem 0.9rem;
+      }
+      #mirror-line::placeholder { color: var(--faint); }
+      #mirror-line:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+      #mirror-btn {
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.85rem; letter-spacing: 0.12em;
+        background: transparent; color: var(--gold);
+        border: 1px solid #4a3f22; padding: 0.8rem 1.2rem; cursor: pointer;
+      }
+      #mirror-btn:hover { border-color: var(--gold); }
+      .mirror-grids { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; margin: 1.3rem 0 0.6rem; }
+      .lat-label {
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.68rem; letter-spacing: 0.1em; color: var(--dim); margin-bottom: 0.5rem; line-height: 1.5;
+      }
+      .lattice { display: grid; grid-template-columns: repeat(12, 1fr); gap: 3px; }
+      .cell {
+        aspect-ratio: 1 / 1; background: #0d1524; border: 1px solid #1a2742;
+        transition: background-color 0.35s ease, border-color 0.35s ease;
+      }
+      .cell.mir { border-color: var(--gold); }
+      .mirror-counts {
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.92rem; letter-spacing: 0.08em; color: var(--ink);
+        border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+        padding: 0.7rem 0; margin: 0.9rem 0 1.2rem; font-variant-numeric: tabular-nums;
+      }
+      .mirror-counts .dim { color: var(--dim); }
+      .carved { font-size: 1.08rem; line-height: 1.66; }
+
+      /* ---------- FIXED FOOTER ---------- */
+      .confbar {
+        position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+        background: #05080f; border-top: 1px solid var(--line);
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.7rem; letter-spacing: 0.16em; color: var(--dim);
+        text-align: center;
+        padding: 0.55rem 1rem calc(0.55rem + env(safe-area-inset-bottom));
+      }
+      @media print {
+        .confbar { position: fixed; }
+        #accept-btn, .run-btn, #mirror-btn { display: none; }
+        body { padding-bottom: 2rem; background: #fff; }
+      }
+      @media (max-width: 34rem) {
+        body { font-size: 16px; padding: 0 1rem 4.5rem; }
+        .cover { padding: 1.8rem 1.2rem 1.6rem; }
+        .cover h1 { font-size: 1.55rem; }
+        .line { font-size: 0.78rem; }
+        .standing th { width: 46%; }
+        .mirror-grids { gap: 0.7rem; }
+        .lattice { gap: 2px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+
+      <!-- ============ COVER / GATE ============ -->
+      <header class="cover" id="cover">
+        <p class="doc-id">THE VAULT · MONSTERS INK LLC</p>
+        <h1>PRIVATE — CONFIDENTIAL</h1>
+        <p class="conf">This dossier is the confidential property of Monsters Ink LLC. It is provided to its recipient for evaluation only, under non-disclosure: it may not be copied, forwarded, or discussed with any third party. Opening past this cover is acceptance of that confidence.</p>
+        <p class="prepared">Prepared for: <b>the recipient</b></p>
+        <button id="accept-btn" type="button" aria-expanded="false" aria-controls="dossier">I accept the confidence — open the dossier</button>
+        <p class="record-note">Acceptance is recorded in this browser only. Nothing is transmitted.</p>
+        <p id="accepted-line" role="status"></p>
+      </header>
+
+      <!-- ============ THE VAULT (gated) ============ -->
+      <main id="dossier" hidden>
+
+        <!-- ===== 01 · RUN IT ===== -->
+        <section aria-labelledby="h-run">
+          <div class="sec-head"><span class="no">01</span><h2 id="h-run">RUN IT — RECOMPUTED IN THIS BROWSER</h2></div>
+          <p class="lede">The wall outside shows nothing. Inside, everything shows — starting with proof.
+          The figures in this vault are not asserted here. They are recomputed, on this device, from the
+          published data embedded in this page: the GENESIS census pair records and the mask list of the
+          closed GF(2⁷) set. <span class="dim">No network requests. No trust in this page required — the
+          same files are linked in §03 and §07, with their certificates.</span></p>
+
+          <div class="run-panel">
+            <div class="check" id="check-census">
+              <div class="check-head"><span class="name">A · GENESIS CENSUS — 48 NODES, ALL PAIRS</span><span class="verdict" data-v>QUEUED</span></div>
+              <div class="line"><span class="k">pair records counted</span><span class="v"><span data-n="pairs">0</span> <span class="target">/ 1,128</span></span></div>
+              <div class="line"><span class="k">classified DOOR / ALIAS / NEVER</span><span class="v"><span data-n="door">0</span> / <span data-n="alias">0</span> / <span data-n="never">0</span> <span class="target">· record 944 / 124 / 60</span></span></div>
+              <div class="line"><span class="k">Σ doors on pair</span><span class="v"><span data-n="doors">0</span> <span class="target">/ 7,140</span></span></div>
+              <div class="line"><span class="k">Hamming strata of DOOR pairs, d = 2…6</span><span class="v"><span data-n="strata">—</span> <span class="target">· record 244 / 340 / 245 / 98 / 17</span></span></div>
+              <div class="line"><span class="k">file's Hamming column vs popcount(a ⊕ b)</span><span class="v"><span data-n="hamok">0</span> <span class="target">/ 1,128 agree</span></span></div>
+              <div class="line"><span class="k">midpoints on DOOR pairs · complement pairs a + b = 128</span><span class="v"><span data-n="mid">0</span> · <span data-n="comp">0</span> <span class="target">· record 83 · 17</span></span></div>
+            </div>
+
+            <div class="check" id="check-pairs">
+              <div class="check-head"><span class="name">B · CLOSED GF(2⁷) SET — PAIR LEVEL (SIDON)</span><span class="verdict" data-v>QUEUED</span></div>
+              <div class="line"><span class="k">XOR pair sums distinct</span><span class="v"><span data-n="xor">0</span> <span class="target">/ 1,128</span></span></div>
+              <div class="line"><span class="k">integer pair sums (++) distinct</span><span class="v"><span data-n="pp">0</span> <span class="target">/ 1,128</span></span></div>
+              <div class="line"><span class="k">ordered differences (+−) distinct</span><span class="v"><span data-n="pm">0</span> <span class="target">/ 2,256</span></span></div>
+            </div>
+
+            <div class="check" id="check-triples">
+              <div class="check-head"><span class="name">C · CLOSED GF(2⁷) SET — TRIPLE-SYNDROME CLOSURE</span><span class="verdict" data-v>QUEUED</span></div>
+              <div class="line"><span class="k">weight-3 patterns enumerated (17,296 +++ · 51,888 ++−)</span><span class="v"><span data-n="pat">0</span> <span class="target">/ 69,184</span></span></div>
+              <div class="line"><span class="k">distinct syndromes</span><span class="v"><span data-n="dist">0</span> <span class="target">/ 69,184</span></span></div>
+              <div class="line"><span class="k">collisions</span><span class="v"><span data-n="coll">0</span></span></div>
+              <div class="line"><span class="k">accepted under decoder models A / A+ / B</span><span class="v"><span data-n="acc">—</span> <span class="target">· record 0 / 0 / 0</span></span></div>
+            </div>
+
+            <div class="run-foot">
+              <span data-n="runtime">engine time in this browser: —</span>
+              <button class="run-btn" id="rerun-btn" type="button">RE-RUN</button>
+            </div>
+          </div>
+          <p class="fineprint">Model: unit-amplitude integer syndromes, as defined by battery.py in the
+          v4-sidon drop. Syndromes are encoded digit-wise in base 8 with offset +3 — injective over every
+          vector these checks touch (digits −3…3); the count above is exact, not sampled. Source of the
+          method and the data: the drops themselves, §07.</p>
+        </section>
+
+        <!-- ===== 02 · THE VAULT OF KNOWLEDGE ===== -->
+        <section aria-labelledby="h-vault">
+          <div class="sec-head"><span class="no">02</span><h2 id="h-vault">THE VAULT OF KNOWLEDGE — SIX CHAMBERS, ONE MATH</h2></div>
+          <p class="lede">One admission math: measure the syndrome, repair only what is provably
+          repairable, refuse the rest. It is held in six chambers — the six domains it has been carried
+          into. <span class="dim">Each chamber holds its canon distilled: its measured figures, its
+          submission state, its verdicts. Limits are printed at the same size as the claims.</span></p>
+
+          <div class="chamber">
+            <div class="chamber-head"><h3><span class="rn">I</span>CODEC / C2</h3><span class="vehicle">VEHICLE — xTECH</span></div>
+            <p>The native chamber: the mathematics itself, and the decoders built from it.</p>
+            <div class="line"><span class="k">closed GF(2⁷) set — triple syndromes distinct</span><span class="v">69,184 / 69,184</span></div>
+            <div class="line"><span class="k">weight-3 accepted — models A / A+ / B</span><span class="v">0 / 0 / 0</span></div>
+            <div class="line"><span class="k">F₆₄ spec set — accepted A / A+ / B</span><span class="v">0 / 0 / 0</span></div>
+            <div class="line"><span class="k">F₆₄ triples distinct (distinctness not claimed)</span><span class="v">67,926 / 69,184</span></div>
+            <div class="line"><span class="k">minimum measured row count r</span><span class="v">10 · r = 8 / 9 open</span></div>
+            <div class="line"><span class="k">HDL decoders — exhaustive vectors, each</span><span class="v">143,005 · 0 errors</span></div>
+            <div class="line"><span class="k">Fmax floors, ECP5 post-P&amp;R — F₆₄ / GF(2⁷)</span><span class="v">21.98 / 23.24 MHz</span></div>
+            <p class="scope">The Fmax figures are in-flow floors under a shortened mapping script, not
+            ceilings. No physical board run has been made; none is implied.</p>
+            <p class="state"><span class="sk">STATE</span>xTech — semifinalists announced 2027-01-05 (clock, §03). This chamber's verdicts are recomputed live in §01.</p>
+          </div>
+
+          <div class="chamber">
+            <div class="chamber-head"><h3><span class="rn">II</span>T&amp;E ASSURANCE</h3><span class="vehicle">VEHICLE — ATEC</span></div>
+            <p>The chamber of proof about the other chambers: every claim restated as runnable code,
+            and a measured corpus to test against.</p>
+            <div class="line"><span class="k">VERIFY_ALL — the Master Document as code</span><span class="v">215 PASS / 0 FAIL / 1 SKIP / 13 RECORD</span></div>
+            <div class="line"><span class="k">GENESIS census — pairs classified</span><span class="v">1,128 · 944 / 124 / 60</span></div>
+            <div class="line"><span class="k">census spectra — W λmax / Σλ² · T λmax / Σλ²</span><span class="v">299.358 / 191,808 · 598.650 / 685,584</span></div>
+            <div class="line"><span class="k">spectral controls ⟨r⟩ — GOE / GUE / Poisson</span><span class="v">0.5332 / 0.5993 / 0.3892</span></div>
+            <div class="line"><span class="k">corpus W ⟨r⟩ — symmetry-clustered</span><span class="v">0.1688 · a noise band, not a class</span></div>
+            <div class="line"><span class="k">zeta zeros ⟨r⟩ — the target class</span><span class="v">0.6150 / 0.6183 · GUE</span></div>
+            <p class="scope">A single imposed phase angle never reaches GUE at any θ (scan plateau
+            0.208–0.344); random per-pair phases reach 0.6012 — GUE is reached only by phase disorder,
+            generic universality rather than a signature of this corpus. No Hilbert–Pólya operator is
+            claimed; the excavation found none, and the negative result is published.</p>
+            <p class="state"><span class="sk">STATE</span>ATEC RIW26_003 — Phase 1 non-select, 2026-09-14. A written debrief was requested 2026-10-06; the request stands. The assurance method is §04: when the verifier and the document disagreed, the document was corrected.</p>
+          </div>
+
+          <div class="chamber">
+            <div class="chamber-head"><h3><span class="rn">III</span>MARITIME</h3><span class="vehicle">VEHICLE — DEEP BLUE</span></div>
+            <p>The admission law carried to the sea services' test problems: a classifier that repairs
+            only the provable and refuses the rest, where a silent wrong repair is the failure that
+            matters.</p>
+            <div class="line"><span class="k">refusal guarantee it sails on — weight-3 accepted, model A</span><span class="v">0 / 69,184</span></div>
+            <div class="line"><span class="k">under amplitude-extended A+ / lookup B</span><span class="v">0 / 0</span></div>
+            <div class="line"><span class="k">decoder evidence — exhaustive simulation</span><span class="v">143,005 vectors · 0 errors</span></div>
+            <div class="line"><span class="k">verification basis</span><span class="v">VERIFY_ALL · §02 II</span></div>
+            <p class="state"><span class="sk">STATE</span>Deep Blue — a live family within the portfolio standing printed whole in §05: 15 submitted · 5 live · 0 selected · $0 contracted. Nothing is apportioned to a chamber beyond what the record states.</p>
+          </div>
+
+          <div class="chamber">
+            <div class="chamber-head"><h3><span class="rn">IV</span>SPACE</h3><span class="vehicle">VEHICLE — STISE</span></div>
+            <p>For systems that cannot be reached after launch, the fault model is the mission model:
+            signed faults of weight ≤ 3, refused — never silently misrepaired.</p>
+            <div class="line"><span class="k">closed set under lookup decoder B</span><span class="v">0 accepted / 69,184</span></div>
+            <div class="line"><span class="k">the withdrawn seed6 set under B</span><span class="v">10 misrepairs · §04</span></div>
+            <div class="line"><span class="k">Kimberling — injectivity</span><span class="v">PROVED · Row-Triple Theorem</span></div>
+            <div class="line"><span class="k">values missing from the first 100,000 terms</span><span class="v">30 / 30 located</span></div>
+            <div class="line"><span class="k">largest located — 669 = a(653,494,691)</span><span class="v">verified twice, independently</span></div>
+            <p class="scope">Surjectivity is not proved. Locating 30 of 30 is computational evidence,
+            not a proof; the $300 problem remains open, and it is on the Gathering List in §03.</p>
+            <p class="state"><span class="sk">STATE</span>STISE — a live family within the portfolio standing printed whole in §05.</p>
+          </div>
+
+          <div class="chamber">
+            <div class="chamber-head"><h3><span class="rn">V</span>AI SAFETY</h3><span class="vehicle">VEHICLE — PRIM3</span></div>
+            <p>The gate as a product: claims and inputs are admitted, refuted, or refused — never
+            merely answered. Refusal is a first-class output, with its reasons attached.</p>
+            <div class="line"><span class="k">KRINO belief ledger — held beliefs</span><span class="v">50</span></div>
+            <div class="line"><span class="k">admitted / refuted / refused</span><span class="v">33 / 12 / 5</span></div>
+            <div class="line"><span class="k">the classifier's REFUSE state</span><span class="v">§01 · models A / A+ / B</span></div>
+            <div class="line"><span class="k">register discipline — append-only, hash-chained</span><span class="v">87 rows · §03</span></div>
+            <p class="state"><span class="sk">STATE</span>PRIM3 — lock 2026-10-23 at 14:00 CT (clock, §03).</p>
+          </div>
+
+          <div class="chamber">
+            <div class="chamber-head"><h3><span class="rn">VI</span>SPATIAL / VR</h3><span class="vehicle">VEHICLE — VR GATEKEEPER</span></div>
+            <p>The door as an admission problem: identity measured at the threshold, never warehoused.
+            The reflection primitive in §06 is this chamber's instrument — a twin lattice computed from
+            the visitor and the state of the record, stored nowhere.</p>
+            <div class="line"><span class="k">reflection lattice</span><span class="v">96 cells · mirrored / refused / distance</span></div>
+            <div class="line"><span class="k">seed — the visitor's line + the register tip</span><span class="v">7d5aa6c2…c5574c9f</span></div>
+            <div class="line"><span class="k">stored</span><span class="v">nowhere</span></div>
+            <p class="state"><span class="sk">STATE</span>VR Gatekeeper — lock 2026-11-18 (clock, §03).</p>
+          </div>
+        </section>
+
+        <!-- ===== 03 · THE WINDOWS ===== -->
+        <section aria-labelledby="h-windows">
+          <div class="sec-head"><span class="no">03</span><h2 id="h-windows">THE WINDOWS — THE ENGINES, LOOKED INTO</h2></div>
+          <p class="lede">Windows are lit apertures in the rock: each shows one engine — what it sorts,
+          what it gathers, and its current state. <span class="dim">What is live is labeled LIVE. What is
+          a snapshot is labeled RECORDED, with its date. Nothing here updates silently.</span></p>
+
+          <div class="window">
+            <div class="win-head"><h3>THE REGISTER</h3><span class="wchip">RECORDED · 2026-10-23 02:07 CT</span></div>
+            <p>The swarm's hash-chained event ledger — append-only; every row seals the one before it.</p>
+            <div class="line"><span class="k">rows</span><span class="v">125</span></div>
+            <div class="line"><span class="k">packets admitted / refused</span><span class="v">20 / 2</span></div>
+            <div class="line"><span class="k">receipts</span><span class="v">13</span></div>
+            <div class="tip">TIP 7d5aa6c2f34d4794de7fb97d537dabfb233695f02f3c49b7caeebdc9c5574c9f</div>
+          </div>
+
+          <div class="window">
+            <div class="win-head"><h3>KRINO — THE BELIEF GATE</h3><span class="wchip">RECORDED · 2026-10-23 02:06 CT</span></div>
+            <p>Every belief the system holds has passed a verdict — or carries the verdict that stopped it.</p>
+            <div class="line"><span class="k">cycles</span><span class="v">101</span></div>
+            <div class="line"><span class="k">beliefs held</span><span class="v">50</span></div>
+            <div class="line"><span class="k">admitted</span><span class="v">33</span></div>
+            <div class="line"><span class="k">refuted</span><span class="v">12</span></div>
+            <div class="line"><span class="k">refused</span><span class="v">5</span></div>
+          </div>
+
+          <div class="window">
+            <div class="win-head"><h3>TOLL — THE OPPORTUNITY SWEEP</h3><span class="wchip">RECORDED · 2026-10-23</span></div>
+            <p>The sweep that prices every opportunity against the record before a dollar moves.</p>
+            <div class="line"><span class="k">spent, all-time</span><span class="v">$0</span></div>
+            <div class="line"><span class="k">strongest watch</span><span class="v">NIWC Pacific CSO</span></div>
+            <div class="line"><span class="k">fit</span><span class="v">0.85</span></div>
+            <div class="line"><span class="k">due</span><span class="v">2027-01-07</span></div>
+          </div>
+
+          <div class="window clock">
+            <div class="win-head"><h3>THE CLOCKS — RATIFICATION</h3><span class="wchip live">LIVE · TICKING IN THIS BROWSER</span></div>
+            <p>Real deadlines, counted down from this device's clock against America/Chicago. A clock
+            that has passed does not disappear; it changes state.</p>
+            <div id="clock-rows"></div>
+          </div>
+
+          <div class="window">
+            <div class="win-head"><h3>THE SEVEN DROPS + VERIFY_ALL</h3><span class="wchip link">LIVE LINKS · THE ONLY EXITS</span></div>
+            <p>The primary sources, on the public record. Each certificate is the SHA-256 of the drop's
+            index page, computed 2026-10-23 from the repository of record — hash the file in hand and
+            compare.</p>
+            <div class="cert"><span class="nm"><a href="https://snowphamtom.github.io/data/kimberling/">The Kimberling Shuffle</a></span><div class="hash">9b9ec68a4229afb8f550c67d4457b5df1c207b04fea1d7fa04f4cf4c5a903a1f</div></div>
+            <div class="cert"><span class="nm"><a href="https://snowphamtom.github.io/data/genesis-census/">GENESIS Census</a></span><div class="hash">f7db65ddfe29da0923f63369d789177e98881234b569c16c87b509592e4bf9f6</div></div>
+            <div class="cert"><span class="nm"><a href="https://snowphamtom.github.io/data/v4-sidon/">V4 Sidon over GF(2⁷)</a></span><div class="hash">929e71e2634addd409f334c8956cc31e6b3f1ed17bee37dc182118b080e04834</div></div>
+            <div class="cert"><span class="nm"><a href="https://snowphamtom.github.io/data/codec-sets/">Sidon Codec Sets</a></span><div class="hash">d12f368753c7ff11cbace75f004117925cad6ae7921db143e13086049d518a13</div></div>
+            <div class="cert"><span class="nm"><a href="https://snowphamtom.github.io/data/hdl-decoders/">V4 Sidon — Verilog Decoders</a></span><div class="hash">d16e61a201994daa6142106e28eb7e2a1619a5d1b50f2d0ebeab1c55328d7fad</div></div>
+            <div class="cert"><span class="nm"><a href="https://snowphamtom.github.io/data/spectral/">Spectral Measurements</a></span><div class="hash">c502152317e786d2de5efc491e92ee86c2b0e158881041d851a610efb0243388</div></div>
+            <div class="cert"><span class="nm"><a href="https://snowphamtom.github.io/data/verify/">Verify — VERIFY_ALL, runnable</a></span><div class="hash">9966c7f1ba07ac2bca7c7eb718b727d2b6227c7622a8a29998eedda5ea562cf2</div></div>
+            <p style="margin-top:0.7rem"><a href="https://snowphamtom.github.io/data/">The Record — all seven drops, indexed</a></p>
+          </div>
+
+          <div class="window">
+            <div class="win-head"><h3>THE GATHERING</h3><span class="wchip">RECORDED · 2026-10-23</span></div>
+            <p>What the system is gathering now: the open questions, kept on a list as deliberately as
+            the answers are kept in the chambers.</p>
+            <div class="line"><span class="k">Gathering List + corpus census — entries</span><span class="v">51</span></div>
+            <div class="line"><span class="k">across the six domains</span><span class="v">I – VI</span></div>
+            <div class="line"><span class="k">on the list — Kimberling surjectivity</span><span class="v">OPEN</span></div>
+            <div class="line"><span class="k">on the list — r = 8 / r = 9 existence</span><span class="v">OPEN</span></div>
+            <div class="line"><span class="k">on the list — the seed6 selection rule</span><span class="v">OPEN</span></div>
+            <div class="line"><span class="k">on the list — a physical board run for the decoders</span><span class="v">NONE EXISTS</span></div>
+          </div>
+        </section>
+
+        <!-- ===== 04 · CORRECTIONS LEDGER ===== -->
+        <section aria-labelledby="h-corr">
+          <div class="sec-head"><span class="no">04</span><h2 id="h-corr">CORRECTIONS LEDGER</h2></div>
+          <p class="lede">The record corrects itself in public, in the same size type as its claims.
+          Two of the three entries below can be recomputed from this page.</p>
+
+          <div class="entry">
+            <h3>2026-10-22 — the “69184 CERTIFIED” headline, withdrawn</h3>
+            <p>The GF(2⁷) set that circulated as <em>seed6</em> carried the headline “69184/69184
+            CERTIFIED, 0 alias.” Independent recomputation — two counting methods, in agreement —
+            measured otherwise at the triple level: <span class="num">69,084 of 69,184</span> syndromes
+            distinct (10 +++ collisions, 90 ++− collisions, 10 triple syndromes equal to a pair
+            syndrome), all 110 aliases generated by 11 identities inside columns {19, 36, 38, 41, 45}.
+            The pair level was closed exactly as claimed. The label was withdrawn and the correction
+            published in the drop itself.</p>
+            <p>The defect was then closed, not relabeled: five columns swapped to reserve curve points
+            (indices 8, 12, 16, 28, 36) produced the closed set of §01–02. Under the admission
+            classifier that was actually built (Model A), even seed6 refuses every weight-3 pattern;
+            under a pair-correcting lookup it would have misrepaired 10.</p>
+          </div>
+
+          <div class="entry">
+            <h3>The filed baseline, measured against itself</h3>
+            <p>U.S. application 64/170,360 — the filed [55,8] matrix, the odd masks 3–97 over 7 rows.
+            Minimum Hamming distance <span class="num">1</span>. Integer pair sums
+            <span class="num">464 of 1,128</span> distinct: the matrix is not Sidon, and never claimed
+            the later sets' properties. <span class="num">7,296 of 69,184</span> weight-3 patterns alias
+            into a repair class — the same count under all three decoder models. The flaws are
+            published in the baseline's own drop; they are what the F₆₄ and GF(2⁷) constructions were
+            built to eliminate.</p>
+          </div>
+
+          <div class="entry">
+            <h3>The verifier caught the document, not the other way round</h3>
+            <p>VERIFY_ALL's first run failed against the Master Document it was written to check. The
+            error was in the document. The document was corrected, not the test; the run of record —
+            215 PASS / 0 FAIL — is the run after that correction.</p>
+          </div>
+
+          <div class="run-panel" style="margin-top:1.2rem">
+            <div class="check" id="check-seed6">
+              <div class="check-head"><span class="name">seed6 — THE WITHDRAWN SET, RECOMPUTED</span><span class="verdict" data-v>QUEUED</span></div>
+              <div class="line"><span class="k">weight-3 patterns enumerated</span><span class="v"><span data-n="pat">0</span> <span class="target">/ 69,184</span></span></div>
+              <div class="line"><span class="k">distinct syndromes</span><span class="v"><span data-n="dist">0</span> <span class="target">· correction of record 69,084</span></span></div>
+              <div class="line"><span class="k">accepted under A / A+ / B</span><span class="v"><span data-n="acc">—</span> <span class="target">· record 0 / 0 / 10</span></span></div>
+            </div>
+            <div class="check" id="check-filed">
+              <div class="check-head"><span class="name">FILED [55,8] — THE BASELINE, RECOMPUTED</span><span class="verdict" data-v>QUEUED</span></div>
+              <div class="line"><span class="k">integer pair sums distinct</span><span class="v"><span data-n="pp">0</span> <span class="target">· record 464 / 1,128</span></span></div>
+              <div class="line"><span class="k">minimum Hamming distance</span><span class="v"><span data-n="mind">—</span> <span class="target">· record 1</span></span></div>
+              <div class="line"><span class="k">weight-3 patterns accepted under A / A+ / B</span><span class="v"><span data-n="acc">—</span> <span class="target">· record 7,296 / 7,296 / 7,296</span></span></div>
+            </div>
+            <div class="run-foot">
+              <span data-n="runtime2">The corrections are claims too. Check them.</span>
+              <button class="run-btn" id="corr-btn" type="button">RECOMPUTE THE CORRECTIONS</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== 05 · STANDING ===== -->
+        <section aria-labelledby="h-standing">
+          <div class="sec-head"><span class="no">05</span><h2 id="h-standing">STANDING, PLAIN</h2></div>
+          <table class="standing">
+            <tr><th>ENTITY</th><td>Monsters Ink LLC — Nebraska domestic LLC, organized April 25, 2019; Secretary of State account 1904147073, status ACTIVE</td></tr>
+            <tr><th>FEDERAL REGISTRATION</th><td>SAM.gov — active. UEI R9SQEQR51E46 · CAGE 24VL0</td></tr>
+            <tr><th>PATENT APPLICATIONS</th><td>8 filed</td></tr>
+            <tr><th>SUBMISSIONS</th><td>15 submitted · 5 live · 0 selected</td></tr>
+            <tr><th>CONTRACTED</th><td>$0</td></tr>
+          </table>
+          <p class="lede" style="margin-top:1.1rem">The depth in §02 and the zeros in this table are the
+          same document. Both are printed because both are true.</p>
+        </section>
+
+        <!-- ===== 06 · THE MIRROR ===== -->
+        <section aria-labelledby="h-mirror">
+          <div class="sec-head"><span class="no">06</span><h2 id="h-mirror">THE MIRROR — PERSONALIZATION WITHOUT SURVEILLANCE</h2></div>
+          <p class="lede">Other sites remember you to predict you. This one measures the interaction and forgets you. The reflection is the only souvenir, and it cannot be taken twice.</p>
+          <p>Give it one line of your own — a name, a sentence, anything. The page seeds a twin lattice
+          with your line and the register tip, and walks it against the record: lattice A walks the seeded
+          stream against the closed set's row sums; lattice B walks the same stream offset by your line
+          alone. A cell mirrors when both walks land identically. Otherwise it refuses.</p>
+
+          <div class="mirror-row">
+            <input id="mirror-line" type="text" autocomplete="off" autocapitalize="off" spellcheck="false"
+              placeholder="One line — a name, a sentence, anything" aria-label="Your line for the mirror" />
+            <button id="mirror-btn" type="button">REFLECT</button>
+          </div>
+
+          <div class="mirror-grids">
+            <div>
+              <div class="lat-label">A — YOUR LINE + THE REGISTER TIP, AGAINST THE RECORD</div>
+              <div class="lattice" id="lat-a" aria-hidden="true"></div>
+            </div>
+            <div>
+              <div class="lat-label">B — YOUR LINE ALONE</div>
+              <div class="lattice" id="lat-b" aria-hidden="true"></div>
+            </div>
+          </div>
+
+          <p class="mirror-counts" id="mirror-counts" role="status">MIRRORED <span class="dim">—</span> · REFUSED <span class="dim">—</span> · DISTANCE <span class="dim">—</span></p>
+
+          <p class="carved">No reflection has ever matched another. This one is yours. It was computed here, from your words and the state of the record — and it is stored nowhere.</p>
+          <p class="fineprint">Deterministic: the same line against the same register tip
+          (7d5aa6c2…c5574c9f) returns the same reflection, cell for cell, on any machine — xmur3 seed hash,
+          sfc32 stream, computed entirely in this browser. Your line is a seed, nothing more: it is not
+          stored, transmitted, or kept after this page closes. When the register moves, the tip changes,
+          and this reflection can never be computed again.</p>
+        </section>
+
+        <!-- ===== 07 · COLOPHON ===== -->
+        <section aria-labelledby="h-colophon">
+          <div class="sec-head"><span class="no">07</span><h2 id="h-colophon">COLOPHON — CERTIFICATES &amp; SOURCES</h2></div>
+          <p class="lede">The seven public drops are the sources for everything above. Each certificate
+          is the SHA-256 of that drop's index page, computed 2026-10-23 from the repository of record.
+          <span class="dim">Hash the file in hand and compare; if the hashes agree, the file is the file
+          of record.</span></p>
+
+          <div class="cert"><span class="nm"><a href="https://snowphamtom.github.io/data/kimberling/">The Kimberling Shuffle — injectivity &amp; the located values</a></span><div class="hash">9b9ec68a4229afb8f550c67d4457b5df1c207b04fea1d7fa04f4cf4c5a903a1f</div></div>
+          <div class="cert"><span class="nm"><a href="https://snowphamtom.github.io/data/genesis-census/">GENESIS Census — the 1,128 pair records recomputed in §01</a></span><div class="hash">f7db65ddfe29da0923f63369d789177e98881234b569c16c87b509592e4bf9f6</div></div>
+          <div class="cert"><span class="nm"><a href="https://snowphamtom.github.io/data/v4-sidon/">V4 Sidon over GF(2⁷) — the corrected record &amp; the closed set</a></span><div class="hash">929e71e2634addd409f334c8956cc31e6b3f1ed17bee37dc182118b080e04834</div></div>
+          <div class="cert"><span class="nm"><a href="https://snowphamtom.github.io/data/codec-sets/">Sidon Codec Sets — filed baseline, F₆₄ spec set, r = 10</a></span><div class="hash">d12f368753c7ff11cbace75f004117925cad6ae7921db143e13086049d518a13</div></div>
+          <div class="cert"><span class="nm"><a href="https://snowphamtom.github.io/data/hdl-decoders/">V4 Sidon — Verilog decoders, both matrices</a></span><div class="hash">d16e61a201994daa6142106e28eb7e2a1619a5d1b50f2d0ebeab1c55328d7fad</div></div>
+          <div class="cert"><span class="nm"><a href="https://snowphamtom.github.io/data/spectral/">Spectral Measurements — the operator, the phase twist, the zeta controls</a></span><div class="hash">c502152317e786d2de5efc491e92ee86c2b0e158881041d851a610efb0243388</div></div>
+          <div class="cert"><span class="nm"><a href="https://snowphamtom.github.io/data/verify/">Verify — the Master Document as runnable code</a></span><div class="hash">9966c7f1ba07ac2bca7c7eb718b727d2b6227c7622a8a29998eedda5ea562cf2</div></div>
+
+          <p class="fineprint">This vault is a single file. It makes no external requests; the data it
+          computes on is embedded in its own source, copied from the drops above on 2026-10-23. The seven
+          links in §03 and in this colophon are its only exits, and they lead to the sources. Set in the
+          device's serif and monospace faces; no fonts, scripts, or images are loaded.</p>
+        </section>
+
+      </main>
+    </div>
+
+    <footer class="confbar">MONSTERS INK LLC — CONFIDENTIAL — UNDER NDA</footer>
+
+    <!-- Embedded source data: genesis-census/pairs.csv, verbatim (2026-10-23). -->
+    <script type="text/plain" id="pairs-data">a,b,hamming_distance,class,doors_on_pair
+3,5,2,NEVER,0
+3,7,1,ALIAS,0
+3,9,2,NEVER,0
+3,11,1,ALIAS,0
+3,13,3,DOOR,4
+3,15,2,DOOR,2
+3,17,2,NEVER,0
+3,19,1,ALIAS,0
+3,21,3,DOOR,4
+3,23,2,DOOR,2
+3,25,3,DOOR,4
+3,27,2,DOOR,2
+3,29,4,DOOR,12
+3,31,3,DOOR,6
+3,33,2,NEVER,0
+3,35,1,ALIAS,0
+3,37,3,DOOR,4
+3,39,2,DOOR,2
+3,41,3,DOOR,4
+3,43,2,DOOR,2
+3,45,4,DOOR,12
+3,47,3,DOOR,6
+3,49,3,DOOR,4
+3,51,2,DOOR,2
+3,53,4,DOOR,12
+3,55,3,DOOR,6
+3,57,4,DOOR,12
+3,59,3,DOOR,6
+3,61,5,DOOR,28
+3,63,4,DOOR,14
+3,65,2,NEVER,0
+3,67,1,ALIAS,0
+3,69,3,DOOR,4
+3,71,2,DOOR,2
+3,73,3,DOOR,4
+3,75,2,DOOR,2
+3,77,4,DOOR,12
+3,79,3,DOOR,6
+3,81,3,DOOR,4
+3,83,2,DOOR,2
+3,85,4,DOOR,12
+3,87,3,DOOR,6
+3,89,4,DOOR,12
+3,91,3,DOOR,6
+3,93,5,DOOR,28
+3,95,4,DOOR,14
+3,97,3,DOOR,4
+5,7,1,ALIAS,0
+5,9,2,NEVER,0
+5,11,3,DOOR,4
+5,13,1,ALIAS,0
+5,15,2,DOOR,2
+5,17,2,NEVER,0
+5,19,3,DOOR,4
+5,21,1,ALIAS,0
+5,23,2,DOOR,2
+5,25,3,DOOR,4
+5,27,4,DOOR,12
+5,29,2,DOOR,2
+5,31,3,DOOR,6
+5,33,2,NEVER,0
+5,35,3,DOOR,4
+5,37,1,ALIAS,0
+5,39,2,DOOR,2
+5,41,3,DOOR,4
+5,43,4,DOOR,12
+5,45,2,DOOR,2
+5,47,3,DOOR,6
+5,49,3,DOOR,4
+5,51,4,DOOR,12
+5,53,2,DOOR,2
+5,55,3,DOOR,6
+5,57,4,DOOR,12
+5,59,5,DOOR,28
+5,61,3,DOOR,6
+5,63,4,DOOR,14
+5,65,2,NEVER,0
+5,67,3,DOOR,4
+5,69,1,ALIAS,0
+5,71,2,DOOR,2
+5,73,3,DOOR,4
+5,75,4,DOOR,12
+5,77,2,DOOR,2
+5,79,3,DOOR,6
+5,81,3,DOOR,4
+5,83,4,DOOR,12
+5,85,2,DOOR,2
+5,87,3,DOOR,6
+5,89,4,DOOR,12
+5,91,5,DOOR,28
+5,93,3,DOOR,6
+5,95,4,DOOR,14
+5,97,3,DOOR,4
+7,9,3,DOOR,4
+7,11,2,DOOR,2
+7,13,2,DOOR,2
+7,15,1,ALIAS,0
+7,17,3,DOOR,4
+7,19,2,DOOR,2
+7,21,2,DOOR,2
+7,23,1,ALIAS,0
+7,25,4,DOOR,12
+7,27,3,DOOR,6
+7,29,3,DOOR,6
+7,31,2,DOOR,2
+7,33,3,DOOR,4
+7,35,2,DOOR,2
+7,37,2,DOOR,2
+7,39,1,ALIAS,0
+7,41,4,DOOR,12
+7,43,3,DOOR,6
+7,45,3,DOOR,6
+7,47,2,DOOR,2
+7,49,4,DOOR,12
+7,51,3,DOOR,6
+7,53,3,DOOR,6
+7,55,2,DOOR,2
+7,57,5,DOOR,28
+7,59,4,DOOR,14
+7,61,4,DOOR,14
+7,63,3,DOOR,6
+7,65,3,DOOR,4
+7,67,2,DOOR,2
+7,69,2,DOOR,2
+7,71,1,ALIAS,0
+7,73,4,DOOR,12
+7,75,3,DOOR,6
+7,77,3,DOOR,6
+7,79,2,DOOR,2
+7,81,4,DOOR,12
+7,83,3,DOOR,6
+7,85,3,DOOR,6
+7,87,2,DOOR,2
+7,89,5,DOOR,28
+7,91,4,DOOR,14
+7,93,4,DOOR,14
+7,95,3,DOOR,6
+7,97,4,DOOR,8
+9,11,1,ALIAS,0
+9,13,1,ALIAS,0
+9,15,2,DOOR,2
+9,17,2,NEVER,0
+9,19,3,DOOR,4
+9,21,3,DOOR,4
+9,23,4,DOOR,12
+9,25,1,ALIAS,0
+9,27,2,DOOR,2
+9,29,2,DOOR,2
+9,31,3,DOOR,6
+9,33,2,NEVER,0
+9,35,3,DOOR,4
+9,37,3,DOOR,4
+9,39,4,DOOR,12
+9,41,1,ALIAS,0
+9,43,2,DOOR,2
+9,45,2,DOOR,2
+9,47,3,DOOR,6
+9,49,3,DOOR,4
+9,51,4,DOOR,12
+9,53,4,DOOR,12
+9,55,5,DOOR,28
+9,57,2,DOOR,2
+9,59,3,DOOR,6
+9,61,3,DOOR,6
+9,63,4,DOOR,14
+9,65,2,NEVER,0
+9,67,3,DOOR,4
+9,69,3,DOOR,4
+9,71,4,DOOR,12
+9,73,1,ALIAS,0
+9,75,2,DOOR,2
+9,77,2,DOOR,2
+9,79,3,DOOR,6
+9,81,3,DOOR,4
+9,83,4,DOOR,12
+9,85,4,DOOR,12
+9,87,5,DOOR,28
+9,89,2,DOOR,2
+9,91,3,DOOR,6
+9,93,3,DOOR,6
+9,95,4,DOOR,14
+9,97,3,DOOR,4
+11,13,2,DOOR,2
+11,15,1,ALIAS,0
+11,17,3,DOOR,4
+11,19,2,DOOR,2
+11,21,4,DOOR,12
+11,23,3,DOOR,6
+11,25,2,DOOR,2
+11,27,1,ALIAS,0
+11,29,3,DOOR,6
+11,31,2,DOOR,2
+11,33,3,DOOR,4
+11,35,2,DOOR,2
+11,37,4,DOOR,12
+11,39,3,DOOR,6
+11,41,2,DOOR,2
+11,43,1,ALIAS,0
+11,45,3,DOOR,6
+11,47,2,DOOR,2
+11,49,4,DOOR,12
+11,51,3,DOOR,6
+11,53,5,DOOR,28
+11,55,4,DOOR,14
+11,57,3,DOOR,6
+11,59,2,DOOR,2
+11,61,4,DOOR,14
+11,63,3,DOOR,6
+11,65,3,DOOR,4
+11,67,2,DOOR,2
+11,69,4,DOOR,12
+11,71,3,DOOR,6
+11,73,2,DOOR,2
+11,75,1,ALIAS,0
+11,77,3,DOOR,6
+11,79,2,DOOR,2
+11,81,4,DOOR,12
+11,83,3,DOOR,6
+11,85,5,DOOR,28
+11,87,4,DOOR,14
+11,89,3,DOOR,6
+11,91,2,DOOR,2
+11,93,4,DOOR,14
+11,95,3,DOOR,6
+11,97,4,DOOR,8
+13,15,1,ALIAS,0
+13,17,3,DOOR,4
+13,19,4,DOOR,12
+13,21,2,DOOR,2
+13,23,3,DOOR,6
+13,25,2,DOOR,2
+13,27,3,DOOR,6
+13,29,1,ALIAS,0
+13,31,2,DOOR,2
+13,33,3,DOOR,4
+13,35,4,DOOR,12
+13,37,2,DOOR,2
+13,39,3,DOOR,6
+13,41,2,DOOR,2
+13,43,3,DOOR,6
+13,45,1,ALIAS,0
+13,47,2,DOOR,2
+13,49,4,DOOR,12
+13,51,5,DOOR,28
+13,53,3,DOOR,6
+13,55,4,DOOR,14
+13,57,3,DOOR,6
+13,59,4,DOOR,14
+13,61,2,DOOR,2
+13,63,3,DOOR,6
+13,65,3,DOOR,4
+13,67,4,DOOR,12
+13,69,2,DOOR,2
+13,71,3,DOOR,6
+13,73,2,DOOR,2
+13,75,3,DOOR,6
+13,77,1,ALIAS,0
+13,79,2,DOOR,2
+13,81,4,DOOR,12
+13,83,5,DOOR,28
+13,85,3,DOOR,6
+13,87,4,DOOR,14
+13,89,3,DOOR,6
+13,91,4,DOOR,14
+13,93,2,DOOR,2
+13,95,3,DOOR,6
+13,97,4,DOOR,8
+15,17,4,DOOR,12
+15,19,3,DOOR,6
+15,21,3,DOOR,6
+15,23,2,DOOR,2
+15,25,3,DOOR,6
+15,27,2,DOOR,2
+15,29,2,DOOR,2
+15,31,1,ALIAS,0
+15,33,4,DOOR,12
+15,35,3,DOOR,6
+15,37,3,DOOR,6
+15,39,2,DOOR,2
+15,41,3,DOOR,6
+15,43,2,DOOR,2
+15,45,2,DOOR,2
+15,47,1,ALIAS,0
+15,49,5,DOOR,28
+15,51,4,DOOR,14
+15,53,4,DOOR,14
+15,55,3,DOOR,6
+15,57,4,DOOR,14
+15,59,3,DOOR,6
+15,61,3,DOOR,6
+15,63,2,DOOR,2
+15,65,4,DOOR,12
+15,67,3,DOOR,6
+15,69,3,DOOR,6
+15,71,2,DOOR,2
+15,73,3,DOOR,6
+15,75,2,DOOR,2
+15,77,2,DOOR,2
+15,79,1,ALIAS,0
+15,81,5,DOOR,28
+15,83,4,DOOR,14
+15,85,4,DOOR,14
+15,87,3,DOOR,6
+15,89,4,DOOR,14
+15,91,3,DOOR,6
+15,93,3,DOOR,6
+15,95,2,DOOR,2
+15,97,5,DOOR,16
+17,19,1,ALIAS,0
+17,21,1,ALIAS,0
+17,23,2,DOOR,2
+17,25,1,ALIAS,0
+17,27,2,DOOR,2
+17,29,2,DOOR,2
+17,31,3,DOOR,6
+17,33,2,NEVER,0
+17,35,3,DOOR,4
+17,37,3,DOOR,4
+17,39,4,DOOR,12
+17,41,3,DOOR,4
+17,43,4,DOOR,12
+17,45,4,DOOR,12
+17,47,5,DOOR,28
+17,49,1,ALIAS,0
+17,51,2,DOOR,2
+17,53,2,DOOR,2
+17,55,3,DOOR,6
+17,57,2,DOOR,2
+17,59,3,DOOR,6
+17,61,3,DOOR,6
+17,63,4,DOOR,14
+17,65,2,NEVER,0
+17,67,3,DOOR,4
+17,69,3,DOOR,4
+17,71,4,DOOR,12
+17,73,3,DOOR,4
+17,75,4,DOOR,12
+17,77,4,DOOR,12
+17,79,5,DOOR,28
+17,81,1,ALIAS,0
+17,83,2,DOOR,2
+17,85,2,DOOR,2
+17,87,3,DOOR,6
+17,89,2,DOOR,2
+17,91,3,DOOR,6
+17,93,3,DOOR,6
+17,95,4,DOOR,14
+17,97,3,DOOR,4
+19,21,2,DOOR,2
+19,23,1,ALIAS,0
+19,25,2,DOOR,2
+19,27,1,ALIAS,0
+19,29,3,DOOR,6
+19,31,2,DOOR,2
+19,33,3,DOOR,4
+19,35,2,DOOR,2
+19,37,4,DOOR,12
+19,39,3,DOOR,6
+19,41,4,DOOR,12
+19,43,3,DOOR,6
+19,45,5,DOOR,28
+19,47,4,DOOR,14
+19,49,2,DOOR,2
+19,51,1,ALIAS,0
+19,53,3,DOOR,6
+19,55,2,DOOR,2
+19,57,3,DOOR,6
+19,59,2,DOOR,2
+19,61,4,DOOR,14
+19,63,3,DOOR,6
+19,65,3,DOOR,4
+19,67,2,DOOR,2
+19,69,4,DOOR,12
+19,71,3,DOOR,6
+19,73,4,DOOR,12
+19,75,3,DOOR,6
+19,77,5,DOOR,28
+19,79,4,DOOR,14
+19,81,2,DOOR,2
+19,83,1,ALIAS,0
+19,85,3,DOOR,6
+19,87,2,DOOR,2
+19,89,3,DOOR,6
+19,91,2,DOOR,2
+19,93,4,DOOR,14
+19,95,3,DOOR,6
+19,97,4,DOOR,8
+21,23,1,ALIAS,0
+21,25,2,DOOR,2
+21,27,3,DOOR,6
+21,29,1,ALIAS,0
+21,31,2,DOOR,2
+21,33,3,DOOR,4
+21,35,4,DOOR,12
+21,37,2,DOOR,2
+21,39,3,DOOR,6
+21,41,4,DOOR,12
+21,43,5,DOOR,28
+21,45,3,DOOR,6
+21,47,4,DOOR,14
+21,49,2,DOOR,2
+21,51,3,DOOR,6
+21,53,1,ALIAS,0
+21,55,2,DOOR,2
+21,57,3,DOOR,6
+21,59,4,DOOR,14
+21,61,2,DOOR,2
+21,63,3,DOOR,6
+21,65,3,DOOR,4
+21,67,4,DOOR,12
+21,69,2,DOOR,2
+21,71,3,DOOR,6
+21,73,4,DOOR,12
+21,75,5,DOOR,28
+21,77,3,DOOR,6
+21,79,4,DOOR,14
+21,81,2,DOOR,2
+21,83,3,DOOR,6
+21,85,1,ALIAS,0
+21,87,2,DOOR,2
+21,89,3,DOOR,6
+21,91,4,DOOR,14
+21,93,2,DOOR,2
+21,95,3,DOOR,6
+21,97,4,DOOR,8
+23,25,3,DOOR,6
+23,27,2,DOOR,2
+23,29,2,DOOR,2
+23,31,1,ALIAS,0
+23,33,4,DOOR,12
+23,35,3,DOOR,6
+23,37,3,DOOR,6
+23,39,2,DOOR,2
+23,41,5,DOOR,28
+23,43,4,DOOR,14
+23,45,4,DOOR,14
+23,47,3,DOOR,6
+23,49,3,DOOR,6
+23,51,2,DOOR,2
+23,53,2,DOOR,2
+23,55,1,ALIAS,0
+23,57,4,DOOR,14
+23,59,3,DOOR,6
+23,61,3,DOOR,6
+23,63,2,DOOR,2
+23,65,4,DOOR,12
+23,67,3,DOOR,6
+23,69,3,DOOR,6
+23,71,2,DOOR,2
+23,73,5,DOOR,28
+23,75,4,DOOR,14
+23,77,4,DOOR,14
+23,79,3,DOOR,6
+23,81,3,DOOR,6
+23,83,2,DOOR,2
+23,85,2,DOOR,2
+23,87,1,ALIAS,0
+23,89,4,DOOR,14
+23,91,3,DOOR,6
+23,93,3,DOOR,6
+23,95,2,DOOR,2
+23,97,5,DOOR,16
+25,27,1,ALIAS,0
+25,29,1,ALIAS,0
+25,31,2,DOOR,2
+25,33,3,DOOR,4
+25,35,4,DOOR,12
+25,37,4,DOOR,12
+25,39,5,DOOR,28
+25,41,2,DOOR,2
+25,43,3,DOOR,6
+25,45,3,DOOR,6
+25,47,4,DOOR,14
+25,49,2,DOOR,2
+25,51,3,DOOR,6
+25,53,3,DOOR,6
+25,55,4,DOOR,14
+25,57,1,ALIAS,0
+25,59,2,DOOR,2
+25,61,2,DOOR,2
+25,63,3,DOOR,6
+25,65,3,DOOR,4
+25,67,4,DOOR,12
+25,69,4,DOOR,12
+25,71,5,DOOR,28
+25,73,2,DOOR,2
+25,75,3,DOOR,6
+25,77,3,DOOR,6
+25,79,4,DOOR,14
+25,81,2,DOOR,2
+25,83,3,DOOR,6
+25,85,3,DOOR,6
+25,87,4,DOOR,14
+25,89,1,ALIAS,0
+25,91,2,DOOR,2
+25,93,2,DOOR,2
+25,95,3,DOOR,6
+25,97,4,DOOR,8
+27,29,2,DOOR,2
+27,31,1,ALIAS,0
+27,33,4,DOOR,12
+27,35,3,DOOR,6
+27,37,5,DOOR,28
+27,39,4,DOOR,14
+27,41,3,DOOR,6
+27,43,2,DOOR,2
+27,45,4,DOOR,14
+27,47,3,DOOR,6
+27,49,3,DOOR,6
+27,51,2,DOOR,2
+27,53,4,DOOR,14
+27,55,3,DOOR,6
+27,57,2,DOOR,2
+27,59,1,ALIAS,0
+27,61,3,DOOR,6
+27,63,2,DOOR,2
+27,65,4,DOOR,12
+27,67,3,DOOR,6
+27,69,5,DOOR,28
+27,71,4,DOOR,14
+27,73,3,DOOR,6
+27,75,2,DOOR,2
+27,77,4,DOOR,14
+27,79,3,DOOR,6
+27,81,3,DOOR,6
+27,83,2,DOOR,2
+27,85,4,DOOR,14
+27,87,3,DOOR,6
+27,89,2,DOOR,2
+27,91,1,ALIAS,0
+27,93,3,DOOR,6
+27,95,2,DOOR,2
+27,97,5,DOOR,16
+29,31,1,ALIAS,0
+29,33,4,DOOR,12
+29,35,5,DOOR,28
+29,37,3,DOOR,6
+29,39,4,DOOR,14
+29,41,3,DOOR,6
+29,43,4,DOOR,14
+29,45,2,DOOR,2
+29,47,3,DOOR,6
+29,49,3,DOOR,6
+29,51,4,DOOR,14
+29,53,2,DOOR,2
+29,55,3,DOOR,6
+29,57,2,DOOR,2
+29,59,3,DOOR,6
+29,61,1,ALIAS,0
+29,63,2,DOOR,2
+29,65,4,DOOR,12
+29,67,5,DOOR,28
+29,69,3,DOOR,6
+29,71,4,DOOR,14
+29,73,3,DOOR,6
+29,75,4,DOOR,14
+29,77,2,DOOR,2
+29,79,3,DOOR,6
+29,81,3,DOOR,6
+29,83,4,DOOR,14
+29,85,2,DOOR,2
+29,87,3,DOOR,6
+29,89,2,DOOR,2
+29,91,3,DOOR,6
+29,93,1,ALIAS,0
+29,95,2,DOOR,2
+29,97,5,DOOR,16
+31,33,5,DOOR,28
+31,35,4,DOOR,14
+31,37,4,DOOR,14
+31,39,3,DOOR,6
+31,41,4,DOOR,14
+31,43,3,DOOR,6
+31,45,3,DOOR,6
+31,47,2,DOOR,2
+31,49,4,DOOR,14
+31,51,3,DOOR,6
+31,53,3,DOOR,6
+31,55,2,DOOR,2
+31,57,3,DOOR,6
+31,59,2,DOOR,2
+31,61,2,DOOR,2
+31,63,1,ALIAS,0
+31,65,5,DOOR,28
+31,67,4,DOOR,14
+31,69,4,DOOR,14
+31,71,3,DOOR,6
+31,73,4,DOOR,14
+31,75,3,DOOR,6
+31,77,3,DOOR,6
+31,79,2,DOOR,2
+31,81,4,DOOR,14
+31,83,3,DOOR,6
+31,85,3,DOOR,6
+31,87,2,DOOR,2
+31,89,3,DOOR,6
+31,91,2,DOOR,2
+31,93,2,DOOR,2
+31,95,1,ALIAS,0
+31,97,6,DOOR,32
+33,35,1,ALIAS,0
+33,37,1,ALIAS,0
+33,39,2,DOOR,2
+33,41,1,ALIAS,0
+33,43,2,DOOR,2
+33,45,2,DOOR,2
+33,47,3,DOOR,6
+33,49,1,ALIAS,0
+33,51,2,DOOR,2
+33,53,2,DOOR,2
+33,55,3,DOOR,6
+33,57,2,DOOR,2
+33,59,3,DOOR,6
+33,61,3,DOOR,6
+33,63,4,DOOR,14
+33,65,2,NEVER,0
+33,67,3,DOOR,4
+33,69,3,DOOR,4
+33,71,4,DOOR,8
+33,73,3,DOOR,4
+33,75,4,DOOR,8
+33,77,4,DOOR,8
+33,79,5,DOOR,16
+33,81,3,DOOR,4
+33,83,4,DOOR,8
+33,85,4,DOOR,8
+33,87,5,DOOR,16
+33,89,4,DOOR,8
+33,91,5,DOOR,16
+33,93,5,DOOR,16
+33,95,6,DOOR,32
+33,97,1,ALIAS,0
+35,37,2,DOOR,2
+35,39,1,ALIAS,0
+35,41,2,DOOR,2
+35,43,1,ALIAS,0
+35,45,3,DOOR,6
+35,47,2,DOOR,2
+35,49,2,DOOR,2
+35,51,1,ALIAS,0
+35,53,3,DOOR,6
+35,55,2,DOOR,2
+35,57,3,DOOR,6
+35,59,2,DOOR,2
+35,61,4,DOOR,14
+35,63,3,DOOR,6
+35,65,3,DOOR,4
+35,67,2,NEVER,0
+35,69,4,DOOR,8
+35,71,3,DOOR,2
+35,73,4,DOOR,8
+35,75,3,DOOR,2
+35,77,5,DOOR,16
+35,79,4,DOOR,6
+35,81,4,DOOR,8
+35,83,3,DOOR,2
+35,85,5,DOOR,16
+35,87,4,DOOR,6
+35,89,5,DOOR,16
+35,91,4,DOOR,6
+35,93,6,DOOR,32
+35,95,5,DOOR,14
+35,97,2,NEVER,0
+37,39,1,ALIAS,0
+37,41,2,DOOR,2
+37,43,3,DOOR,6
+37,45,1,ALIAS,0
+37,47,2,DOOR,2
+37,49,2,DOOR,2
+37,51,3,DOOR,6
+37,53,1,ALIAS,0
+37,55,2,DOOR,2
+37,57,3,DOOR,6
+37,59,4,DOOR,14
+37,61,2,DOOR,2
+37,63,3,DOOR,6
+37,65,3,DOOR,4
+37,67,4,DOOR,8
+37,69,2,NEVER,0
+37,71,3,DOOR,2
+37,73,4,DOOR,8
+37,75,5,DOOR,16
+37,77,3,DOOR,2
+37,79,4,DOOR,6
+37,81,4,DOOR,8
+37,83,5,DOOR,16
+37,85,3,DOOR,2
+37,87,4,DOOR,6
+37,89,5,DOOR,16
+37,91,6,DOOR,32
+37,93,4,DOOR,6
+37,95,5,DOOR,14
+37,97,2,NEVER,0
+39,41,3,DOOR,6
+39,43,2,DOOR,2
+39,45,2,DOOR,2
+39,47,1,ALIAS,0
+39,49,3,DOOR,6
+39,51,2,DOOR,2
+39,53,2,DOOR,2
+39,55,1,ALIAS,0
+39,57,4,DOOR,14
+39,59,3,DOOR,6
+39,61,3,DOOR,6
+39,63,2,DOOR,2
+39,65,4,DOOR,8
+39,67,3,DOOR,2
+39,69,3,DOOR,2
+39,71,2,NEVER,0
+39,73,5,DOOR,16
+39,75,4,DOOR,6
+39,77,4,DOOR,6
+39,79,3,DOOR,2
+39,81,5,DOOR,16
+39,83,4,DOOR,6
+39,85,4,DOOR,6
+39,87,3,DOOR,2
+39,89,6,DOOR,32
+39,91,5,DOOR,14
+39,93,5,DOOR,14
+39,95,4,DOOR,6
+39,97,3,NEVER,0
+41,43,1,ALIAS,0
+41,45,1,ALIAS,0
+41,47,2,DOOR,2
+41,49,2,DOOR,2
+41,51,3,DOOR,6
+41,53,3,DOOR,6
+41,55,4,DOOR,14
+41,57,1,ALIAS,0
+41,59,2,DOOR,2
+41,61,2,DOOR,2
+41,63,3,DOOR,6
+41,65,3,DOOR,4
+41,67,4,DOOR,8
+41,69,4,DOOR,8
+41,71,5,DOOR,16
+41,73,2,NEVER,0
+41,75,3,DOOR,2
+41,77,3,DOOR,2
+41,79,4,DOOR,6
+41,81,4,DOOR,8
+41,83,5,DOOR,16
+41,85,5,DOOR,16
+41,87,6,DOOR,32
+41,89,3,DOOR,2
+41,91,4,DOOR,6
+41,93,4,DOOR,6
+41,95,5,DOOR,14
+41,97,2,NEVER,0
+43,45,2,DOOR,2
+43,47,1,ALIAS,0
+43,49,3,DOOR,6
+43,51,2,DOOR,2
+43,53,4,DOOR,14
+43,55,3,DOOR,6
+43,57,2,DOOR,2
+43,59,1,ALIAS,0
+43,61,3,DOOR,6
+43,63,2,DOOR,2
+43,65,4,DOOR,8
+43,67,3,DOOR,2
+43,69,5,DOOR,16
+43,71,4,DOOR,6
+43,73,3,DOOR,2
+43,75,2,NEVER,0
+43,77,4,DOOR,6
+43,79,3,DOOR,2
+43,81,5,DOOR,16
+43,83,4,DOOR,6
+43,85,6,DOOR,32
+43,87,5,DOOR,14
+43,89,4,DOOR,6
+43,91,3,DOOR,2
+43,93,5,DOOR,14
+43,95,4,DOOR,6
+43,97,3,NEVER,0
+45,47,1,ALIAS,0
+45,49,3,DOOR,6
+45,51,4,DOOR,14
+45,53,2,DOOR,2
+45,55,3,DOOR,6
+45,57,2,DOOR,2
+45,59,3,DOOR,6
+45,61,1,ALIAS,0
+45,63,2,DOOR,2
+45,65,4,DOOR,8
+45,67,5,DOOR,16
+45,69,3,DOOR,2
+45,71,4,DOOR,6
+45,73,3,DOOR,2
+45,75,4,DOOR,6
+45,77,2,NEVER,0
+45,79,3,DOOR,2
+45,81,5,DOOR,16
+45,83,6,DOOR,32
+45,85,4,DOOR,6
+45,87,5,DOOR,14
+45,89,4,DOOR,6
+45,91,5,DOOR,14
+45,93,3,DOOR,2
+45,95,4,DOOR,6
+45,97,3,NEVER,0
+47,49,4,DOOR,14
+47,51,3,DOOR,6
+47,53,3,DOOR,6
+47,55,2,DOOR,2
+47,57,3,DOOR,6
+47,59,2,DOOR,2
+47,61,2,DOOR,2
+47,63,1,ALIAS,0
+47,65,5,DOOR,16
+47,67,4,DOOR,6
+47,69,4,DOOR,6
+47,71,3,DOOR,2
+47,73,4,DOOR,6
+47,75,3,DOOR,2
+47,77,3,DOOR,2
+47,79,2,NEVER,0
+47,81,6,DOOR,32
+47,83,5,DOOR,14
+47,85,5,DOOR,14
+47,87,4,DOOR,6
+47,89,5,DOOR,14
+47,91,4,DOOR,6
+47,93,4,DOOR,6
+47,95,3,DOOR,2
+47,97,4,NEVER,0
+49,51,1,ALIAS,0
+49,53,1,ALIAS,0
+49,55,2,DOOR,2
+49,57,1,ALIAS,0
+49,59,2,DOOR,2
+49,61,2,DOOR,2
+49,63,3,DOOR,6
+49,65,3,DOOR,4
+49,67,4,DOOR,8
+49,69,4,DOOR,8
+49,71,5,DOOR,16
+49,73,4,DOOR,8
+49,75,5,DOOR,16
+49,77,5,DOOR,16
+49,79,6,DOOR,32
+49,81,2,NEVER,0
+49,83,3,DOOR,2
+49,85,3,DOOR,2
+49,87,4,DOOR,6
+49,89,3,DOOR,2
+49,91,4,DOOR,6
+49,93,4,DOOR,6
+49,95,5,DOOR,14
+49,97,2,NEVER,0
+51,53,2,DOOR,2
+51,55,1,ALIAS,0
+51,57,2,DOOR,2
+51,59,1,ALIAS,0
+51,61,3,DOOR,6
+51,63,2,DOOR,2
+51,65,4,DOOR,8
+51,67,3,DOOR,2
+51,69,5,DOOR,16
+51,71,4,DOOR,6
+51,73,5,DOOR,16
+51,75,4,DOOR,6
+51,77,6,DOOR,32
+51,79,5,DOOR,14
+51,81,3,DOOR,2
+51,83,2,NEVER,0
+51,85,4,DOOR,6
+51,87,3,DOOR,2
+51,89,4,DOOR,6
+51,91,3,DOOR,2
+51,93,5,DOOR,14
+51,95,4,DOOR,6
+51,97,3,NEVER,0
+53,55,1,ALIAS,0
+53,57,2,DOOR,2
+53,59,3,DOOR,6
+53,61,1,ALIAS,0
+53,63,2,DOOR,2
+53,65,4,DOOR,8
+53,67,5,DOOR,16
+53,69,3,DOOR,2
+53,71,4,DOOR,6
+53,73,5,DOOR,16
+53,75,6,DOOR,32
+53,77,4,DOOR,6
+53,79,5,DOOR,14
+53,81,3,DOOR,2
+53,83,4,DOOR,6
+53,85,2,NEVER,0
+53,87,3,DOOR,2
+53,89,4,DOOR,6
+53,91,5,DOOR,14
+53,93,3,DOOR,2
+53,95,4,DOOR,6
+53,97,3,NEVER,0
+55,57,3,DOOR,6
+55,59,2,DOOR,2
+55,61,2,DOOR,2
+55,63,1,ALIAS,0
+55,65,5,DOOR,16
+55,67,4,DOOR,6
+55,69,4,DOOR,6
+55,71,3,DOOR,2
+55,73,6,DOOR,32
+55,75,5,DOOR,14
+55,77,5,DOOR,14
+55,79,4,DOOR,6
+55,81,4,DOOR,6
+55,83,3,DOOR,2
+55,85,3,DOOR,2
+55,87,2,NEVER,0
+55,89,5,DOOR,14
+55,91,4,DOOR,6
+55,93,4,DOOR,6
+55,95,3,DOOR,2
+55,97,4,NEVER,0
+57,59,1,ALIAS,0
+57,61,1,ALIAS,0
+57,63,2,DOOR,2
+57,65,4,DOOR,8
+57,67,5,DOOR,16
+57,69,5,DOOR,16
+57,71,6,DOOR,32
+57,73,3,DOOR,2
+57,75,4,DOOR,6
+57,77,4,DOOR,6
+57,79,5,DOOR,14
+57,81,3,DOOR,2
+57,83,4,DOOR,6
+57,85,4,DOOR,6
+57,87,5,DOOR,14
+57,89,2,NEVER,0
+57,91,3,DOOR,2
+57,93,3,DOOR,2
+57,95,4,DOOR,6
+57,97,3,NEVER,0
+59,61,2,DOOR,2
+59,63,1,ALIAS,0
+59,65,5,DOOR,16
+59,67,4,DOOR,6
+59,69,6,DOOR,32
+59,71,5,DOOR,14
+59,73,4,DOOR,6
+59,75,3,DOOR,2
+59,77,5,DOOR,14
+59,79,4,DOOR,6
+59,81,4,DOOR,6
+59,83,3,DOOR,2
+59,85,5,DOOR,14
+59,87,4,DOOR,6
+59,89,3,DOOR,2
+59,91,2,NEVER,0
+59,93,4,DOOR,6
+59,95,3,DOOR,2
+59,97,4,NEVER,0
+61,63,1,ALIAS,0
+61,65,5,DOOR,16
+61,67,6,DOOR,32
+61,69,4,DOOR,6
+61,71,5,DOOR,14
+61,73,4,DOOR,6
+61,75,5,DOOR,14
+61,77,3,DOOR,2
+61,79,4,DOOR,6
+61,81,4,DOOR,6
+61,83,5,DOOR,14
+61,85,3,DOOR,2
+61,87,4,DOOR,6
+61,89,3,DOOR,2
+61,91,4,DOOR,6
+61,93,2,NEVER,0
+61,95,3,DOOR,2
+61,97,4,NEVER,0
+63,65,6,DOOR,32
+63,67,5,DOOR,14
+63,69,5,DOOR,14
+63,71,4,DOOR,6
+63,73,5,DOOR,14
+63,75,4,DOOR,6
+63,77,4,DOOR,6
+63,79,3,DOOR,2
+63,81,5,DOOR,14
+63,83,4,DOOR,6
+63,85,4,DOOR,6
+63,87,3,DOOR,2
+63,89,4,DOOR,6
+63,91,3,DOOR,2
+63,93,3,DOOR,2
+63,95,2,NEVER,0
+63,97,5,NEVER,0
+65,67,1,ALIAS,0
+65,69,1,ALIAS,0
+65,71,2,DOOR,2
+65,73,1,ALIAS,0
+65,75,2,DOOR,2
+65,77,2,DOOR,2
+65,79,3,DOOR,6
+65,81,1,ALIAS,0
+65,83,2,DOOR,2
+65,85,2,DOOR,2
+65,87,3,DOOR,6
+65,89,2,DOOR,2
+65,91,3,DOOR,6
+65,93,3,DOOR,6
+65,95,4,DOOR,14
+65,97,1,ALIAS,0
+67,69,2,DOOR,2
+67,71,1,ALIAS,0
+67,73,2,DOOR,2
+67,75,1,ALIAS,0
+67,77,3,DOOR,6
+67,79,2,DOOR,2
+67,81,2,DOOR,2
+67,83,1,ALIAS,0
+67,85,3,DOOR,6
+67,87,2,DOOR,2
+67,89,3,DOOR,6
+67,91,2,DOOR,2
+67,93,4,DOOR,14
+67,95,3,DOOR,6
+67,97,2,NEVER,0
+69,71,1,ALIAS,0
+69,73,2,DOOR,2
+69,75,3,DOOR,6
+69,77,1,ALIAS,0
+69,79,2,DOOR,2
+69,81,2,DOOR,2
+69,83,3,DOOR,6
+69,85,1,ALIAS,0
+69,87,2,DOOR,2
+69,89,3,DOOR,6
+69,91,4,DOOR,14
+69,93,2,DOOR,2
+69,95,3,DOOR,6
+69,97,2,NEVER,0
+71,73,3,DOOR,6
+71,75,2,DOOR,2
+71,77,2,DOOR,2
+71,79,1,ALIAS,0
+71,81,3,DOOR,6
+71,83,2,DOOR,2
+71,85,2,DOOR,2
+71,87,1,ALIAS,0
+71,89,4,DOOR,14
+71,91,3,DOOR,6
+71,93,3,DOOR,6
+71,95,2,DOOR,2
+71,97,3,NEVER,0
+73,75,1,ALIAS,0
+73,77,1,ALIAS,0
+73,79,2,DOOR,2
+73,81,2,DOOR,2
+73,83,3,DOOR,6
+73,85,3,DOOR,6
+73,87,4,DOOR,14
+73,89,1,ALIAS,0
+73,91,2,DOOR,2
+73,93,2,DOOR,2
+73,95,3,DOOR,6
+73,97,2,NEVER,0
+75,77,2,DOOR,2
+75,79,1,ALIAS,0
+75,81,3,DOOR,6
+75,83,2,DOOR,2
+75,85,4,DOOR,14
+75,87,3,DOOR,6
+75,89,2,DOOR,2
+75,91,1,ALIAS,0
+75,93,3,DOOR,6
+75,95,2,DOOR,2
+75,97,3,NEVER,0
+77,79,1,ALIAS,0
+77,81,3,DOOR,6
+77,83,4,DOOR,14
+77,85,2,DOOR,2
+77,87,3,DOOR,6
+77,89,2,DOOR,2
+77,91,3,DOOR,6
+77,93,1,ALIAS,0
+77,95,2,DOOR,2
+77,97,3,NEVER,0
+79,81,4,DOOR,14
+79,83,3,DOOR,6
+79,85,3,DOOR,6
+79,87,2,DOOR,2
+79,89,3,DOOR,6
+79,91,2,DOOR,2
+79,93,2,DOOR,2
+79,95,1,ALIAS,0
+79,97,4,NEVER,0
+81,83,1,ALIAS,0
+81,85,1,ALIAS,0
+81,87,2,DOOR,2
+81,89,1,ALIAS,0
+81,91,2,DOOR,2
+81,93,2,DOOR,2
+81,95,3,DOOR,6
+81,97,2,NEVER,0
+83,85,2,DOOR,2
+83,87,1,ALIAS,0
+83,89,2,DOOR,2
+83,91,1,ALIAS,0
+83,93,3,DOOR,6
+83,95,2,DOOR,2
+83,97,3,NEVER,0
+85,87,1,ALIAS,0
+85,89,2,DOOR,2
+85,91,3,DOOR,6
+85,93,1,ALIAS,0
+85,95,2,DOOR,2
+85,97,3,NEVER,0
+87,89,3,DOOR,6
+87,91,2,DOOR,2
+87,93,2,DOOR,2
+87,95,1,ALIAS,0
+87,97,4,NEVER,0
+89,91,1,ALIAS,0
+89,93,1,ALIAS,0
+89,95,2,DOOR,2
+89,97,3,NEVER,0
+91,93,2,DOOR,2
+91,95,1,ALIAS,0
+91,97,4,NEVER,0
+93,95,1,ALIAS,0
+93,97,4,NEVER,0
+95,97,5,NEVER,0</script>
+
+    <script>
+    (function () {
+      "use strict";
+      var fmt = function (n) { return n.toLocaleString("en-US"); };
+      var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      /* ================= GATE ================= */
+      var KEY = "monsters-ink-dossier-acceptance-v1";
+      var cover = document.getElementById("cover");
+      var btn = document.getElementById("accept-btn");
+      var acceptedLine = document.getElementById("accepted-line");
+      var dossier = document.getElementById("dossier");
+      var stored = null;
+      try { stored = window.localStorage.getItem(KEY); } catch (e) { stored = null; }
+
+      function fmtWhen(iso) {
+        var d = new Date(iso);
+        return d.toLocaleString("en-US", {
+          year: "numeric", month: "long", day: "numeric",
+          hour: "numeric", minute: "2-digit", timeZoneName: "short"
+        });
+      }
+      function showAccepted(iso) {
+        acceptedLine.textContent = "Accepted: " + fmtWhen(iso);
+        cover.classList.add("accepted");
+      }
+      if (stored) {
+        showAccepted(stored);
+        btn.textContent = "Open the dossier";
+      }
+      var opened = false;
+      btn.addEventListener("click", function () {
+        if (!stored) {
+          stored = new Date().toISOString();
+          try { window.localStorage.setItem(KEY, stored); } catch (e) { /* session-only fallback */ }
+          showAccepted(stored);
+          btn.textContent = "Open the dossier";
+        }
+        if (!opened) {
+          opened = true;
+          dossier.hidden = false;
+          btn.setAttribute("aria-expanded", "true");
+          runMain();
+          startClocks();
+          runMirror();
+        } else {
+          dossier.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+        }
+      });
+
+      /* ================= DATA ================= */
+      var MASKS = {
+        closed: [3302,11338,5994,13323,11967,3170,6306,10885,3996,6803,8405,14156,1167,16122,11103,5680,7829,995,1923,1827,7803,2407,4506,7646,4789,7237,14406,14296,4626,3481,12233,8647,9946,14824,5625,13045,9494,11236,9356,12855,3371,2137,2991,2813,6561,3641,5486,4457],
+        seed6:  [3302,11338,5994,13323,11967,3170,6306,10885,129,6803,8405,14156,8125,16122,11103,5680,553,995,1923,1827,7803,2407,4506,7646,4789,7237,14406,14296,2573,3481,12233,8647,9946,14824,5625,13045,9679,11236,9356,12855,3371,2137,2991,2813,6561,3641,5486,4457],
+        filed55:[3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59,61,63,65,67,69,71,73,75,77,79,81,83,85,87,89,91,93,95,97]
+      };
+      function parsePairs() {
+        var txt = document.getElementById("pairs-data").textContent.trim();
+        var lines = txt.split("\n");
+        var rows = [];
+        for (var i = 1; i < lines.length; i++) {
+          if (!lines[i]) continue;
+          var p = lines[i].split(",");
+          rows.push({ a: +p[0], b: +p[1], h: +p[2], c: p[3], d: +p[4] });
+        }
+        return rows;
+      }
+
+      /* ============ BATTERY (mirrors battery.py, unit-amplitude integer model) ============
+         A syndrome vector v (digits in -3..3) is encoded as sum (v_k + 3) * 8^k.
+         Base 8 with offset +3 is injective over that digit range, so the numeric
+         key is an exact identity for the vector. Per-column code KP[i] = sum bit_k * 8^k;
+         sums and differences of codes give syndrome keys directly. */
+      function prep(masks) {
+        var r = 0, i, k;
+        for (i = 0; i < masks.length; i++) { var bl = masks[i].toString(2).length; if (bl > r) r = bl; }
+        var pow8 = [1]; for (k = 1; k < r; k++) pow8.push(pow8[k - 1] * 8);
+        var KP = [], C8 = 0;
+        for (k = 0; k < r; k++) C8 += 3 * pow8[k];
+        for (i = 0; i < masks.length; i++) {
+          var s = 0; for (k = 0; k < r; k++) if ((masks[i] >> k) & 1) s += pow8[k];
+          KP.push(s);
+        }
+        var A = {}, Aplus = {}, pairSyn = {}, B = {};
+        A[C8] = 1;
+        for (i = 0; i < masks.length; i++) { A[C8 + KP[i]] = 1; A[C8 - KP[i]] = 1; }
+        for (k = 0; k < r; k++) { A[C8 + pow8[k]] = 1; A[C8 - pow8[k]] = 1; }
+        for (var key in A) Aplus[key] = 1;
+        var amps = [2, 3, -2, -3];
+        for (var a = 0; a < amps.length; a++) {
+          for (i = 0; i < masks.length; i++) Aplus[C8 + amps[a] * KP[i]] = 1;
+          for (k = 0; k < r; k++) Aplus[C8 + amps[a] * pow8[k]] = 1;
+        }
+        for (i = 0; i < masks.length; i++) for (var j = i + 1; j < masks.length; j++) pairSyn[KP[i] + KP[j] + C8] = 1;
+        for (i = 0; i < masks.length; i++) for (var j2 = 0; j2 < masks.length; j2++) if (j2 !== i) pairSyn[KP[i] - KP[j2] + C8] = 1;
+        for (key in A) B[key] = 1;
+        for (key in pairSyn) B[key] = 1;
+        return { r: r, KP: KP, C8: C8, A: A, Aplus: Aplus, B: B };
+      }
+
+      /* Chunked driver: work() returns true when finished. */
+      function drive(work, done) {
+        if (reduced) { var t0 = performance.now(); while (!work()) {} done(performance.now() - t0); return; }
+        var active = 0;
+        (function step() {
+          var t0 = performance.now();
+          var fin = false;
+          while (performance.now() - t0 < 24 && !fin) fin = work();
+          active += performance.now() - t0;
+          if (fin) done(active); else setTimeout(step, 0);
+        })();
+      }
+
+      function setV(checkEl, state, text) {
+        var v = checkEl.querySelector("[data-v]");
+        v.className = "verdict" + (state ? " " + state : "");
+        v.textContent = text;
+      }
+      function setN(checkEl, name, val) {
+        checkEl.querySelector('[data-n="' + name + '"]').textContent = val;
+      }
+
+      /* ================= CHECK A: CENSUS ================= */
+      function runCensus(el, done) {
+        var rows = parsePairs();
+        var i = 0, door = 0, alias = 0, never = 0, doors = 0, hamok = 0, comp = 0;
+        var strata = {}, mid = {};
+        setV(el, "run", "RUNNING");
+        drive(function () {
+          var end = Math.min(i + 140, rows.length);
+          for (; i < end; i++) {
+            var r = rows[i];
+            if (r.c === "DOOR") { door++; strata[r.h] = (strata[r.h] || 0) + 1; mid[r.a + r.b] = 1; }
+            else if (r.c === "ALIAS") alias++; else never++;
+            doors += r.d;
+            var x = r.a ^ r.b, pc = 0; while (x) { pc += x & 1; x >>= 1; }
+            if (pc === r.h) hamok++;
+            if (r.a + r.b === 128) comp++;
+          }
+          setN(el, "pairs", fmt(rows.length ? i : 0));
+          setN(el, "door", fmt(door)); setN(el, "alias", fmt(alias)); setN(el, "never", fmt(never));
+          setN(el, "doors", fmt(doors)); setN(el, "hamok", fmt(hamok));
+          var midCount = 0; for (var key in mid) midCount++;
+          setN(el, "mid", fmt(midCount)); setN(el, "comp", fmt(comp));
+          if (i >= rows.length) {
+            setN(el, "strata", [2, 3, 4, 5, 6].map(function (d) { return fmt(strata[d] || 0); }).join(" / "));
+            var ok = rows.length === 1128 && door === 944 && alias === 124 && never === 60 &&
+              doors === 7140 && hamok === 1128 && midCount === 83 && comp === 17 &&
+              strata[2] === 244 && strata[3] === 340 && strata[4] === 245 && strata[5] === 98 && strata[6] === 17;
+            setV(el, ok ? "pass" : "fail", ok ? "PASS" : "FAIL — MISMATCH");
+            return true;
+          }
+          return false;
+        }, done);
+      }
+
+      /* ================= CHECK B: PAIR LEVEL ================= */
+      function runPairs(el, masks, done) {
+        var P = prep(masks), KP = P.KP, C8 = P.C8;
+        var xor = {}, pp = {}, pm = {};
+        var stage = 0, i = 0, j = 1;
+        setV(el, "run", "RUNNING");
+        drive(function () {
+          if (stage === 0) {
+            var t0 = performance.now();
+            while (i < 48) {
+              for (; j < 48; j++) { xor[masks[i] ^ masks[j]] = 1; pp[KP[i] + KP[j] + C8] = 1; }
+              i++; j = i + 1;
+              if (performance.now() - t0 > 20) break;
+            }
+            var xc = 0, pc2 = 0, k;
+            for (k in xor) xc++; for (k in pp) pc2++;
+            setN(el, "xor", fmt(xc)); setN(el, "pp", fmt(pc2));
+            if (i < 48) return false;
+            stage = 1; i = 0; j = 0;
+          }
+          var t1 = performance.now();
+          while (i < 48) {
+            for (; j < 48; j++) { if (j !== i) pm[KP[i] - KP[j] + C8] = 1; }
+            i++; j = 0;
+            if (performance.now() - t1 > 20) break;
+          }
+          var mc = 0; for (var k2 in pm) mc++;
+          setN(el, "pm", fmt(mc));
+          if (i < 48) return false;
+          var xc2 = 0, pc3 = 0; for (var k3 in xor) xc2++; for (var k4 in pp) pc3++;
+          var ok = xc2 === 1128 && pc3 === 1128 && mc === 2256;
+          setV(el, ok ? "pass" : "fail", ok ? "PASS" : "FAIL — MISMATCH");
+          return true;
+        }, done);
+      }
+
+      /* ============ CHECK C / corrections: TRIPLE BATTERY ============ */
+      function runTriples(el, masks, expected, done) {
+        var P = prep(masks), KP = P.KP, C8 = P.C8, A = P.A, Aplus = P.Aplus, B = P.B;
+        var trip = {}, pat = 0, dist = 0, accA = 0, accAp = 0, accB = 0;
+        var phase = 0, i = 0, j = 1, k = 2;
+        setV(el, "run", "RUNNING");
+        function test(s) {
+          if (!trip[s]) { trip[s] = 1; dist++; }
+          pat++;
+          if (A[s]) accA++; if (Aplus[s]) accAp++; if (B[s]) accB++;
+        }
+        drive(function () {
+          var t0 = performance.now();
+          if (phase === 0) {
+            while (i < 46) {
+              for (; j < 47; j++) { for (k = j + 1; k < 48; k++) test(KP[i] + KP[j] + KP[k] + C8); }
+              i++; j = i + 1;
+              if (performance.now() - t0 > 20) break;
+            }
+            if (i < 46) { upd(); return false; }
+            phase = 1; i = 0; j = 1; k = 0;
+          }
+          while (i < 47) {
+            for (; j < 48; j++) { for (k = 0; k < 48; k++) { if (k !== i && k !== j) test(KP[i] + KP[j] - KP[k] + C8); } }
+            i++; j = i + 1;
+            if (performance.now() - t0 > 20) break;
+          }
+          upd();
+          if (i < 47) return false;
+          setN(el, "dist", fmt(dist));
+          if (el.querySelector('[data-n="coll"]')) setN(el, "coll", fmt(pat - dist));
+          setN(el, "acc", fmt(accA) + " / " + fmt(accAp) + " / " + fmt(accB));
+          var ok = pat === 69184 && dist === expected.dist && accA === expected.a && accAp === expected.ap && accB === expected.b;
+          setV(el, ok ? "pass" : "fail", ok ? expected.verdict : "FAIL — MISMATCH");
+          return true;
+        }, done);
+        function upd() {
+          setN(el, "pat", fmt(pat));
+          setN(el, "dist", fmt(dist));
+          if (el.querySelector('[data-n="coll"]')) setN(el, "coll", fmt(pat - dist));
+        }
+      }
+
+      /* ================= FILED [55,8] CHECK ================= */
+      function runFiled(el, done) {
+        var masks = MASKS.filed55, P = prep(masks), KP = P.KP, C8 = P.C8;
+        var pp = {}, mind = 99, i, j;
+        for (i = 0; i < 48; i++) for (j = i + 1; j < 48; j++) {
+          pp[KP[i] + KP[j] + C8] = 1;
+          var x = masks[i] ^ masks[j], pc = 0; while (x) { pc += x & 1; x >>= 1; }
+          if (pc < mind) mind = pc;
+        }
+        var ppc = 0; for (var key in pp) ppc++;
+        setN(el, "pp", fmt(ppc) + " / 1,128");
+        setN(el, "mind", fmt(mind));
+        var A = P.A, Aplus = P.Aplus, B = P.B, accA = 0, accAp = 0, accB = 0, pat = 0;
+        var phase = 0; i = 0; j = 1;
+        setV(el, "run", "RUNNING");
+        function test(s) { pat++; if (A[s]) accA++; if (Aplus[s]) accAp++; if (B[s]) accB++; }
+        drive(function () {
+          var t0 = performance.now();
+          if (phase === 0) {
+            while (i < 46) {
+              for (; j < 47; j++) { for (var k = j + 1; k < 48; k++) test(KP[i] + KP[j] + KP[k] + C8); }
+              i++; j = i + 1;
+              if (performance.now() - t0 > 20) break;
+            }
+            if (i < 46) return false;
+            phase = 1; i = 0; j = 1;
+          }
+          while (i < 47) {
+            for (; j < 48; j++) { for (var k2 = 0; k2 < 48; k2++) { if (k2 !== i && k2 !== j) test(KP[i] + KP[j] - KP[k2] + C8); } }
+            i++; j = i + 1;
+            if (performance.now() - t0 > 20) break;
+          }
+          if (i < 47) return false;
+          setN(el, "acc", fmt(accA) + " / " + fmt(accAp) + " / " + fmt(accB));
+          var ok = ppc === 464 && mind === 1 && pat === 69184 && accA === 7296 && accAp === 7296 && accB === 7296;
+          setV(el, ok ? "pass" : "fail", ok ? "CONFIRMED" : "FAIL — MISMATCH");
+          return true;
+        }, done);
+      }
+
+      /* ================= DRIVERS ================= */
+      var running = false;
+      var rerunBtn = document.getElementById("rerun-btn");
+      var runtimeEl = document.querySelector('[data-n="runtime"]');
+      function runMain() {
+        if (running) return;
+        running = true; rerunBtn.disabled = true;
+        var total = 0, steps = 0;
+        function next(ms) {
+          total += ms; steps++;
+          if (steps === 3) {
+            runtimeEl.textContent = "engine time in this browser: " + fmt(Math.round(total)) + " ms · all counts live";
+            running = false; rerunBtn.disabled = false;
+          }
+        }
+        runCensus(document.getElementById("check-census"), next);
+        runPairs(document.getElementById("check-pairs"), MASKS.closed, next);
+        runTriples(document.getElementById("check-triples"), MASKS.closed,
+          { dist: 69184, a: 0, ap: 0, b: 0, verdict: "PASS" }, next);
+      }
+      rerunBtn.addEventListener("click", runMain);
+
+      var corrBtn = document.getElementById("corr-btn");
+      var corrRunning = false;
+      corrBtn.addEventListener("click", function () {
+        if (corrRunning) return;
+        corrRunning = true; corrBtn.disabled = true;
+        var total = 0, steps = 0;
+        function next(ms) {
+          total += ms; steps++;
+          if (steps === 2) {
+            document.querySelector('[data-n="runtime2"]').textContent =
+              "recomputed in this browser: " + fmt(Math.round(total)) + " ms · agrees with the published corrections";
+            corrRunning = false; corrBtn.disabled = false;
+          }
+        }
+        runTriples(document.getElementById("check-seed6"), MASKS.seed6,
+          { dist: 69084, a: 0, ap: 0, b: 10, verdict: "CONFIRMED" }, next);
+        runFiled(document.getElementById("check-filed"), next);
+      });
+
+      /* ================= THE CLOCKS =================
+         Deadlines as recorded, in America/Chicago; targets stored as UTC
+         instants (CDT = UTC-5 through 2026-11-01, CST = UTC-6 after). */
+      var CLOCKS = [
+        { name: "PRIM3 — LOCK", when: "2026-10-23 · 14:00 CT", target: "2026-10-23T19:00:00Z", past: "LOCKED" },
+        { name: "B2G — LUNCH", when: "2026-10-27 · 12:00 CT", target: "2026-10-27T17:00:00Z", past: "PASSED" },
+        { name: "APEX — SARGUS MEETING", when: "2026-10-28 · 10:00 CT", target: "2026-10-28T15:00:00Z", past: "PASSED" },
+        { name: "JABLONSKI — LAST DAY AT DIU", when: "2026-10-30", target: "2026-10-31T04:59:00Z", past: "PASSED" },
+        { name: "VR GATEKEEPER — LOCK", when: "2026-11-18", target: "2026-11-19T05:59:00Z", past: "LOCKED" },
+        { name: "xTECH — SEMIFINALISTS", when: "2027-01-05", target: "2027-01-05T06:00:00Z", past: "ANNOUNCED" },
+        { name: "SAM — RENEWAL", when: "2027-09-08", target: "2027-09-08T05:00:00Z", past: "DUE DATE PASSED" }
+      ];
+      var clockTimer = null;
+      function pad2(n) { return (n < 10 ? "0" : "") + n; }
+      function startClocks() {
+        var host = document.getElementById("clock-rows");
+        if (!host || host.children.length) { tickClocks(); return; }
+        CLOCKS.forEach(function (c, idx) {
+          var row = document.createElement("div");
+          row.className = "line";
+          row.innerHTML = '<span class="k"></span><span class="v"></span>';
+          row.querySelector(".k").textContent = c.name + " — " + c.when;
+          row.querySelector(".v").id = "clock-" + idx;
+          host.appendChild(row);
+        });
+        tickClocks();
+        if (!clockTimer) clockTimer = setInterval(tickClocks, 1000);
+      }
+      function tickClocks() {
+        var now = Date.now();
+        CLOCKS.forEach(function (c, idx) {
+          var el = document.getElementById("clock-" + idx);
+          if (!el) return;
+          var ms = Date.parse(c.target) - now;
+          if (ms <= 0) {
+            el.textContent = c.past;
+            el.classList.add("done");
+            return;
+          }
+          el.classList.remove("done");
+          var s = Math.floor(ms / 1000);
+          var d = Math.floor(s / 86400); s -= d * 86400;
+          var h = Math.floor(s / 3600); s -= h * 3600;
+          var m = Math.floor(s / 60); s -= m * 60;
+          el.textContent = (d > 0 ? d + "d " : "") + pad2(h) + "h " + pad2(m) + "m " + pad2(s) + "s";
+        });
+      }
+
+      /* ================= THE MIRROR =================
+         Twin lattice, 96 cells. Lattice A: stream seeded by the visitor's line
+         plus the register tip, each draw walked against the closed set's row
+         sums. Lattice B: stream seeded by the line alone. A cell mirrors when
+         both walks land on the same state (0..5); otherwise it refuses.
+         Distance = sum of |A - B| over the 96 cells. Nothing leaves the page. */
+      var REG_TIP = "7d5aa6c2f34d4794de7fb97d537dabfb233695f02f3c49b7caeebdc9c5574c9f";
+      var ROW_SUMS = [28, 27, 23, 26, 23, 24, 26, 28, 23, 25, 27, 26, 23, 19];
+      function xmur3(str) {
+        var h = 1779033703 ^ str.length;
+        for (var i = 0; i < str.length; i++) {
+          h = Math.imul(h ^ str.charCodeAt(i), 3432918353);
+          h = (h << 13) | (h >>> 19);
+        }
+        return function () {
+          h = Math.imul(h ^ (h >>> 16), 2246822507);
+          h = Math.imul(h ^ (h >>> 13), 3266489909);
+          return (h ^= h >>> 16) >>> 0;
+        };
+      }
+      function sfc32(a, b, c, d) {
+        return function () {
+          a >>>= 0; b >>>= 0; c >>>= 0; d >>>= 0;
+          var t = (((a + b) | 0) + d) | 0;
+          d = (d + 1) | 0;
+          a = b ^ (b >>> 9);
+          b = (c + ((c << 3) | 0)) | 0;
+          c = (c << 21) | (c >>> 11);
+          c = (c + t) | 0;
+          return (t >>> 0) / 4294967296;
+        };
+      }
+      function computeReflection(line) {
+        var seedA = xmur3(line + "\u0001" + REG_TIP);
+        var randA = sfc32(seedA(), seedA(), seedA(), seedA());
+        var seedB = xmur3(line);
+        var randB = sfc32(seedB(), seedB(), seedB(), seedB());
+        var A = [], Bc = [], mir = 0, dist = 0;
+        for (var n = 0; n < 96; n++) {
+          var va = (Math.floor(randA() * 6) + ROW_SUMS[n % 14]) % 6;
+          var vb = Math.floor(randB() * 6);
+          A.push(va); Bc.push(vb);
+          if (va === vb) mir++;
+          dist += Math.abs(va - vb);
+        }
+        return { A: A, B: Bc, mir: mir, ref: 96 - mir, dist: dist };
+      }
+      var latA = document.getElementById("lat-a");
+      var latB = document.getElementById("lat-b");
+      var countsEl = document.getElementById("mirror-counts");
+      var cellsA = [], cellsB = [], built = false;
+      function buildCells() {
+        if (built) return; built = true;
+        for (var n = 0; n < 96; n++) {
+          var da = document.createElement("div"); da.className = "cell"; latA.appendChild(da); cellsA.push(da);
+          var db = document.createElement("div"); db.className = "cell"; latB.appendChild(db); cellsB.push(db);
+        }
+      }
+      function shade(v, mirrored) {
+        var alpha = 0.05 + v * 0.155 + (mirrored ? 0.14 : 0);
+        return "rgba(201,162,39," + alpha.toFixed(3) + ")";
+      }
+      var mirrorToken = 0;
+      function runMirror() {
+        buildCells();
+        var line = document.getElementById("mirror-line").value;
+        var R = computeReflection(line);
+        var token = ++mirrorToken;
+        var idx = 0, mirSoFar = 0, distSoFar = 0;
+        for (var n = 0; n < 96; n++) {
+          cellsA[n].style.backgroundColor = ""; cellsA[n].classList.remove("mir");
+          cellsB[n].style.backgroundColor = ""; cellsB[n].classList.remove("mir");
+        }
+        function counts(doneAll) {
+          countsEl.innerHTML = "MIRRORED " + fmt(mirSoFar) + " · REFUSED " + fmt(idx - mirSoFar) +
+            " · DISTANCE " + fmt(distSoFar) + (doneAll ? "" : ' <span class="dim">· kindling…</span>');
+        }
+        function lightOne() {
+          var va = R.A[idx], vb = R.B[idx], m = va === vb;
+          if (m) mirSoFar++;
+          distSoFar += Math.abs(va - vb);
+          cellsA[idx].style.backgroundColor = shade(va, m);
+          cellsB[idx].style.backgroundColor = shade(vb, m);
+          if (m) { cellsA[idx].classList.add("mir"); cellsB[idx].classList.add("mir"); }
+          idx++;
+          counts(idx >= 96);
+        }
+        if (reduced) { while (idx < 96) lightOne(); return; }
+        counts(false);
+        (function step() {
+          if (token !== mirrorToken) return;
+          var t0 = performance.now();
+          while (idx < 96 && performance.now() - t0 < 30) lightOne();
+          if (idx < 96) setTimeout(step, 16);
+        })();
+      }
+      document.getElementById("mirror-btn").addEventListener("click", runMirror);
+      document.getElementById("mirror-line").addEventListener("keydown", function (e) {
+        if (e.key === "Enter") { e.preventDefault(); runMirror(); }
+      });
+    })();
+    </script>
+  </body>
+</html>
