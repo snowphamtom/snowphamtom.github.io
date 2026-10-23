@@ -11,7 +11,7 @@ below names its model.
 
 The masks are the odd numbers 3–97 (7 rows; bit 0 set in every column).
 
-- Row sums **[48, 24, 24, 24, 24, 17, 17]**, 178 bits; min distance 2.
+- Row sums **[48, 24, 24, 24, 24, 17, 17]**, 178 bits; min distance 1.
 - Integer pair sums ++: **464 of 1,128 distinct** — this matrix is *not*
   Sidon, and never claimed the later sets' properties. XOR pair sums:
   63 distinct.
