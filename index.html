@@ -12,7 +12,7 @@
   html,body{height:100%;}
   body{margin:0;color:#cfe8ff;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
     background:#04070f;
-    min-height:100vh;min-height:100svh;display:flex;align-items:center;justify-content:center;
+    min-height:100vh;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;
     padding:calc(env(safe-area-inset-top) + 24px) 20px calc(env(safe-area-inset-bottom) + 24px);}
   body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
     background-image:linear-gradient(rgba(5,11,24,.38), rgba(3,7,16,.66)),
@@ -26,6 +26,8 @@
   .mouth{width:min(78vw,330px);margin:28px auto 0;filter:drop-shadow(0 16px 30px rgba(0,0,0,.6));}
   .line{margin-top:32px;font-size:15px;color:#a9cdf2;letter-spacing:.14em;text-shadow:0 2px 14px rgba(0,0,0,.8);}
   .legal{margin:22px auto 0;max-width:38ch;font-size:9.5px;line-height:1.8;letter-spacing:.18em;color:#5d82ab;text-shadow:0 1px 10px rgba(0,0,0,.85);}
+  .dev{margin-top:30px;font-size:11px;letter-spacing:.22em;color:rgba(232,179,75,.78);text-decoration:none;text-shadow:0 1px 10px rgba(0,0,0,.85);}
+  .dev:active{transform:translateY(1px);}
 </style>
 </head>
 <body>
@@ -42,5 +44,6 @@
     <div class="line">Speak, and be known.</div>
     <div class="legal">PRIVATE — CONFIDENTIAL · ACCESS BY INVITATION ONLY · EVERYTHING BEYOND THIS DOOR IS THE CONFIDENTIAL PROPERTY OF MONSTERS INK LLC AND IS SUBJECT TO NON-DISCLOSURE</div>
   </a>
+  <a class="dev" href="https://www.roblox.com/users/11828033934/profile">Roblox — sequesteredyeti</a>
 </body>
 </html>
