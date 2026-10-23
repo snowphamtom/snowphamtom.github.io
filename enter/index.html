@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#0a2547" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Yeti" />
+<title>Yeti</title>
+<style>
+  :root{
+    --deep:#071c38; --blue:#0a2547; --blue2:#0e2f5a; --ice:#cfe8ff; --ice-dim:#8fb6dd;
+    --gold:#e8b34b; --gold-dim:#7a5c1e; --dark:#040d1d;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    margin:0; color:var(--ice);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+    background:
+      radial-gradient(120% 70% at 50% -10%, #16407c 0%, var(--blue) 42%, var(--deep) 78%, #051426 100%);
+    display:flex; flex-direction:column; align-items:center;
+    padding:calc(env(safe-area-inset-top) + 28px) 20px calc(env(safe-area-inset-bottom) + 24px);
+    overflow-x:hidden;
+  }
+  /* faint stars */
+  .stars{position:fixed; inset:0; pointer-events:none; opacity:.5;
+    background-image:
+      radial-gradient(1.5px 1.5px at 12% 18%, #dff1ff 50%, transparent 51%),
+      radial-gradient(1px 1px at 78% 10%, #cfe8ff 50%, transparent 51%),
+      radial-gradient(1.2px 1.2px at 62% 26%, #eaf6ff 50%, transparent 51%),
+      radial-gradient(1px 1px at 30% 8%, #bcd9f7 50%, transparent 51%),
+      radial-gradient(1.4px 1.4px at 88% 30%, #dff1ff 50%, transparent 51%),
+      radial-gradient(1px 1px at 45% 15%, #cfe8ff 50%, transparent 51%);
+  }
+  header{text-align:center; margin-top:6px; z-index:1;}
+  h1{font-size:15px; letter-spacing:.42em; text-transform:uppercase; color:var(--ice);
+     margin:14px 0 4px; font-weight:600;}
+  .sub{font-size:12.5px; color:var(--ice-dim); letter-spacing:.08em;}
+  /* ---- the cave ---- */
+  .cave-wrap{width:min(88vw,380px); margin-top:26px; z-index:1;}
+  svg{display:block; width:100%; height:auto;}
+  .seam{stroke:var(--gold-dim); transition:stroke 1.1s ease, filter 1.1s ease;}
+  body.open .seam{stroke:var(--gold); filter:drop-shadow(0 0 9px rgba(232,179,75,.85));}
+  .inner{fill:#02060f; transition:fill 1.1s ease;}
+  body.open .inner{fill:#0a1e3d;}
+  .lat{opacity:.28; transition:opacity 1.1s ease;}
+  body.open .lat{opacity:.95;}
+  /* ---- the voice box ---- */
+  form{width:min(88vw,380px); margin-top:22px; z-index:1;}
+  label{display:block; font-size:12px; letter-spacing:.22em; text-transform:uppercase;
+        color:var(--ice-dim); text-align:center; margin-bottom:10px;}
+  .mouth{
+    background:linear-gradient(180deg,#030914, #061831);
+    border:1px solid #1d4476; border-radius:26px;
+    padding:8px; box-shadow:inset 0 10px 30px rgba(0,0,0,.75), 0 0 0 1px rgba(0,0,0,.35);
+  }
+  input[type=text]{
+    width:100%; border:0; outline:0; background:transparent; color:var(--ice);
+    font-size:17px; /* >=16px: iOS Safari will not zoom */
+    padding:14px 16px; text-align:center; letter-spacing:.02em;
+    font-family:inherit; -webkit-appearance:none; appearance:none;
+  }
+  input::placeholder{color:#5f83ab;}
+  button{
+    margin-top:12px; width:100%; border:0; cursor:pointer;
+    background:linear-gradient(180deg,#123a6e,#0c2a52); color:var(--ice);
+    border:1px solid #2a5796; border-radius:16px;
+    font-size:15px; letter-spacing:.28em; text-transform:uppercase; padding:14px 0;
+    font-family:inherit; font-weight:600;
+  }
+  button:active{transform:translateY(1px);}
+  .voice{min-height:26px; text-align:center; margin-top:16px; font-size:14.5px; color:var(--ice);}
+  .voice.refuse{color:#e8a0a0;}
+  .gate-log{margin-top:6px; text-align:center; font-size:11.5px; color:#5f83ab; letter-spacing:.06em; min-height:15px;}
+  footer{margin-top:auto; padding-top:26px; text-align:center; font-size:11px; color:#46688f; letter-spacing:.14em; z-index:1;}
+  .shake{animation:shake .45s ease;}
+  @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+</style>
+</head>
+<body>
+<div class="stars"></div>
+
+<header>
+  <!-- Yeti's emblem: ice-rimmed cave mouth, gold seam, twin lattices that do not match -->
+  <div class="cave-wrap" style="width:104px;margin:0 auto;">
+    <svg viewBox="0 0 200 160" aria-hidden="true">
+      <path d="M100 6 C150 6 188 52 188 108 L188 154 L12 154 L12 108 C12 52 50 6 100 6 Z" fill="#dceffb"/>
+      <path d="M100 22 C142 22 172 60 172 108 L172 154 L28 154 L28 108 C28 60 58 22 100 22 Z" fill="#9cc4e8"/>
+      <path d="M100 34 C136 34 162 66 162 108 L162 154 L38 154 L38 108 C38 66 64 34 100 34 Z" fill="#123a6e"/>
+      <path class="seam" d="M100 44 C131 44 153 72 153 108 L153 154 L47 154 L47 108 C47 72 69 44 100 44 Z" fill="none" stroke-width="3"/>
+      <path class="inner" d="M100 50 C128 50 147 75 147 108 L147 154 L53 154 L53 108 C53 75 72 50 100 50 Z"/>
+      <g class="lat" stroke="#9fd0ff" stroke-width="1" fill="#cfe8ff">
+        <circle cx="78" cy="86" r="2"/><circle cx="88" cy="102" r="2"/><circle cx="72" cy="116" r="2"/><circle cx="90" cy="128" r="2"/>
+        <path d="M78 86 L88 102 L72 116 M88 102 L90 128" fill="none"/>
+        <circle cx="124" cy="82" r="2"/><circle cx="114" cy="100" r="2"/><circle cx="130" cy="114" r="2"/><circle cx="116" cy="130" r="2"/>
+        <path d="M124 82 L114 100 L130 114 M114 100 L116 130" fill="none"/>
+      </g>
+    </svg>
+  </div>
+  <h1>Yeti</h1>
+  <div class="sub">The cave is closed. Speak, and be known.</div>
+</header>
+
+<div class="cave-wrap">
+  <svg viewBox="0 0 200 130" aria-hidden="true">
+    <path d="M100 4 C152 4 190 48 190 96 L190 126 L10 126 L10 96 C10 48 48 4 100 4 Z" fill="#cfe6fa"/>
+    <path d="M100 16 C144 16 176 52 176 96 L176 126 L24 126 L24 96 C24 52 56 16 100 16 Z" fill="#7fb0dd"/>
+    <path d="M100 26 C138 26 166 56 166 96 L166 126 L34 126 L34 96 C34 56 62 26 100 26 Z" fill="#0e2f5a"/>
+    <path class="seam" d="M100 36 C132 36 155 62 155 96 L155 126 L45 126 L45 96 C45 62 68 36 100 36 Z" fill="none" stroke-width="3"/>
+    <path class="inner" d="M100 42 C129 42 149 66 149 96 L149 126 L51 126 L51 96 C51 66 71 42 100 42 Z"/>
+    <g class="lat" stroke="#9fd0ff" stroke-width="1" fill="#cfe8ff">
+      <circle cx="76" cy="72" r="2"/><circle cx="87" cy="88" r="2"/><circle cx="70" cy="100" r="2"/><circle cx="89" cy="110" r="2"/>
+      <path d="M76 72 L87 88 L70 100 M87 88 L89 110" fill="none"/>
+      <circle cx="126" cy="70" r="2"/><circle cx="115" cy="86" r="2"/><circle cx="131" cy="98" r="2"/><circle cx="117" cy="112" r="2"/>
+      <path d="M126 70 L115 86 L131 98 M115 86 L117 112" fill="none"/>
+    </g>
+  </svg>
+</div>
+
+<form id="gate" autocomplete="off">
+  <label for="voice">Say who you are</label>
+  <div class="mouth" id="mouth">
+    <input type="text" id="voice" placeholder="Speak into the cave"
+           autocapitalize="sentences" autocorrect="off" spellcheck="false"
+           enterkeyhint="go" aria-label="Say who you are" />
+  </div>
+  <button type="submit">Enter</button>
+  <div class="voice" id="reply" role="status"></div>
+  <div class="gate-log" id="log"></div>
+</form>
+
+<footer>SEQUESTERED&nbsp;YETI&nbsp;·&nbsp;BELLEVUE,&nbsp;NEBRASKA</footer>
+
+<script>
+(function(){
+  // The door's destination — where the cave opens to. One constant, re-aimed by the house.
+  var DEST = "https://muse.ai/s/yeti-gxf6xcbxuu3xdxjxe/GuuceX0Ix9qy1bww1QdTzLUhVaeeaMfEchwbbAkSKFY";
+  // The recognition phrase, as the conductor set it.
+  var PHRASE = "this is yeti the conductor";
+  var refusals = 0;
+  var form = document.getElementById('gate');
+  var input = document.getElementById('voice');
+  var reply = document.getElementById('reply');
+  var log = document.getElementById('log');
+  var mouth = document.getElementById('mouth');
+
+  function normalize(s){
+    return (s || "")
+      .toLowerCase()
+      .replace(/[\u2018\u2019]/g, "'")
+      .replace(/[\u201C\u201D]/g, '"')
+      .replace(/[^a-z0-9' ]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var said = normalize(input.value);
+    if (said === PHRASE) {
+      reply.classList.remove('refuse');
+      reply.textContent = "Known. The cave opens.";
+      log.textContent = "";
+      document.body.classList.add('open');
+      setTimeout(function(){ window.location.href = DEST; }, 1300);
+    } else {
+      refusals += 1;
+      reply.classList.add('refuse');
+      reply.textContent = "The cave does not know that voice.";
+      log.textContent = "Refused " + refusals + (refusals === 1 ? " time" : " times") + " at this door.";
+      mouth.classList.remove('shake');
+      void mouth.offsetWidth;
+      mouth.classList.add('shake');
+      input.select();
+    }
+  });
+})();
+</script>
+</body>
+</html>
