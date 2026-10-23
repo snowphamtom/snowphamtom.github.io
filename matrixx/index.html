@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#0a2547" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<title>Matrixx</title>
+<style>
+  :root{
+    --deep:#071c38; --blue:#0a2547; --blue2:#0e2f5a; --ice:#cfe8ff; --ice-dim:#8fb6dd;
+    --gold:#e8b34b; --gold-dim:#7a5c1e; --dark:#040d1d;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{min-height:100%;}
+  body{
+    margin:0; color:var(--ice);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+    background:#04070f;
+    padding:calc(env(safe-area-inset-top) + 28px) 20px calc(env(safe-area-inset-bottom) + 24px);
+    overflow-x:hidden;
+  }
+  body::before{content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
+    background:
+      radial-gradient(120% 60% at 50% -10%, rgba(14,47,90,.55), rgba(4,7,15,0) 60%),
+      radial-gradient(90% 50% at 50% 115%, rgba(232,179,75,.07), rgba(4,7,15,0) 55%),
+      linear-gradient(rgba(6,13,26,.52), rgba(3,7,16,.88));}
+  .wrap{max-width:1060px; margin:0 auto;}
+  .legal{text-align:center; font-size:10.5px; letter-spacing:.18em; color:#6f96c2; line-height:1.9;}
+  .cave-wrap{max-width:340px; margin:26px auto 4px;}
+  .cave-wrap svg{display:block; width:100%; height:auto; filter:drop-shadow(0 16px 34px rgba(0,0,0,.55));}
+  .seam{stroke:#3d5a80; transition:stroke .6s ease;}
+  body.open .seam{stroke:var(--gold); filter:drop-shadow(0 0 9px rgba(232,179,75,.85));}
+  h1.title{text-align:center; font-size:34px; letter-spacing:.28em; margin:14px 0 4px; font-weight:600;
+    text-shadow:0 2px 14px rgba(0,0,0,.8); padding-left:.28em;}
+  .sub{text-align:center; font-size:12.5px; color:var(--ice-dim); letter-spacing:.14em;
+    text-transform:uppercase; text-shadow:0 1px 10px rgba(0,0,0,.85);}
+  .gate{max-width:420px; margin:30px auto 0; text-align:center;}
+  .accept-note{font-size:12.5px; color:var(--ice-dim); letter-spacing:.04em; margin:0 auto 12px; max-width:38ch;}
+  button{font:inherit; cursor:pointer; border-radius:12px;}
+  #accept{ background:linear-gradient(180deg, var(--blue2), var(--blue)); color:var(--ice);
+    border:1px solid rgba(232,179,75,.35); padding:12px 22px; letter-spacing:.12em; font-size:13px;
+    text-transform:uppercase; box-shadow:0 14px 34px rgba(0,0,0,.45);}
+  #accepted{font-size:12px; color:var(--gold); letter-spacing:.1em; min-height:18px; margin-top:10px;}
+  #gateform{margin-top:22px;}
+  #gateform label{display:block; font-size:12px; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--ice-dim); text-align:center; margin-bottom:10px;}
+  .voicebox{background:rgba(4,13,29,.75); border-radius:16px; padding:8px;
+    box-shadow:inset 0 10px 30px rgba(0,0,0,.8), 0 0 0 1px rgba(232,179,75,.14), 0 14px 34px rgba(0,0,0,.45);}
+  #voice{width:100%; background:transparent; border:0; outline:0; color:var(--ice);
+    font:inherit; font-size:17px; text-align:center; padding:12px 8px; letter-spacing:.03em;}
+  #voice::placeholder{color:#54749c;}
+  #enter{margin-top:14px; width:100%; background:linear-gradient(180deg, #123a6e, var(--blue));
+    color:var(--ice); border:1px solid rgba(207,232,255,.22); padding:13px 22px;
+    letter-spacing:.18em; font-size:13px; text-transform:uppercase;}
+  button:disabled, input:disabled{opacity:.38; cursor:default;}
+  .voice{min-height:26px; text-align:center; margin-top:16px; font-size:14.5px; color:var(--ice);}
+  body.open #gateform, body.open #accept, body.open .accept-note{display:none;}
+  #chamber{display:none; margin-top:44px;}
+  body.open #chamber{display:block;}
+  .recorded{text-align:center; font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:11.5px; color:var(--gold); letter-spacing:.08em; margin-bottom:10px;}
+  .pointer{text-align:center; font-size:11px; letter-spacing:.16em; color:var(--gold);
+    opacity:.85; margin-bottom:26px; line-height:1.9;}
+  h2.section{font-size:15px; letter-spacing:.3em; text-transform:uppercase; color:var(--ice);
+    border-bottom:1px solid rgba(232,179,75,.25); padding-bottom:8px; margin:40px 0 16px;}
+  .body-text{font-size:14.5px; line-height:1.75; color:#dceeff;}
+  .body-text p{margin:0 0 12px;}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; overflow-wrap:anywhere;}
+  .pass{color:#9df0bd; font-weight:600; letter-spacing:.1em;}
+  .fail{color:#f2a3a3; font-weight:600; letter-spacing:.1em;}
+  .gridwrap{background:rgba(4,13,29,.72); border:1px solid rgba(232,179,75,.28); border-radius:16px;
+    padding:16px 14px 12px; overflow-x:auto;}
+  .mxgrid{display:grid; gap:2px; min-width:560px;}
+  .mxgrid .cn,.mxgrid .rn{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; color:#54749c;
+    display:flex; align-items:center; justify-content:center;}
+  .mxgrid .cn{font-size:8px; padding-bottom:2px;}
+  .mxgrid .rn{font-size:9.5px; justify-content:flex-end; padding-right:6px;}
+  .cell{aspect-ratio:1/1; border-radius:2px; background:rgba(207,232,255,.05);}
+  .cell.on{background:linear-gradient(180deg, #f3cd77, var(--gold)); box-shadow:0 0 5px rgba(232,179,75,.35);}
+  .legend{font-size:12px; color:var(--ice-dim); letter-spacing:.06em; margin-top:10px; line-height:1.7;}
+  .sw-on{display:inline-block; width:10px; height:10px; border-radius:2px; background:var(--gold);
+    vertical-align:-1px; margin:0 4px 0 10px;}
+  .sw-off{display:inline-block; width:10px; height:10px; border-radius:2px;
+    background:rgba(207,232,255,.12); vertical-align:-1px; margin:0 4px 0 10px;}
+  .checks{display:flex; flex-direction:column; gap:10px;}
+  .check{background:linear-gradient(180deg, rgba(14,47,90,.55), rgba(7,28,56,.55));
+    border:1px solid rgba(207,232,255,.13); border-radius:14px; padding:13px 15px;}
+  .check-top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
+  .check-name{font-weight:600; letter-spacing:.05em; font-size:14px;}
+  .check-what{color:var(--ice-dim); font-size:12.5px; margin-top:3px; line-height:1.55;}
+  .check-result{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:13px;
+    margin-top:8px; color:var(--ice); overflow-wrap:anywhere;}
+  .chip{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:10px; letter-spacing:.08em;
+    padding:3px 7px; border-radius:999px; border:1px solid rgba(207,232,255,.3); color:var(--ice);
+    white-space:nowrap;}
+  .chip.run{border-color:rgba(232,179,75,.55); color:var(--gold);}
+  .chip.ok{border-color:rgba(110,231,160,.55); color:#9df0bd;}
+  .chip.bad{border-color:rgba(240,130,130,.6); color:#f2a3a3;}
+  .chip.idle{color:var(--ice-dim);}
+  .bar{height:6px; border-radius:3px; background:rgba(207,232,255,.1); margin-top:10px; overflow:hidden; display:none;}
+  .bar > div{height:100%; width:0%; background:linear-gradient(90deg, var(--blue2), var(--gold)); transition:width .12s linear;}
+  #runbtn{margin:0 0 18px; background:linear-gradient(180deg, #123a6e, var(--blue)); color:var(--ice);
+    border:1px solid rgba(232,179,75,.35); padding:12px 26px; letter-spacing:.16em; font-size:12.5px;
+    text-transform:uppercase;}
+  .verdict{background:rgba(4,13,29,.72); border:1px solid rgba(232,179,75,.28); border-radius:16px;
+    padding:18px; font-size:14px; line-height:1.75; margin-top:18px; display:none;}
+  footer{margin-top:54px; text-align:center; font-size:11px; color:#6f96c2; letter-spacing:.14em; line-height:2;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="legal">PRIVATE — CONFIDENTIAL · ACCESS BY INVITATION ONLY<br/>
+  EVERYTHING BEYOND THIS DOOR IS THE CONFIDENTIAL PROPERTY OF MONSTERS INK LLC AND IS SUBJECT TO NON-DISCLOSURE</div>
+
+  <div class="cave-wrap" aria-hidden="true">
+    <svg viewBox="0 0 200 130" role="img">
+      <path d="M18 118 L18 74 Q18 22 100 22 Q182 22 182 74 L182 118" fill="none" stroke="#8fb6dd" stroke-width="2"/>
+      <path d="M34 118 L34 78 Q34 38 100 38 Q166 38 166 78 L166 118" fill="none" stroke="#3d5a80" stroke-width="1.5"/>
+      <path class="seam" d="M100 22 L100 118" fill="none" stroke-width="2"/>
+    </svg>
+  </div>
+
+  <h1 class="title">MATRIXX</h1>
+  <div class="sub">Counted, not asserted.</div>
+
+  <div class="gate">
+    <p class="accept-note">This chamber is a confidence. Accept it, and the door will listen for your voice.</p>
+    <button type="button" id="accept">I accept the confidence</button>
+    <div id="accepted"></div>
+    <form id="gateform" autocomplete="off">
+      <label for="voice">Say who you are</label>
+      <div class="voicebox">
+        <input id="voice" type="text" placeholder="Speak"
+               autocapitalize="sentences" autocorrect="off" spellcheck="false"
+               enterkeyhint="go" aria-label="Say who you are" disabled />
+      </div>
+      <button type="submit" id="enter" disabled>Enter</button>
+      <div class="voice" id="reply" role="status"></div>
+    </form>
+  </div>
+
+  <main id="chamber">
+    <div class="recorded">RECORDED · 2026-10-23T13:17:42Z · DATA FILE SHA-256 efa521bf18d10f53f5… (matrixx_14x48.json, 2,045 B)</div>
+    <div class="pointer">A WORKING INSTRUMENT · THE PAGE FETCHES ITS DATA AND COMPUTES EVERY FIGURE IN YOUR BROWSER — NOTHING HERE IS A CLAIM; EVERYTHING IS A COUNT</div>
+
+    <h2 class="section">The Piece</h2>
+    <div class="body-text">
+      <p><strong>Taylor's matrix.</strong> He uploaded it on 2026-10-23 as
+      <span class="mono">Matrixx.pdf</span> — a printout dated 2026-10-19, 6,515 bytes,
+      SHA-256 <span class="mono">b917a643416ddb47c420450e39f6bd939552c116d5bca03e69b73eb20057508f</span>.</p>
+      <p>Fourteen rows by forty-eight columns of bits. The grid below is drawn from the data file
+      this page fetches from beside itself — <span class="mono">matrixx_14x48.json</span>,
+      SHA-256 <span class="mono">efa521bf18d10f53f587007845848a270598d90db17f33ffce97b01e429fff8f</span> —
+      byte-identical to the data extracted from the upload itself. Nothing on this page is rendered
+      from a description of the matrix; it is rendered from the matrix.</p>
+      <p><strong>Provenance beyond Taylor's upload is not held, and none is claimed.</strong></p>
+    </div>
+
+    <h2 class="section">The Matrix</h2>
+    <div class="gridwrap">
+      <div class="mxgrid" id="mxgrid" aria-label="The 14 by 48 matrix"></div>
+      <div class="legend"><span class="sw-on"></span>1<span class="sw-off"></span>0
+        · rows numbered 1–14 down the side, columns 1–48 across the top.
+        Rows 1 and 8 burn full width — the two all-ones rows. Rows 9–14 are the complements
+        of rows 2–7, column by column: the dual mirror. The battery below proves both,
+        it does not take this caption's word for it.</div>
+    </div>
+
+    <h2 class="section">The Battery — Run It</h2>
+    <div class="body-text">
+      <p>Nothing here is asserted. The battery recomputes every figure from the fetched data,
+      in this browser, while you watch. The acceptance battery uses <strong>Variant A decoder
+      semantics</strong> — the house instrument (<span class="mono">verify_v3_sets.py</span>):
+      a fault is accepted iff its syndrome is zero, axis-aligned (one nonzero component),
+      or a scalar multiple of a column — the column-repair (REPAIRED) class. Syndromes are
+      integer sums and differences of columns: for pairs, V<sub>i</sub>+V<sub>j</sub> and
+      V<sub>i</sub>−V<sub>j</sub>; for triples, V<sub>i</sub>+V<sub>j</sub>+V<sub>k</sub> and
+      each (V<sub>a</sub>+V<sub>b</sub>)−V<sub>c</sub>.</p>
+    </div>
+    <button type="button" id="runbtn">Run the battery</button>
+    <div class="checks" id="checks">
+      <div class="check" id="ck-weights"><div class="check-top"><div><div class="check-name">Column weights</div><div class="check-what">Sum every column; each must be exactly 8.</div></div><span class="chip idle">WAITING</span></div><div class="check-result"></div></div>
+      <div class="check" id="ck-distinct"><div class="check-top"><div><div class="check-name">Distinct columns</div><div class="check-what">Compare all 48 columns pairwise; count the distinct ones.</div></div><span class="chip idle">WAITING</span></div><div class="check-result"></div></div>
+      <div class="check" id="ck-ones"><div class="check-top"><div><div class="check-name">All-ones rows</div><div class="check-what">Find the rows that are 1 in all 48 columns.</div></div><span class="chip idle">WAITING</span></div><div class="check-result"></div></div>
+      <div class="check" id="ck-mirror"><div class="check-top"><div><div class="check-name">Dual mirror</div><div class="check-what">Per column: rows 1 and 8 are 1, and row 8+k is the complement of row k for k = 2…7.</div></div><span class="chip idle">WAITING</span></div><div class="check-result"></div></div>
+      <div class="check" id="ck-dist"><div class="check-top"><div><div class="check-name">Pairwise distances</div><div class="check-what">Hamming distance between every pair of columns — 1,128 pairs.</div></div><span class="chip idle">WAITING</span></div><div class="check-result"></div></div>
+      <div class="check" id="ck-sums"><div class="check-top"><div><div class="check-name">Integer pair sums</div><div class="check-what">Add every pair of columns as integer vectors; count the distinct sums.</div></div><span class="chip idle">WAITING</span></div><div class="check-result"></div></div>
+      <div class="check" id="ck-pairs"><div class="check-top"><div><div class="check-name">Pair faults — Variant A</div><div class="check-what">2,256 syndromes (1,128 pairs × sum and difference), classified zero / axis / column-parallel.</div></div><span class="chip idle">WAITING</span></div><div class="check-result"></div></div>
+      <div class="check" id="ck-triples"><div class="check-top"><div><div class="check-name">Triple faults — Variant A</div><div class="check-what">69,184 syndromes (17,296 triples × 4), classified zero / axis / column-parallel. The column-parallel count is the column-repair alias count.</div></div><span class="chip idle">WAITING</span></div><div class="check-result"></div><div class="bar"><div></div></div></div>
+    </div>
+    <div class="verdict" id="verdict"></div>
+
+    <h2 class="section">Standing</h2>
+    <div class="body-text">
+      <p>The house battery measured this matrix on 2026-10-23 under the same Variant A
+      instrument: accepted pair faults 0 (zero 0 · axis 0 · column-parallel 0); accepted triple
+      faults — column-repair aliases <strong>5,556</strong>, axis 0, zero 0; column weights
+      48 of 48 at 8; 48 distinct columns; dual mirror on 48 of 48 columns; minimum distance 2;
+      565 distinct integer pair sums. An independent recomputation the same day reproduced
+      every one of those figures exactly. When the battery above finishes, this page compares
+      its own fresh computation against them and says whether they agree.</p>
+      <p>Same battery, same pass, on the regenerated dual-mirror set: 7,140
+      column-repair aliases. Matrixx's count is smaller by 1,584 — by the same
+      instrument, the stricter matrix.</p>
+      <p>What this matrix is for is not stated here, because the record does not state it.
+      Its provenance beyond the upload is not held. Every other figure on this page is
+      computed, not quoted.</p>
+    </div>
+  </main>
+
+  <footer>SEQUESTERED&nbsp;YETI&nbsp;·&nbsp;BELLEVUE,&nbsp;NEBRASKA<br/>
+  LINKED FROM NOWHERE · FOUND ONLY BY THOSE WHO WERE TOLD</footer>
+</div>
+
+<script>
+(function(){
+  // The recognition phrase, as the conductor set it — the same voice the
+  // cave's door knows. This chamber conducts no one anywhere: no redirect,
+  // no link leaves this folder, and nothing is transmitted; there is no server.
+  var PHRASE = "this is yeti the conductor";
+  var wrong = 0;
+  var locked = false;
+  var form = document.getElementById('gateform');
+  var input = document.getElementById('voice');
+  var reply = document.getElementById('reply');
+  var button = document.getElementById('enter');
+  var acceptBtn = document.getElementById('accept');
+  var acceptedEl = document.getElementById('accepted');
+
+  // Click-to-accept: the box stays shut until the confidence is accepted.
+  // The acceptance is kept only in this browser's own local storage.
+  var acceptedAt = null;
+  try { acceptedAt = window.localStorage.getItem('matrixx-accepted'); } catch (e) { acceptedAt = null; }
+
+  function showAccepted(ts){
+    acceptedEl.textContent = "Accepted: " + new Date(ts).toLocaleString();
+    acceptBtn.style.display = 'none';
+    input.disabled = false;
+    button.disabled = false;
+  }
+  if (acceptedAt) { showAccepted(isNaN(+acceptedAt) ? acceptedAt : +acceptedAt); }
+  acceptBtn.addEventListener('click', function(){
+    var ts = Date.now();
+    try { window.localStorage.setItem('matrixx-accepted', String(ts)); } catch (e) {}
+    showAccepted(ts);
+    input.focus();
+  });
+
+  function normalize(s){
+    return (s || "")
+      .toLowerCase()
+      .replace(/[‘’]/g, "'")
+      .replace(/[“”]/g, '"')
+      .replace(/[^a-z0-9' ]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function lockout(){
+    locked = true;
+    input.disabled = true;
+    button.disabled = true;
+    setTimeout(function(){
+      input.disabled = false;
+      button.disabled = false;
+      locked = false;
+      wrong = 0;
+    }, 60000);
+  }
+
+  var opened = false;
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if (locked || input.disabled) { return; }
+    var said = normalize(input.value);
+    if (said === PHRASE) {
+      reply.textContent = "The cave knows that voice.";
+      document.body.classList.add('open');
+      document.getElementById('chamber').scrollIntoView({behavior:'smooth'});
+      if (!opened) { opened = true; window.__mxOpen && window.__mxOpen(); }
+    } else {
+      // Silence. No message, no count, no change — the seam stays dark.
+      // After five wrong voices the box rests, silently, for a minute.
+      wrong += 1;
+      if (wrong >= 5) { lockout(); }
+    }
+  });
+})();
+</script>
+
+<script>
+// === MX ENGINE BEGIN ===
+// Pure computation over the matrix rows (M[r][c], r = row 0..13 top-first,
+// c = column 0..47). Variant A semantics, ported exactly from the house
+// instrument's definitions: integer vector syndromes; a fault is ACCEPTED
+// iff its syndrome is zero, axis-aligned, or column-parallel.
+function mxColumns(M){
+  var R = M.length, N = M[0].length, V = [];
+  for (var c = 0; c < N; c++){ var col = []; for (var r = 0; r < R; r++) col.push(M[r][c]); V.push(col); }
+  return V;
+}
+function mxAdd(){ var out = [], i, k, arg = arguments;
+  for (k = 0; k < arg[0].length; k++){ var s = 0; for (i = 0; i < arg.length; i++) s += arg[i][k]; out.push(s); }
+  return out; }
+function mxSub(a, b){ var out = []; for (var k = 0; k < a.length; k++) out.push(a[k] - b[k]); return out; }
+function mxIsZero(s){ for (var k = 0; k < s.length; k++) if (s[k] !== 0) return false; return true; }
+function mxIsAxis(s){ var n = 0; for (var k = 0; k < s.length; k++) if (s[k] !== 0) n++; return n === 1; }
+function mxParallel(s, V){
+  for (var j = 0; j < V.length; j++){
+    var col = V[j], e = null, ok = true;
+    for (var k = 0; k < col.length; k++){
+      if (col[k] === 0){ if (s[k] !== 0){ ok = false; break; } }
+      else if (e === null){ e = s[k]; if (e === 0){ ok = false; break; } }
+      else if (s[k] !== e){ ok = false; break; }
+    }
+    if (ok && e) return true;
+  }
+  return false;
+}
+function mxClassify(s, V, acc, pre){
+  if (mxIsZero(s)) acc[pre + "_zero"]++;
+  else if (mxIsAxis(s)) acc[pre + "_axis"]++;
+  else if (mxParallel(s, V)) acc[pre + "_par"]++;
+}
+function mxStructural(M){
+  var R = M.length, N = M[0].length, V = mxColumns(M), i, j, r, c;
+  var weights = V.map(function(col){ return col.reduce(function(a, b){ return a + b; }, 0); });
+  var masks = V.map(function(col){ var m = 0; for (r = 0; r < R; r++) m += col[r] * Math.pow(2, r); return m; });
+  var distinct = new Set(masks).size;
+  var onesRows = [];
+  for (r = 0; r < R; r++){ var all = true; for (c = 0; c < N; c++) if (M[r][c] !== 1){ all = false; break; } if (all) onesRows.push(r + 1); }
+  var mirrorOk = 0;
+  for (c = 0; c < N; c++){
+    if (M[0][c] !== 1 || M[7][c] !== 1) continue;
+    var ok = true;
+    for (var k = 1; k <= 6; k++) if (M[7 + k][c] !== 1 - M[k][c]){ ok = false; break; }
+    if (ok) mirrorOk++;
+  }
+  var dist = {}, mind = null, sums = new Set();
+  for (i = 0; i < N; i++) for (j = i + 1; j < N; j++){
+    var x = masks[i] ^ masks[j], d = 0; while (x){ d += x & 1; x >>= 1; }
+    dist[d] = (dist[d] || 0) + 1;
+    if (mind === null || d < mind) mind = d;
+    sums.add(mxAdd(V[i], V[j]).join(","));
+  }
+  return { weights: weights, weightsAll8: weights.every(function(w){ return w === 8; }),
+           distinct: distinct, onesRows: onesRows, mirrorOk: mirrorOk,
+           dist: dist, mindist: mind, pairSums: sums.size };
+}
+async function mxBattery(M, yieldFn, progressFn){
+  var V = mxColumns(M), N = V.length, i, j, k;
+  var acc = { pair_par: 0, pair_axis: 0, pair_zero: 0, tri_par: 0, tri_axis: 0, tri_zero: 0 };
+  for (i = 0; i < N; i++) for (j = i + 1; j < N; j++){
+    mxClassify(mxAdd(V[i], V[j]), V, acc, "pair");
+    mxClassify(mxSub(V[i], V[j]), V, acc, "pair");
+  }
+  var triples = [];
+  for (i = 0; i < N; i++) for (j = i + 1; j < N; j++) for (k = j + 1; k < N; k++) triples.push([i, j, k]);
+  var CH = 500;
+  for (var t = 0; t < triples.length; t++){
+    var a = triples[t][0], b = triples[t][1], c = triples[t][2];
+    mxClassify(mxAdd(V[a], V[b], V[c]), V, acc, "tri");
+    mxClassify(mxSub(mxAdd(V[b], V[c]), V[a]), V, acc, "tri");
+    mxClassify(mxSub(mxAdd(V[a], V[c]), V[b]), V, acc, "tri");
+    mxClassify(mxSub(mxAdd(V[a], V[b]), V[c]), V, acc, "tri");
+    if (t % CH === CH - 1){ if (progressFn) progressFn(t + 1, triples.length); if (yieldFn) await yieldFn(); }
+  }
+  if (progressFn) progressFn(triples.length, triples.length);
+  return acc;
+}
+// === MX ENGINE END ===
+
+// The house measurement of 2026-10-23 (Variant A battery + structural pass),
+// cited so this page can compare its own fresh computation against it.
+var HOUSE = { weightsAll8: true, distinct: 48, onesRows: [1, 8], mirrorOk: 48,
+  mindist: 2, dist: {"2": 96, "4": 281, "6": 355, "8": 270, "10": 109, "12": 17},
+  pairSums: 565, pair_par: 0, pair_axis: 0, pair_zero: 0,
+  tri_par: 5556, tri_axis: 0, tri_zero: 0 };
+
+(function(){
+  var M = null, running = false;
+  function fmt(n){ return n.toLocaleString("en-US"); }
+  function el(id){ return document.getElementById(id); }
+  function setCheck(id, state, chipText, resultHTML){
+    var box = el(id); if (!box) return;
+    var chip = box.querySelector(".chip");
+    chip.className = "chip " + state;
+    chip.textContent = chipText;
+    if (resultHTML !== null) box.querySelector(".check-result").innerHTML = resultHTML;
+  }
+  function drawGrid(){
+    var g = el("mxgrid");
+    g.style.gridTemplateColumns = "26px repeat(48, 1fr)";
+    var html = "<div></div>";
+    for (var c = 1; c <= 48; c++) html += '<div class="cn">' + c + "</div>";
+    for (var r = 0; r < 14; r++){
+      html += '<div class="rn">' + (r + 1) + "</div>";
+      for (var c2 = 0; c2 < 48; c2++) html += '<div class="cell' + (M[r][c2] === 1 ? " on" : "") + '"></div>';
+    }
+    g.innerHTML = html;
+  }
+  function distString(dist){
+    return Object.keys(dist).sort(function(a, b){ return a - b; })
+      .map(function(d){ return d + " : " + fmt(dist[d]); }).join(" · ");
+  }
+  async function run(){
+    if (running || !M) return;
+    running = true;
+    el("runbtn").disabled = true;
+    ["ck-weights","ck-distinct","ck-ones","ck-mirror","ck-dist","ck-sums","ck-pairs","ck-triples"]
+      .forEach(function(id){ setCheck(id, "idle", "WAITING", ""); });
+    el("verdict").style.display = "none";
+    var yieldFn = function(){ return new Promise(function(r){ setTimeout(r, 0); }); };
+
+    var S = mxStructural(M);
+    setCheck("ck-weights", S.weightsAll8 ? "ok" : "bad", S.weightsAll8 ? "PASS" : "MISMATCH",
+      "48 columns summed: <span class='mono'>" + (S.weightsAll8 ? "every column weighs exactly 8" : "weights " + S.weights.join(",")) + "</span>");
+    await yieldFn();
+    setCheck("ck-distinct", S.distinct === 48 ? "ok" : "bad", S.distinct === 48 ? "PASS" : "MISMATCH",
+      "<span class='mono'>" + S.distinct + " distinct of 48</span>");
+    await yieldFn();
+    var onesOk = S.onesRows.length === 2 && S.onesRows[0] === 1 && S.onesRows[1] === 8;
+    setCheck("ck-ones", onesOk ? "ok" : "bad", onesOk ? "PASS" : "MISMATCH",
+      "<span class='mono'>all-ones rows: " + S.onesRows.join(" and ") + "</span> — no other row qualifies");
+    await yieldFn();
+    setCheck("ck-mirror", S.mirrorOk === 48 ? "ok" : "bad", S.mirrorOk === 48 ? "PASS" : "MISMATCH",
+      "<span class='mono'>" + S.mirrorOk + " of 48 columns</span> satisfy the dual mirror");
+    await yieldFn();
+    setCheck("ck-dist", S.mindist === 2 ? "ok" : "bad", S.mindist === 2 ? "PASS" : "MISMATCH",
+      "minimum distance <span class='mono'>" + S.mindist + "</span> · distribution <span class='mono'>" + distString(S.dist) + "</span> (of 1,128 pairs)");
+    await yieldFn();
+    setCheck("ck-sums", S.pairSums === 565 ? "ok" : "bad", S.pairSums === 565 ? "PASS" : "MISMATCH",
+      "<span class='mono'>" + fmt(S.pairSums) + " distinct</span> integer pair sums of 1,128 pairs");
+    await yieldFn();
+
+    setCheck("ck-triples", "run", "RUNNING", "counting triples…");
+    var bar = el("ck-triples").querySelector(".bar");
+    var fill = bar.querySelector("div");
+    bar.style.display = "block";
+    var acc = await mxBattery(M, yieldFn, function(done, total){
+      fill.style.width = (100 * done / total).toFixed(1) + "%";
+      el("ck-triples").querySelector(".check-result").innerHTML =
+        "counting triples… <span class='mono'>" + fmt(done) + " / " + fmt(total) + "</span>";
+    });
+    setCheck("ck-pairs", (acc.pair_par + acc.pair_axis + acc.pair_zero) === 0 ? "ok" : "bad",
+      (acc.pair_par + acc.pair_axis + acc.pair_zero) === 0 ? "PASS" : "MISMATCH",
+      "2,256 syndromes: <span class='mono'>zero " + acc.pair_zero + " · axis " + acc.pair_axis +
+      " · column-parallel " + acc.pair_par + "</span> — no pair fault is accepted");
+    bar.style.display = "none";
+    setCheck("ck-triples", acc.tri_par === HOUSE.tri_par ? "ok" : "bad",
+      acc.tri_par === HOUSE.tri_par ? "COUNTED" : "MISMATCH",
+      "69,184 syndromes: <span class='mono'>column-repair aliases " + fmt(acc.tri_par) +
+      " · axis " + acc.tri_axis + " · zero " + acc.tri_zero + "</span>");
+
+    var agree = S.weightsAll8 === HOUSE.weightsAll8 && S.distinct === HOUSE.distinct &&
+      onesOk && S.mirrorOk === HOUSE.mirrorOk && S.mindist === HOUSE.mindist &&
+      JSON.stringify(S.dist) === JSON.stringify(HOUSE.dist) && S.pairSums === HOUSE.pairSums &&
+      acc.pair_par === HOUSE.pair_par && acc.pair_axis === HOUSE.pair_axis &&
+      acc.pair_zero === HOUSE.pair_zero && acc.tri_par === HOUSE.tri_par &&
+      acc.tri_axis === HOUSE.tri_axis && acc.tri_zero === HOUSE.tri_zero;
+    var v = el("verdict");
+    v.style.display = "block";
+    v.innerHTML = agree
+      ? "<span class='pass'>AGREEMENT.</span> Every figure this page just computed in your browser "
+        + "matches the house measurement of 2026-10-23 — including the 5,556 column-repair aliases "
+        + "under the Variant A battery. The instrument and the record agree because both counted "
+        + "the same fetched data."
+      : "<span class='fail'>DISAGREEMENT.</span> One or more figures computed here differ from the "
+        + "house measurement of 2026-10-23 cited in Standing. The chips above show exactly which, "
+        + "and the fresh computation is the one displayed.";
+    running = false;
+    el("runbtn").disabled = false;
+  }
+  el("runbtn").addEventListener("click", run);
+  window.__mxOpen = function(){
+    fetch("matrixx_14x48.json").then(function(r){ return r.json(); }).then(function(data){
+      M = data;
+      drawGrid();
+      run();
+    }).catch(function(){
+      el("mxgrid").innerHTML = "<div class='check-result'>The data file did not load — without it, nothing on this page can be drawn or verified.</div>";
+    });
+  };
+})();
+</script>
+</body>
+</html>
