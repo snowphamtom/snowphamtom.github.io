@@ -1,13 +1,13 @@
 {
- "exported_at": "2026-10-23T16:50:14Z",
+ "exported_at": "2026-10-23T17:24:28Z",
  "exporter": "djinn_mind/engine.py via export_for_living_site.py",
  "canon": 25,
  "corpus": 5681,
- "raw_bytes": 197133715,
- "raw_sha256": "ea40206b5a49f2fe2f168abd852b5c2599887a4dc2c1d9428596e3ce8f6df883",
+ "raw_bytes": 195955616,
+ "raw_sha256": "1324fe3204dcc719cd524bf5a25ed4b78d28f022cfd6acc1a76801f444b3c40f",
  "codec": "zstd",
  "encoding": "base64",
- "compressed_bytes": 40301042,
+ "compressed_bytes": 40624784,
  "slice_bytes": 3000000,
  "chunk_size": 3000000,
  "chunk_count": 14,
@@ -16,99 +16,99 @@
    "index": 0,
    "name": "seed-0000.b64",
    "bytes": 4000000,
-   "sha256": "b58c93aadff5a6da719a8e1ad647b3a3b7043f85d04c6cde7179957c17165fda",
+   "sha256": "46fd558d4f7a71c3cd197ca3dc3e75755a034e087d3d2cf62931f12cbe815c17",
    "slice_bytes": 3000000
   },
   {
    "index": 1,
    "name": "seed-0001.b64",
    "bytes": 4000000,
-   "sha256": "d218bc81165e0e0ba7a17c8f1bda9eec51adce96057f1a0d866b9cec34e7da27",
+   "sha256": "5b94a5487912d049bf00c2bd28d30eac51c4e42c9c079992c6c1840f6225d226",
    "slice_bytes": 3000000
   },
   {
    "index": 2,
    "name": "seed-0002.b64",
    "bytes": 4000000,
-   "sha256": "39c110b9bbe45c6b5eb914cd042a5964aa07dbf34ae5be6c51cf7719593e4c21",
+   "sha256": "c42d0f798dcf84c7db7feb31720e1d56b06fa28448ba3df2749260591a3bea56",
    "slice_bytes": 3000000
   },
   {
    "index": 3,
    "name": "seed-0003.b64",
    "bytes": 4000000,
-   "sha256": "587f196ed34cb0e0e2564d72e20dd3ea43ea2a137fe720f69b336fcecfcb8d9c",
+   "sha256": "2e76ae6d74ffbe4b79a95731d9adf335ad4fd4843890b8712ee1281276f367b9",
    "slice_bytes": 3000000
   },
   {
    "index": 4,
    "name": "seed-0004.b64",
    "bytes": 4000000,
-   "sha256": "9152082b60a6abe4b142b8bb3f3afc1c0992ace025f1fcc4184f7aa83681a1ff",
+   "sha256": "cd896fc98db3167f83f4c05287c064135043abeecb03a7945720a9e7b05d6538",
    "slice_bytes": 3000000
   },
   {
    "index": 5,
    "name": "seed-0005.b64",
    "bytes": 4000000,
-   "sha256": "cc878040f5ffb84af951623e0e9386ab6457a2bf1958ebdbe3673f078462eb6a",
+   "sha256": "d7274caca05e3bef3d62b7ff3e177c95caeab4975d843e2f922424953c762a53",
    "slice_bytes": 3000000
   },
   {
    "index": 6,
    "name": "seed-0006.b64",
    "bytes": 4000000,
-   "sha256": "e055248b7bd53bdcb4246b85a28a5f48e1e199f37938f121a63da778dba3bfe4",
+   "sha256": "4baa7ce2de9e54aeda39097ecdd44e29735d791c736164a5ab5c003f5b910f88",
    "slice_bytes": 3000000
   },
   {
    "index": 7,
    "name": "seed-0007.b64",
    "bytes": 4000000,
-   "sha256": "982726663992bcbbf0fe06c0c8c1c8f252198aa92515f7f783a6ca20c399df58",
+   "sha256": "e6037740f4b737e1ac1a59b10c6f2373563928493e237a2b474bff2578aa1db0",
    "slice_bytes": 3000000
   },
   {
    "index": 8,
    "name": "seed-0008.b64",
    "bytes": 4000000,
-   "sha256": "34f408e1447a574e7c3c725d2d5501ef55b702c70614736b46aafcf378c996b5",
+   "sha256": "54d341101c45619f90d77cfca7f8b92ec93e55d423acbc0928ecbeaccc416592",
    "slice_bytes": 3000000
   },
   {
    "index": 9,
    "name": "seed-0009.b64",
    "bytes": 4000000,
-   "sha256": "b857947d87ba82c2855be535186227d0f1eb77d4216e8eacf1883ed314ac68eb",
+   "sha256": "5ce31bc6c6897f7e538aca60117ec4a35399d1754985404ba96e6fe23a2aad70",
    "slice_bytes": 3000000
   },
   {
    "index": 10,
    "name": "seed-0010.b64",
    "bytes": 4000000,
-   "sha256": "3d4a4e98ced91469fc90d7eb319bacd32d3296082fd0ececa4d9a282775d1087",
+   "sha256": "f6072615fc01eb64611859ee152fae826291d88221d8ce5d95d99e809e0637d9",
    "slice_bytes": 3000000
   },
   {
    "index": 11,
    "name": "seed-0011.b64",
    "bytes": 4000000,
-   "sha256": "7bbff60affa17aaf08c913764368c2ea7ab11b9e8bff10a5c49103767be9c6cd",
+   "sha256": "db1f77037ffa600b23e815dbd7daf3a1f694a8db8305ab4c8358b80c122de635",
    "slice_bytes": 3000000
   },
   {
    "index": 12,
    "name": "seed-0012.b64",
    "bytes": 4000000,
-   "sha256": "f9abab4e9c91b49ffd8fc5c3833e397f47e371299c547a8f1f817236c11992ae",
+   "sha256": "bf51ea0ca39fd7cef4dbe89e6118afd331c88a9457a4a9dbb9455e64856066d0",
    "slice_bytes": 3000000
   },
   {
    "index": 13,
    "name": "seed-0013.b64",
-   "bytes": 1734724,
-   "sha256": "101a1e3209170f4221aa7b6c162311af93a24275a6f53ca2727a02e49bdb665e",
-   "slice_bytes": 1301042
+   "bytes": 2166380,
+   "sha256": "8e214da2263638448debea87522c7c89bb06638827e957f7457b238df49d8f6d",
+   "slice_bytes": 1624784
   }
  ],
  "site_base": "https://sequesteredyeti.art/djinn/seed/",
