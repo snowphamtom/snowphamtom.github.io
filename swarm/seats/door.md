@@ -12,5 +12,5 @@ The admission law, posted at the door (Taylor's text, unchanged):
 
 > measure what is left over after an interaction; admit only what fits inside that leftover; otherwise refuse and record the refusal
 
-State at the door's opening: register 347 rows, chain verified,
-tip `111a9d281cdfb352`. The board is [STATUS.md](../STATUS.md).
+State at the door's opening: register 354 rows, chain verified,
+tip `ac4e928d896878c8`. The board is [STATUS.md](../STATUS.md).

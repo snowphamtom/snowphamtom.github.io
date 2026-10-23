@@ -1,9 +1,9 @@
 {
- "rows": 347,
- "tip": "111a9d281cdfb352c65134cde1668747345ce8c623ad80b229b55abdc7330364",
- "mirror_sha256": "b9ba7e087df9f0f5029f80937f623fe6dbba9e14b1f3429087269b1780bf9b2b",
- "bytes": 381780,
- "verified_at": "2026-10-23T14:19:27Z",
+ "rows": 354,
+ "tip": "ac4e928d896878c84fd300725ab9b584006ebeb1a370f97750093c766e9785ed",
+ "mirror_sha256": "04f45328729dfd1d52781d845afa86de9a84a7239dba0132f76777aa01a43e01",
+ "bytes": 390991,
+ "verified_at": "2026-10-23T14:36:11Z",
  "source": "the house register (canonical)",
  "chain": "VERIFIED \u2014 mirror verified byte-identical to the house original",
  "floor": "sequesteredyeti.art/swarm/ (repo snowphamtom/snowphamtom.github.io, path swarm/register/)"
