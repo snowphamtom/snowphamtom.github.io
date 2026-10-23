@@ -1,4 +1,4 @@
-d765c3b38a853c3b0bf23dc76d3719520f09bf284aad3ec3cdce1e28d40cf23a  ./README.md
+18187a5a5a1b374cdcb58984b9062fa6afc8d094e26abd9911cb292cb2eb3832  ./README.md
 cae51f749912838e0a67f26082c4a3fcc2f161d00ee8a1b6f298cdd83fc8bf6f  ./battery.py
 699a1f3d4c7e4ed1b6a22aed9634ef867ea3eac341d243795d26f10fb2d2a91b  ./battery_results.txt
 9260e520675cdf5f5fd12a9f88a545dd0c1e74f90c4febc0dad682d1296b4355  ./f64_spec_masks.csv
