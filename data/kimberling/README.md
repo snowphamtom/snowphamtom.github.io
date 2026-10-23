@@ -29,7 +29,8 @@ the 30 positive integers absent from the first 100,000 terms:
   paper; the recursion itself reproduces all 20 published initial terms.
 - Independent forward recomputation (a second implementation of the
   backward trace, run 2026-10-22): a(181393) = 68, a(168343) = 150,
-  a(471122) = 384, a(4574186) = 427 — all exact.
+  a(471122) = 384, a(4574186) = 427, a(118850522) = 502,
+  a(653494691) = 669 — all exact, including both largest indices.
 
 ## What is still open
 
