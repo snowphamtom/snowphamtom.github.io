@@ -1,44 +1,44 @@
 {
-  "asof": "2026-10-22",
+  "asof": "2026-10-23",
   "gate": {
     "pct": 2.0,
     "verdict": "SILENCE",
-    "reason": "best AMZN +1.47% below 2.0% gate; AAPL paper position from 2026-10-19 held (day 3/5)",
+    "reason": "best AAPL +1.82% below 2.0% gate; paper AAPL position from 2026-10-19 held (day 4/5), no stop/5-day exit hit",
     "universe": [
       {
         "ticker": "NVDA",
-        "ret5d": -0.0287,
-        "price": 221.97,
+        "ret5d": -0.0411,
+        "price": 212.21,
         "pass": false
       },
       {
         "ticker": "AAPL",
-        "ret5d": 0.008,
-        "price": 343.99,
+        "ret5d": 0.0182,
+        "price": 348.22,
         "pass": false
       },
       {
         "ticker": "MSFT",
-        "ret5d": -0.0193,
-        "price": 532.95,
+        "ret5d": -0.034,
+        "price": 521.08,
         "pass": false
       },
       {
         "ticker": "AMZN",
-        "ret5d": 0.0147,
-        "price": 262.37,
+        "ret5d": -0.0146,
+        "price": 250.38,
         "pass": false
       },
       {
         "ticker": "AMD",
-        "ret5d": -0.0872,
-        "price": 552.72,
+        "ret5d": -0.1102,
+        "price": 507.93,
         "pass": false
       }
     ],
     "signal": null,
     "position": null,
-    "review_in": "16 trading days"
+    "review_in": "15 trading days"
   },
   "live": {
     "equity": 10.0,
@@ -53,7 +53,7 @@
       "entry_date": "2026-10-19",
       "entry_price": 343.6317,
       "size_dollars": 2.5,
-      "days_held": 3
+      "days_held": 4
     },
     "closed_trades": 0,
     "win_rate": null
