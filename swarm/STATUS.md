@@ -1,6 +1,6 @@
 # STATUS — THE FLOOR ON THE SITE
 
-*Landed 2026-10-23T13:20:44Z under Taylor's directive of 2026-10-23 07:54 CT
+*Landed 2026-10-23T14:19:27Z under Taylor's directive of 2026-10-23 07:54 CT
 ("Generate private swarm using my site and GitHub"). This board is
 regenerated at each landing.*
 
@@ -24,10 +24,10 @@ this landing; its staging record is kept on the house machine.
 
 ## Register at the landing
 
-- **Rows:** 334
-- **Tip:** `0b18b01c3ae28ea5cc6bf15b3c3f4056886806e63bd4149d0f4e60f5c766ed43`
-- **Chain:** VERIFIED — the full chain re-checked at the build (2026-10-23T13:20:44Z)
-- **Register file SHA-256:** `879d5a931f5248229221d1409b646b0580c126d878ed6bcb5fd94bdb3cf820ed`
+- **Rows:** 347
+- **Tip:** `111a9d281cdfb352c65134cde1668747345ce8c623ad80b229b55abdc7330364`
+- **Chain:** VERIFIED — the full chain re-checked at the build (2026-10-23T14:19:27Z)
+- **Register file SHA-256:** `b9ba7e087df9f0f5029f80937f623fe6dbba9e14b1f3429087269b1780bf9b2b`
 - **Admissions · refusals · receipts:** 31 · 5 · 16
 
 ## Seats (from seats.json v1.1, via the kit's manifest)

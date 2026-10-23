@@ -7,9 +7,9 @@ from these seats) with the digest state in `register/REGISTER_STATE.json`.
 
 Mirror state at the floor's landing:
 
-- **Rows:** 334
-- **Tip:** `0b18b01c3ae28ea5cc6bf15b3c3f4056886806e63bd4149d0f4e60f5c766ed43`
-- **Mirror file SHA-256:** `879d5a931f5248229221d1409b646b0580c126d878ed6bcb5fd94bdb3cf820ed`
+- **Rows:** 347
+- **Tip:** `111a9d281cdfb352c65134cde1668747345ce8c623ad80b229b55abdc7330364`
+- **Mirror file SHA-256:** `b9ba7e087df9f0f5029f80937f623fe6dbba9e14b1f3429087269b1780bf9b2b`
 - **Chain verification:** VERIFIED against the mirror (byte-identical to the
   house original — see `PROOF.md` at the floor root)
 

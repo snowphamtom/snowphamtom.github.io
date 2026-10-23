@@ -10,4 +10,4 @@ The HIVE/GRIMM verification swarm: nine seats, a 33-row claim register,
 frozen 2026-10-18 (Freeze HOLD) and unfrozen 2026-10-22 into the one-floor
 design, where its live seats run through their successors above.
 
-Labels: `hive:experimentalist` · `wing:hive` · `state:structure`
+Standing: HIVE seat EXPERIMENTALIST · Wing HIVE · State STRUCTURE-ONLY.

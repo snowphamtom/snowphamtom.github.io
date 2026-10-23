@@ -31,4 +31,4 @@ door. The work itself happens in the workshop.
 
 PRIVATE. Linked from nowhere public. The swarm interior is confidential.
 
-*Landing: 2026-10-23T13:20:44Z · register 334 rows · tip `0b18b01c3ae28ea5` · chain verified.*
+*Landing: 2026-10-23T14:19:27Z · register 347 rows · tip `111a9d281cdfb352` · chain verified.*

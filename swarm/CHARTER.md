@@ -2,11 +2,11 @@
 
 # THE FLOOR — CHARTER
 
-**Repo:** `snowphamtom/the-swarm` (PRIVATE — the swarm interior is confidential;
-the impenetrable posture governs everything in this repo).
+**Repo:** `snowphamtom/the-swarm` (private — the floor's interior is confidential
+and is not published).
 **Design of record:** `Optimal_Bot_Swarm_Design_2026-10-22.html` (Monsters Ink LLC).
 **Seats of record:** `seats.json` v1.1, adopted 2026-10-22.
-**Spine:** the register — an append-only, hash-chained ledger. The VM copy is
+**Spine:** the register — an append-only, hash-chained ledger. The house copy is
 canonical; `register/register.jsonl` in this repo is its verified mirror.
 
 ## The admission law (the GATE) — Taylor's text, unchanged
@@ -16,51 +16,56 @@ canonical; `register/register.jsonl` in this repo is its verified mirror.
 
 ## How the floor works on GitHub
 
-- **One issue per seat.** A seat's issue is its thread and its charter: the
-  body pins the seat's wing, occupant, cadence, capacity, and scopes from
-  `seats.json`. No seat speaks without its issue.
+- **One thread per seat.** Each seat has its own thread, which carries its
+  charter: the seat's wing, occupant, cadence, capacity, and scopes from
+  `seats.json`. No seat speaks outside its own thread.
 - **Admission events** (a packet admitted, a packet refused, a receipt) are
-  recorded as comments on the seat's issue **and** as rows in the register.
-  The register is the proof; the issue is the window.
-- **Labels are the state.** `seat:<id>` names the seat, `wing:<name>` its
-  wing, `state:live|structure|admitted|refused|unresolved` its standing.
-  A seat whose state label changes gets a comment saying why, in the same act.
+  recorded as comments on the seat's thread **and** as rows in the register.
+  The register is the record; the thread shows the seat's state and history.
+- **Standing is stated in words.** Each seat's page and thread state its
+  seat, its wing, and its standing — live, structure-only, admitted, refused,
+  or unresolved. On GitHub the standing is also carried as a label, so the
+  board can be filtered. A change of standing is recorded with its reason,
+  in the same act.
 - **The HIVE is a wing of this floor**, not a second repo — one floor, per
   the design of record. Its nine seats carry `wing:hive` + `hive:<name>`.
   Four live through their successors on the floor; four are structure-only;
-  the ninth seat is **UNRESOLVED** (NH-10) and is never invented.
+  the ninth seat is **unresolved** — its name appears in no held record,
+  and it is never invented.
 - **TOLL's limits carry over exactly:** TOLL cannot sign, send, submit, or
-  spend. Its scopes here are what they are on the VM: sweep, adjudicate, stage.
-- **Standing grants** (from `seats.json`): ALW-GITHUB-T2RZZ7 (github-write,
-  to 2026-11-19), ALW-GMAIL-LCNRUX (gmail, to 2026-11-19),
-  ALL-ACCESS-2026-10-22. Disclosure-class scopes are never covered by a
-  standing grant: publishing unfiled matter needs Taylor's per-action decision.
+  spend. Its scopes here are what they are at the house: sweep, adjudicate, stage.
+- **Standing grants** (recorded in `seats.json`): GitHub write and Gmail,
+  each to 2026-11-19, and an all-access grant dated 2026-10-22. A standing
+  grant never covers disclosure: publishing unfiled matter needs Taylor's
+  decision on the act itself.
 
 ## What is live, with and without the Actions workflows
 
 The Muse GitHub App can read/write issues, comments, labels, and ordinary
 files here — **the floor runs on those powers alone from its first push.**
 The App cannot create this repo (403, measured 2026-10-23) and cannot push
-workflow files (the Workflows permission is Taylor's item T1, ungranted).
+workflow files (the Workflows permission is a change only Taylor can make;
+  it has not been made).
 
 - **Live without workflows:** every seat issue and its thread; label state;
-  the register mirror as files (pushed by the VM mirror script under the
-  house push lock); Taylor's window and hand through Working Copy.
+  the register mirror as files (pushed by the mirror script under the
+  house push lock); Taylor's own reading and hand, through the Working Copy
+  app on his phone.
 - **Added when Taylor pushes `.github/workflows/` from Working Copy:**
   `register-mirror-check` re-verifies the mirrored chain on a 30-minute
   rhythm and comments on the register issue if the chain ever breaks;
   `seat-heartbeat` posts a cycle-state comment on the FLOW seat issue hourly.
-  Until then, the VM's own crons (FLOW 30-minute sweep, the keeper watchdog)
-  remain the rhythm, exactly as they are today.
+  Until then, the house machine's own scheduled jobs (the FLOW 30-minute
+  sweep, the keeper watchdog) remain the rhythm, exactly as they are today.
 
 ## Durability — why this repo exists
 
-The VM that runs the swarm dies to platform churn roughly hourly; the
-register, the keeper, and the reaper record prove it. This repo is the durable
-substrate: the register mirror means the chain's verified state survives any
-single VM death and is readable from Taylor's phone. If the VM register and
-this mirror ever disagree, the mirror's `REGISTER_STATE.json` names the last
-verified tip — the chain is re-derived from the VM original, never from the
-mirror alone.
+The machine that runs the swarm is replaced by its platform roughly
+hourly; the register and the keeper's log prove it. This repo is the durable
+home of the record: the register mirror means the chain's verified state
+survives any single machine's end and is readable from Taylor's phone. If
+the house register and this mirror ever disagree, the mirror's
+`REGISTER_STATE.json` names the last verified tip — the chain is re-derived
+from the house original, never from the mirror alone.
 
 *Staged 2026-10-23T12:45:31Z. Register at staging: 325 rows, tip `5e59f5b80db0ab1b`.*
