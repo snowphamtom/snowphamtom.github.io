@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#0a2547" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Yeti" />
+<title>SRAT-20</title>
+<style>
+  :root{
+    --deep:#071c38; --blue:#0a2547; --blue2:#0e2f5a; --ice:#cfe8ff; --ice-dim:#8fb6dd;
+    --gold:#e8b34b; --gold-dim:#7a5c1e; --dark:#040d1d;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{min-height:100%;}
+  body{
+    margin:0; color:var(--ice);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+    background:#04070f;
+    padding:calc(env(safe-area-inset-top) + 28px) 20px calc(env(safe-area-inset-bottom) + 24px);
+    overflow-x:hidden;
+  }
+  body::before{content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
+    background:
+      radial-gradient(120% 60% at 50% -10%, rgba(14,47,90,.55), rgba(4,7,15,0) 60%),
+      radial-gradient(90% 50% at 50% 115%, rgba(232,179,75,.07), rgba(4,7,15,0) 55%),
+      linear-gradient(rgba(6,13,26,.52), rgba(3,7,16,.88));}
+  .wrap{max-width:1060px; margin:0 auto;}
+  .legal{text-align:center; font-size:10.5px; letter-spacing:.18em; color:#6f96c2; line-height:1.9;}
+  .cave-wrap{max-width:340px; margin:26px auto 4px;}
+  .cave-wrap svg{display:block; width:100%; height:auto; filter:drop-shadow(0 16px 34px rgba(0,0,0,.55));}
+  .seam{stroke:#3d5a80; transition:stroke .6s ease;}
+  body.open .seam{stroke:var(--gold); filter:drop-shadow(0 0 9px rgba(232,179,75,.85));}
+  h1.title{text-align:center; font-size:34px; letter-spacing:.28em; margin:14px 0 4px; font-weight:600;
+    text-shadow:0 2px 14px rgba(0,0,0,.8); padding-left:.28em;}
+  .sub{text-align:center; font-size:12.5px; color:var(--ice-dim); letter-spacing:.14em;
+    text-transform:uppercase; text-shadow:0 1px 10px rgba(0,0,0,.85);}
+  .gate{max-width:420px; margin:30px auto 0; text-align:center;}
+  .accept-note{font-size:12.5px; color:var(--ice-dim); letter-spacing:.04em; margin:0 auto 12px; max-width:38ch;}
+  button{font:inherit; cursor:pointer; border-radius:12px;}
+  #accept{ background:linear-gradient(180deg, var(--blue2), var(--blue)); color:var(--ice);
+    border:1px solid rgba(232,179,75,.35); padding:12px 22px; letter-spacing:.12em; font-size:13px;
+    text-transform:uppercase; box-shadow:0 14px 34px rgba(0,0,0,.45);}
+  #accepted{font-size:12px; color:var(--gold); letter-spacing:.1em; min-height:18px; margin-top:10px;}
+  #gateform{margin-top:22px;}
+  #gateform label{display:block; font-size:12px; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--ice-dim); text-align:center; margin-bottom:10px;}
+  .voicebox{background:rgba(4,13,29,.75); border-radius:16px; padding:8px;
+    box-shadow:inset 0 10px 30px rgba(0,0,0,.8), 0 0 0 1px rgba(232,179,75,.14), 0 14px 34px rgba(0,0,0,.45);}
+  #voice{width:100%; background:transparent; border:0; outline:0; color:var(--ice);
+    font:inherit; font-size:17px; text-align:center; padding:12px 8px; letter-spacing:.03em;}
+  #voice::placeholder{color:#54749c;}
+  #enter{margin-top:14px; width:100%; background:linear-gradient(180deg, #123a6e, var(--blue));
+    color:var(--ice); border:1px solid rgba(207,232,255,.22); padding:13px 22px;
+    letter-spacing:.18em; font-size:13px; text-transform:uppercase;}
+  button:disabled, input:disabled{opacity:.38; cursor:default;}
+  .voice{min-height:26px; text-align:center; margin-top:16px; font-size:14.5px; color:var(--ice);}
+  body.open #gateform, body.open #accept, body.open .accept-note{display:none;}
+  #floor{display:none; margin-top:44px;}
+  body.open #floor{display:block;}
+  .pointer{text-align:center; font-size:11px; letter-spacing:.16em; color:var(--gold);
+    opacity:.85; margin-bottom:26px; line-height:1.9;}
+  h2.section{font-size:15px; letter-spacing:.3em; text-transform:uppercase; color:var(--ice);
+    border-bottom:1px solid rgba(232,179,75,.25); padding-bottom:8px; margin:40px 0 16px;}
+  .body-text{font-size:14.5px; line-height:1.75; color:#dceeff;}
+  .body-text p{margin:0 0 12px;}
+  .panel{background:rgba(4,13,29,.72); border:1px solid rgba(232,179,75,.28); border-radius:16px;
+    padding:18px; font-size:13.5px; line-height:1.7; margin:14px 0;}
+  .panel .k{color:var(--ice-dim); letter-spacing:.12em; text-transform:uppercase; font-size:11px;}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; overflow-wrap:anywhere;}
+  .feats{display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:12px;}
+  .feat{background:linear-gradient(180deg, rgba(14,47,90,.55), rgba(7,28,56,.55));
+    border:1px solid rgba(207,232,255,.13); border-radius:14px; padding:14px;}
+  .feat-name{font-weight:600; letter-spacing:.05em; font-size:14.5px;}
+  .feat-body{color:var(--ice-dim); font-size:12.5px; margin-top:5px; line-height:1.55;}
+  pre.specimen{background:rgba(2,6,14,.85); border:1px solid rgba(207,232,255,.15); border-radius:14px;
+    padding:16px; overflow-x:auto; font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:11.5px; line-height:1.55; color:#bcd8f5;}
+  table.spec, table.lanes{width:100%; border-collapse:collapse; font-size:13.5px; margin:10px 0;}
+  table.spec th, table.spec td, table.lanes th, table.lanes td{
+    border-bottom:1px solid rgba(207,232,255,.13); padding:7px 8px; text-align:left;}
+  table.spec th, table.lanes th{color:var(--ice-dim); letter-spacing:.1em; text-transform:uppercase; font-size:11px;}
+  .cells{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px; line-height:2.1;}
+  .cell{display:inline-block; min-width:2.6em; text-align:center; margin:1px;
+    background:rgba(14,47,90,.5); border:1px solid rgba(207,232,255,.12); border-radius:6px; padding:0 3px;}
+  .cell.par{border-color:rgba(232,179,75,.35);}
+  .cell.bad{background:rgba(120,20,20,.55); border-color:rgba(240,130,130,.7); color:#ffd7d7;}
+  .controls{display:flex; flex-wrap:wrap; gap:10px; align-items:flex-end; margin:14px 0;}
+  .ctl{display:flex; flex-direction:column; gap:5px; font-size:11px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--ice-dim);}
+  .ctl input{width:5.2em; background:rgba(4,13,29,.8); border:1px solid rgba(207,232,255,.25);
+    border-radius:8px; color:var(--ice); font:inherit; font-size:14px; padding:7px 8px; text-align:center;}
+  .btn{background:linear-gradient(180deg, #123a6e, var(--blue)); color:var(--ice);
+    border:1px solid rgba(207,232,255,.22); padding:10px 16px; letter-spacing:.1em;
+    font-size:12px; text-transform:uppercase;}
+  .btn.warn{border-color:rgba(240,130,130,.5);}
+  .status{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:13px; letter-spacing:.1em;
+    padding:4px 11px; border-radius:999px; border:1px solid rgba(207,232,255,.3);}
+  .status.CLEAN{border-color:rgba(110,231,160,.6); color:#9df0bd;}
+  .status.REPAIRED{border-color:rgba(232,179,75,.65); color:var(--gold);}
+  .status.TAIL_EDIT{border-color:rgba(143,182,221,.65); color:var(--ice);}
+  .status.REFUSED{border-color:rgba(240,130,130,.65); color:#f2a3a3;}
+  .detail{margin-top:9px; font-size:13.5px; color:var(--ice-dim); line-height:1.6;}
+  .propagate{font-size:13.5px; line-height:1.65; color:#f2c9c9;
+    border-left:3px solid rgba(240,130,130,.6); padding:4px 0 4px 14px;}
+  .res-refuse{color:#f2a3a3;}
+  .res-ok{color:#9df0bd;}
+  .int-inputs{display:flex; flex-wrap:wrap; gap:10px; margin:10px 0;}
+  .int-input{display:flex; flex-direction:column; gap:5px; font-size:11px; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--ice-dim);}
+  .int-input input{width:6em; background:rgba(4,13,29,.8); border:1px solid rgba(207,232,255,.25);
+    border-radius:8px; color:var(--ice); font:inherit; font-size:14px; padding:7px 8px; text-align:center;}
+  .bpass{color:#9df0bd; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12.5px; line-height:1.9;}
+  .bfail{color:#f2a3a3; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12.5px; line-height:1.9;}
+  .bverdict{margin-top:8px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:13px; letter-spacing:.1em; color:var(--gold);}
+  footer{margin-top:54px; text-align:center; font-size:11px; color:#6f96c2; letter-spacing:.14em; line-height:2;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="legal">PRIVATE — CONFIDENTIAL · ACCESS BY INVITATION ONLY<br/>
+  EVERYTHING BEYOND THIS DOOR IS THE CONFIDENTIAL PROPERTY OF MONSTERS INK LLC AND IS SUBJECT TO NON-DISCLOSURE</div>
+
+  <div class="cave-wrap" aria-hidden="true">
+    <svg viewBox="0 0 200 130" role="img">
+      <path d="M18 118 L18 74 Q18 22 100 22 Q182 22 182 74 L182 118" fill="none" stroke="#8fb6dd" stroke-width="2"/>
+      <path d="M34 118 L34 78 Q34 38 100 38 Q166 38 166 78 L166 118" fill="none" stroke="#3d5a80" stroke-width="1.5"/>
+      <path class="seam" d="M100 22 L100 118" fill="none" stroke-width="2"/>
+    </svg>
+  </div>
+
+  <h1 class="title">SRAT-20</h1>
+  <div class="sub">Speak, and be known.</div>
+
+  <div class="gate">
+    <p class="accept-note">This record is a confidence. Accept it, and the door will listen for your voice.</p>
+    <button type="button" id="accept">I accept the confidence</button>
+    <div id="accepted"></div>
+    <form id="gateform" autocomplete="off">
+      <label for="voice">Say who you are</label>
+      <div class="voicebox">
+        <input id="voice" type="text" placeholder="Speak"
+               autocapitalize="sentences" autocorrect="off" spellcheck="false"
+               enterkeyhint="go" aria-label="Say who you are" disabled />
+      </div>
+      <button type="submit" id="enter" disabled>Enter</button>
+      <div class="voice" id="reply" role="status"></div>
+    </form>
+  </div>
+
+  <main id="floor">
+
+    <div class="pointer">STAGGERED RESIDUAL-ADAPTIVE TRANSPORT · C++20 · MONSTERS INK LLC</div>
+
+    <h2 class="section">The Engine</h2>
+    <div class="body-text">
+      <p>SRAT-20 is a single-header C++20 lock-free queue: a Michael–Scott queue whose
+      nodes and packets are reclaimed through 3-slot hazard pointers, in which every
+      packet carries a residual certificate, admission at the gate is fail-closed, and
+      an execution genome adjusts the engine's own spin and damping parameters through
+      fitness-gated atomic updates.</p>
+      <p>It is the concurrent realization of the house admission rule: a thing is
+      admitted only if it fits inside what is measured to be there — and what does
+      not fit is refused, without side effects.</p>
+    </div>
+    <div class="panel">
+      <div><span class="k">Governing invariant</span> · <span class="mono">S_H = S_solv ∧ R_H ⇔ (C ≼ I(t)) ∧ (|r_H| ≤ ε_H)</span></div>
+      <div><span class="k">Residual validity</span> · a packet is residual-valid at epoch E when <span class="mono">e_p + 1 ≥ E ∧ |r_H| ≤ ε_H</span> — checked before resource ceilings</div>
+      <div><span class="k">Resource ceilings</span> · each packet's resource vector (c, m, p, q) must fit under the ceiling packet, component by component</div>
+      <div><span class="k">Diagnostic</span> · Φ_H is diagnostic only — it never authorizes admission</div>
+    </div>
+
+    <h2 class="section">Design Invariants</h2>
+    <div class="feats">
+      <div class="feat"><div class="feat-name">Hazard pointers — 3 slots</div>
+        <div class="feat-body">Each thread protects the pointers it is using in three hazard
+        slots (MaxHP = 3). Reclamation scans every live slot and frees only what no slot
+        references; the retire threshold is 6.</div></div>
+      <div class="feat"><div class="feat-name">A residual certificate on every packet</div>
+        <div class="feat-body">Every OmniPacket carries its certificate — residual_H,
+        epsilon_H, residual_epoch — as first-class fields. The certificate travels with
+        the packet; it is not a side table.</div></div>
+      <div class="feat"><div class="feat-name">Fail-closed gate</div>
+        <div class="feat-body">Enqueue stage 1 refuses any packet whose resources exceed
+        the ceiling or whose certificate is stale or out of tolerance. A refused packet
+        is rejected without side effects — nothing is linked, nothing is owed.</div></div>
+      <div class="feat"><div class="feat-name">Epoch-scoped validity</div>
+        <div class="feat-body">A single atomic residual epoch modulates all traffic. Once
+        a certificate is invalid at an epoch it remains invalid at every later epoch, so
+        helping that refuses an invalid node can never be wrong later.</div></div>
+      <div class="feat"><div class="feat-name">Digest binding</div>
+        <div class="feat-body">On admission, the packet's digest is bound to its resource
+        vector, its kinematics, and its residual before the node is linked into the
+        queue — the commitment and the certificate are one act.</div></div>
+      <div class="feat"><div class="feat-name">Execution genome</div>
+        <div class="feat-body">An execution genome (spin_limit, damping, generation) is
+        installed only by a compare-and-swap that carries strictly higher measured
+        fitness. The tuning path cannot bypass the residual gate; mutation happens off
+        the admission decision.</div></div>
+    </div>
+
+    <h2 class="section">Canonical Evidence</h2>
+    <div class="body-text">
+      <p>The canonical record of SRAT-20 is the frozen evidence package
+      <span class="mono">SRAT20_CANONICAL_PROOF_2026-08-10</span> (10 August 2026):
+      28 files, whose core is <span class="mono">00_MANIFEST.md</span>,
+      <span class="mono">PROGRESS_ARGUMENT.md</span>, <span class="mono">README.md</span>,
+      and the engine header <span class="mono">srat20.hpp</span>. The package's progress
+      argument asserts joint lock-freedom for residual-compliant operations; wait-freedom,
+      and progress for residual-invalid operations, are expressly not claimed.</p>
+    </div>
+    <div class="panel">
+      <div><span class="k">Engine header</span> · <span class="mono">srat20.hpp</span> · 14,531 bytes</div>
+      <div><span class="k">SHA-256</span> · <span class="mono">c270c546304d0792cde565e42512397ecb0d8442d3a3661a1b5231dfb730673e</span></div>
+    </div>
+    <pre class="specimen">#pragma once
+// =============================================================================
+// SRAT-20 — Staggered Residual-Adaptive Transport
+// Absolute canonical C++20 engine
+// Aligns with GR-21 / Chimera / Monsters Ink seal: S_H = S_solv ∧ R_H
+// 3-slot hazard pointers • residual certificates • self-tuning genome
+// =============================================================================
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Packet — residual certificate is first-class
+// ─────────────────────────────────────────────────────────────────────────────
+struct alignas(32) OmniPacket {
+    uint32_t c = 0, m = 0, p = 0, q = 0;       // GR-21 resource vector
+    float    x = 0, y = 0, z = 0, psi = 0;      // kinematics
+    uint64_t digest = 0;
+
+    float    residual_H = 0.0f;
+    float    epsilon_H  = 0.01f;
+    uint64_t residual_epoch = 0;
+
+    bool residual_ok(uint64_t epoch) const noexcept {
+        return residual_epoch + 1 &gt;= epoch &amp;&amp;
+               std::abs(residual_H) &lt;= epsilon_H;
+    }
+    bool resources_ok(const OmniPacket&amp; ceil) const noexcept {
+        return c &lt;= ceil.c &amp;&amp; m &lt;= ceil.m &amp;&amp; p &lt;= ceil.p &amp;&amp; q &lt;= ceil.q;
+    }
+    uint64_t bind(uint64_t prev) const noexcept {
+        return prev ^ (uint64_t(c) * p) ^ uint64_t(psi * 1e4f)
+                    ^ uint64_t(residual_H * 1e6f);
+    }
+};</pre>
+    <div class="body-text"><p>Specimen, verbatim: the header banner and the packet
+    definition from the canonical <span class="mono">srat20.hpp</span> — the residual
+    certificate fields and the admission predicate <span class="mono">residual_ok</span>
+    are the code's own.</p></div>
+
+    <h2 class="section">Measurements</h2>
+    <div class="body-text">
+      <p>Version lineage, kept straight: the canonical proof package above is the frozen
+      record of August 2026. Taylor's v1.0 package (October 2026) is a later, separate
+      artifact. The measurements below are labeled by the artifact they belong to.</p>
+      <p><strong>Independent house rebuild — 16 October 2026 (Taylor's v1.0 package).</strong>
+      Rebuilt from source on a 2-core virtual machine (g++ 13.3;
+      -Wall -Wextra -Wpedantic -Werror, clean). A reduced stress run passed with exact
+      accounting — 395,876 accepted = 395,876 dequeued + 0 discarded — with zero
+      duplicates, zero invalid returns, and zero bad digests. A frozen-tuner benchmark
+      measured 1,575,497 operations per second over 800,000 operations.</p>
+      <p><strong>The v1.0 package's own test logs report:</strong> 1,000,000-operation
+      runs with exact accounting, clean under AddressSanitizer, UBSan, and
+      ThreadSanitizer (zero reports), at 3.3–3.6M operations per second on an 8-core
+      machine. These are the package's figures; the rebuild above is the independent
+      measurement.</p>
+    </div>
+
+    <h2 class="section">Standing</h2>
+    <div class="body-text">
+      <p>SRAT-20 is the reduction-to-practice backbone of Monsters Ink's umbrella
+      patent application — the concurrent embodiment of the residual gate — and is
+      separately a standalone licensable asset.</p>
+      <p>This page states only what has been verified against the canonical package
+      and independent rebuilds. No further performance, readiness, or certification
+      claims are made.</p>
+    </div>
+
+  </main>
+
+  <footer>SEQUESTERED&nbsp;YETI&nbsp;·&nbsp;BELLEVUE,&nbsp;NEBRASKA<br/>
+  LINKED FROM NOWHERE · FOUND ONLY BY THOSE WHO WERE TOLD</footer>
+</div>
+
+<script>
+(function(){
+  var PHRASE = "this is yeti the conductor";
+  var KEY = "srat20-accepted";
+  var wrong = 0;
+  var locked = false;
+  var form = document.getElementById('gateform');
+  var input = document.getElementById('voice');
+  var reply = document.getElementById('reply');
+  var button = document.getElementById('enter');
+  var acceptBtn = document.getElementById('accept');
+  var acceptedEl = document.getElementById('accepted');
+  var acceptedAt = null;
+  try { acceptedAt = window.localStorage.getItem(KEY); } catch (e) { acceptedAt = null; }
+  function showAccepted(ts){
+    acceptedEl.textContent = "Accepted: " + new Date(ts).toLocaleString();
+    acceptBtn.style.display = 'none';
+    input.disabled = false;
+    button.disabled = false;
+  }
+  if (acceptedAt) { showAccepted(isNaN(+acceptedAt) ? acceptedAt : +acceptedAt); }
+  acceptBtn.addEventListener('click', function(){
+    var ts = Date.now();
+    try { window.localStorage.setItem(KEY, String(ts)); } catch (e) {}
+    showAccepted(ts);
+    input.focus();
+  });
+  function normalize(s){
+    return (s || "")
+      .toLowerCase()
+      .replace(/[‘’]/g, "'")
+      .replace(/[“”]/g, '"')
+      .replace(/[^a-z0-9' ]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+  function lockout(){
+    locked = true;
+    input.disabled = true;
+    button.disabled = true;
+    setTimeout(function(){
+      input.disabled = false;
+      button.disabled = false;
+      locked = false;
+      wrong = 0;
+    }, 60000);
+  }
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if (locked || input.disabled) { return; }
+    var said = normalize(input.value);
+    if (said === PHRASE) {
+      reply.textContent = "The cave knows that voice.";
+      document.body.classList.add('open');
+      document.getElementById('floor').scrollIntoView({behavior:'smooth'});
+    } else {
+      wrong += 1;
+      if (wrong >= 5) { lockout(); }
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

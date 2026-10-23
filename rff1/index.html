@@ -1,0 +1,869 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#0a2547" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Yeti" />
+<title>RFF-1</title>
+<style>
+  :root{
+    --deep:#071c38; --blue:#0a2547; --blue2:#0e2f5a; --ice:#cfe8ff; --ice-dim:#8fb6dd;
+    --gold:#e8b34b; --gold-dim:#7a5c1e; --dark:#040d1d;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{min-height:100%;}
+  body{
+    margin:0; color:var(--ice);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+    background:#04070f;
+    padding:calc(env(safe-area-inset-top) + 28px) 20px calc(env(safe-area-inset-bottom) + 24px);
+    overflow-x:hidden;
+  }
+  body::before{content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
+    background:
+      radial-gradient(120% 60% at 50% -10%, rgba(14,47,90,.55), rgba(4,7,15,0) 60%),
+      radial-gradient(90% 50% at 50% 115%, rgba(232,179,75,.07), rgba(4,7,15,0) 55%),
+      linear-gradient(rgba(6,13,26,.52), rgba(3,7,16,.88));}
+  .wrap{max-width:1060px; margin:0 auto;}
+  .legal{text-align:center; font-size:10.5px; letter-spacing:.18em; color:#6f96c2; line-height:1.9;}
+  .cave-wrap{max-width:340px; margin:26px auto 4px;}
+  .cave-wrap svg{display:block; width:100%; height:auto; filter:drop-shadow(0 16px 34px rgba(0,0,0,.55));}
+  .seam{stroke:#3d5a80; transition:stroke .6s ease;}
+  body.open .seam{stroke:var(--gold); filter:drop-shadow(0 0 9px rgba(232,179,75,.85));}
+  h1.title{text-align:center; font-size:34px; letter-spacing:.28em; margin:14px 0 4px; font-weight:600;
+    text-shadow:0 2px 14px rgba(0,0,0,.8); padding-left:.28em;}
+  .sub{text-align:center; font-size:12.5px; color:var(--ice-dim); letter-spacing:.14em;
+    text-transform:uppercase; text-shadow:0 1px 10px rgba(0,0,0,.85);}
+  .gate{max-width:420px; margin:30px auto 0; text-align:center;}
+  .accept-note{font-size:12.5px; color:var(--ice-dim); letter-spacing:.04em; margin:0 auto 12px; max-width:38ch;}
+  button{font:inherit; cursor:pointer; border-radius:12px;}
+  #accept{ background:linear-gradient(180deg, var(--blue2), var(--blue)); color:var(--ice);
+    border:1px solid rgba(232,179,75,.35); padding:12px 22px; letter-spacing:.12em; font-size:13px;
+    text-transform:uppercase; box-shadow:0 14px 34px rgba(0,0,0,.45);}
+  #accepted{font-size:12px; color:var(--gold); letter-spacing:.1em; min-height:18px; margin-top:10px;}
+  #gateform{margin-top:22px;}
+  #gateform label{display:block; font-size:12px; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--ice-dim); text-align:center; margin-bottom:10px;}
+  .voicebox{background:rgba(4,13,29,.75); border-radius:16px; padding:8px;
+    box-shadow:inset 0 10px 30px rgba(0,0,0,.8), 0 0 0 1px rgba(232,179,75,.14), 0 14px 34px rgba(0,0,0,.45);}
+  #voice{width:100%; background:transparent; border:0; outline:0; color:var(--ice);
+    font:inherit; font-size:17px; text-align:center; padding:12px 8px; letter-spacing:.03em;}
+  #voice::placeholder{color:#54749c;}
+  #enter{margin-top:14px; width:100%; background:linear-gradient(180deg, #123a6e, var(--blue));
+    color:var(--ice); border:1px solid rgba(207,232,255,.22); padding:13px 22px;
+    letter-spacing:.18em; font-size:13px; text-transform:uppercase;}
+  button:disabled, input:disabled{opacity:.38; cursor:default;}
+  .voice{min-height:26px; text-align:center; margin-top:16px; font-size:14.5px; color:var(--ice);}
+  body.open #gateform, body.open #accept, body.open .accept-note{display:none;}
+  #floor{display:none; margin-top:44px;}
+  body.open #floor{display:block;}
+  .pointer{text-align:center; font-size:11px; letter-spacing:.16em; color:var(--gold);
+    opacity:.85; margin-bottom:26px; line-height:1.9;}
+  h2.section{font-size:15px; letter-spacing:.3em; text-transform:uppercase; color:var(--ice);
+    border-bottom:1px solid rgba(232,179,75,.25); padding-bottom:8px; margin:40px 0 16px;}
+  .body-text{font-size:14.5px; line-height:1.75; color:#dceeff;}
+  .body-text p{margin:0 0 12px;}
+  .panel{background:rgba(4,13,29,.72); border:1px solid rgba(232,179,75,.28); border-radius:16px;
+    padding:18px; font-size:13.5px; line-height:1.7; margin:14px 0;}
+  .panel .k{color:var(--ice-dim); letter-spacing:.12em; text-transform:uppercase; font-size:11px;}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; overflow-wrap:anywhere;}
+  .feats{display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:12px;}
+  .feat{background:linear-gradient(180deg, rgba(14,47,90,.55), rgba(7,28,56,.55));
+    border:1px solid rgba(207,232,255,.13); border-radius:14px; padding:14px;}
+  .feat-name{font-weight:600; letter-spacing:.05em; font-size:14.5px;}
+  .feat-body{color:var(--ice-dim); font-size:12.5px; margin-top:5px; line-height:1.55;}
+  pre.specimen{background:rgba(2,6,14,.85); border:1px solid rgba(207,232,255,.15); border-radius:14px;
+    padding:16px; overflow-x:auto; font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:11.5px; line-height:1.55; color:#bcd8f5;}
+  table.spec, table.lanes{width:100%; border-collapse:collapse; font-size:13.5px; margin:10px 0;}
+  table.spec th, table.spec td, table.lanes th, table.lanes td{
+    border-bottom:1px solid rgba(207,232,255,.13); padding:7px 8px; text-align:left;}
+  table.spec th, table.lanes th{color:var(--ice-dim); letter-spacing:.1em; text-transform:uppercase; font-size:11px;}
+  .cells{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px; line-height:2.1;}
+  .cell{display:inline-block; min-width:2.6em; text-align:center; margin:1px;
+    background:rgba(14,47,90,.5); border:1px solid rgba(207,232,255,.12); border-radius:6px; padding:0 3px;}
+  .cell.par{border-color:rgba(232,179,75,.35);}
+  .cell.bad{background:rgba(120,20,20,.55); border-color:rgba(240,130,130,.7); color:#ffd7d7;}
+  .controls{display:flex; flex-wrap:wrap; gap:10px; align-items:flex-end; margin:14px 0;}
+  .ctl{display:flex; flex-direction:column; gap:5px; font-size:11px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--ice-dim);}
+  .ctl input{width:5.2em; background:rgba(4,13,29,.8); border:1px solid rgba(207,232,255,.25);
+    border-radius:8px; color:var(--ice); font:inherit; font-size:14px; padding:7px 8px; text-align:center;}
+  .btn{background:linear-gradient(180deg, #123a6e, var(--blue)); color:var(--ice);
+    border:1px solid rgba(207,232,255,.22); padding:10px 16px; letter-spacing:.1em;
+    font-size:12px; text-transform:uppercase;}
+  .btn.warn{border-color:rgba(240,130,130,.5);}
+  .status{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:13px; letter-spacing:.1em;
+    padding:4px 11px; border-radius:999px; border:1px solid rgba(207,232,255,.3);}
+  .status.CLEAN{border-color:rgba(110,231,160,.6); color:#9df0bd;}
+  .status.REPAIRED{border-color:rgba(232,179,75,.65); color:var(--gold);}
+  .status.TAIL_EDIT{border-color:rgba(143,182,221,.65); color:var(--ice);}
+  .status.REFUSED{border-color:rgba(240,130,130,.65); color:#f2a3a3;}
+  .detail{margin-top:9px; font-size:13.5px; color:var(--ice-dim); line-height:1.6;}
+  .propagate{font-size:13.5px; line-height:1.65; color:#f2c9c9;
+    border-left:3px solid rgba(240,130,130,.6); padding:4px 0 4px 14px;}
+  .res-refuse{color:#f2a3a3;}
+  .res-ok{color:#9df0bd;}
+  .int-inputs{display:flex; flex-wrap:wrap; gap:10px; margin:10px 0;}
+  .int-input{display:flex; flex-direction:column; gap:5px; font-size:11px; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--ice-dim);}
+  .int-input input{width:6em; background:rgba(4,13,29,.8); border:1px solid rgba(207,232,255,.25);
+    border-radius:8px; color:var(--ice); font:inherit; font-size:14px; padding:7px 8px; text-align:center;}
+  .bpass{color:#9df0bd; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12.5px; line-height:1.9;}
+  .bfail{color:#f2a3a3; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12.5px; line-height:1.9;}
+  .bverdict{margin-top:8px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:13px; letter-spacing:.1em; color:var(--gold);}
+  footer{margin-top:54px; text-align:center; font-size:11px; color:#6f96c2; letter-spacing:.14em; line-height:2;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="legal">PRIVATE — CONFIDENTIAL · ACCESS BY INVITATION ONLY<br/>
+  EVERYTHING BEYOND THIS DOOR IS THE CONFIDENTIAL PROPERTY OF MONSTERS INK LLC AND IS SUBJECT TO NON-DISCLOSURE</div>
+
+  <div class="cave-wrap" aria-hidden="true">
+    <svg viewBox="0 0 200 130" role="img">
+      <path d="M18 118 L18 74 Q18 22 100 22 Q182 22 182 74 L182 118" fill="none" stroke="#8fb6dd" stroke-width="2"/>
+      <path d="M34 118 L34 78 Q34 38 100 38 Q166 38 166 78 L166 118" fill="none" stroke="#3d5a80" stroke-width="1.5"/>
+      <path class="seam" d="M100 22 L100 118" fill="none" stroke-width="2"/>
+    </svg>
+  </div>
+
+  <h1 class="title">RFF-1</h1>
+  <div class="sub">Speak, and be known.</div>
+
+  <div class="gate">
+    <p class="accept-note">This instrument is a confidence. Accept it, and the door will listen for your voice.</p>
+    <button type="button" id="accept">I accept the confidence</button>
+    <div id="accepted"></div>
+    <form id="gateform" autocomplete="off">
+      <label for="voice">Say who you are</label>
+      <div class="voicebox">
+        <input id="voice" type="text" placeholder="Speak"
+               autocapitalize="sentences" autocorrect="off" spellcheck="false"
+               enterkeyhint="go" aria-label="Say who you are" disabled />
+      </div>
+      <button type="submit" id="enter" disabled>Enter</button>
+      <div class="voice" id="reply" role="status"></div>
+    </form>
+  </div>
+
+  <main id="floor">
+
+    <div class="pointer">REFUSAL FRAME FORMAT · REVISION 1 · MONSTERS INK LLC · 6 OCTOBER 2026 · DOCKET REFERENCE: RFF-1</div>
+
+    <div class="body-text">
+      <p><strong>Status: NEW MATTER — NOT FILED.</strong> This is an engineering
+      specification. Patentability requires counsel review and a prior-art search.</p>
+      <p>RFF-1 is a self-describing code format that unifies two refusal layers.
+      <strong>Layer 1 (code):</strong> the C(r,N) common-bit refusal-code family —
+      repair-or-refuse decoding. <strong>Layer 2 (admission):</strong> labeled-lane
+      admission on surviving frames — per-lane admit/refuse; surplus never crosses
+      labels. Refusal propagates: a frame refused at Layer 1 never reaches Layer 2.</p>
+    </div>
+
+    <h2 class="section">The C(r,N) Family</h2>
+    <div class="body-text">
+      <p><strong>Parameters:</strong> r parity rows (r ≥ 2), N message symbols
+      (1 ≤ N ≤ 2^(r−1) − 1). <strong>Construction:</strong> H is r×N; column j is the
+      j-th binary r-vector (lexicographic by integer value) with bit 0 set and Hamming
+      weight ≥ 2. Every column contains the common bit (row 0).</p>
+      <p><strong>Proved for every instance</strong> (proofs by the common-bit argument):</p>
+      <p>(a) every single payload spike, any nonzero magnitude → repaired;<br/>
+      (b) every single parity-tail edit → detected, payload intact;<br/>
+      (c) every dual-spike event at distinct columns, any magnitudes/signs → refused;<br/>
+      (d) every same-sign multi-spike event, order ≥ 2 → refused.</p>
+      <p><strong>Disclosed boundary:</strong> adversarial mixed-sign faults of order ≥ 3
+      can alias (outside the proven fault model).</p>
+      <p>The proofs transfer to every (r, N) because the pair-sum argument uses only two
+      facts — entries are binary, and every column contains row 0. Any i ≠ j gives
+      H_i + H_j with a 2 in row 0, which no binary column can equal, so no dual-spike
+      syndrome aliases a single.</p>
+    </div>
+    <table class="spec">
+      <tr><th>Instance</th><th>Code</th><th>Singles</th><th>Tails</th><th>Pairs refused</th><th>Miscorrections</th></tr>
+      <tr><td>C(7,48)</td><td>[55,48] + 7 parity</td><td>48/48</td><td>7/7</td><td>1,128/1,128</td><td>0</td></tr>
+      <tr><td>C(8,100)</td><td>[108,100] + 8 parity</td><td>100/100</td><td>8/8</td><td>4,950/4,950</td><td>0</td></tr>
+    </table>
+    <div class="body-text"><p>C(7,48) is the instance filed as PPA 64/170,360.
+    C(8,100) is new, verified 2026-10-06. The instrument below runs both.</p></div>
+
+    <h2 class="section">Frame Byte Format</h2>
+    <table class="spec">
+      <tr><th>Field</th><th>Size</th><th>Value</th></tr>
+      <tr><td>magic</td><td>4 bytes</td><td class="mono">0x52464631 ("RFF1")</td></tr>
+      <tr><td>r</td><td>1 byte</td><td>parity rows</td></tr>
+      <tr><td>N</td><td>2 bytes</td><td>message symbols, big-endian</td></tr>
+      <tr><td>L</td><td>1 byte</td><td>lane count (N divisible by L)</td></tr>
+      <tr><td>payload</td><td>N × float64</td><td>lane ℓ = symbols [ℓ·N/L : (ℓ+1)·N/L]</td></tr>
+      <tr><td>parity</td><td>r × float64</td><td>H × payload</td></tr>
+    </table>
+    <div class="body-text">
+      <p><strong>Decoder behavior.</strong> (1) Validate magic and parameters; split
+      payload/parity. (2) Layer 1: syndrome s = Hv′ − t′; classify CLEAN / REPAIRED /
+      TAIL_EDIT / REFUSED (single-column support + uniformity + syndrome-collapse
+      verification). (3) If REFUSED → return immediately; the frame never reaches
+      admission. (4) Layer 2: aggregate each lane's symbols to an integer figure;
+      compare against the interior capacity per label — a missing label is a refusal;
+      negative headroom is a refusal, lane named; surplus is held, never applied across
+      labels. (5) Return frame status, trusted payload (if not refused), per-lane rows,
+      and the overall admission decision.</p>
+    </div>
+
+    <h2 class="section">The Instrument</h2>
+    <div class="body-text"><p>The reference implementation, running in this page.
+    The demo payload is a fixed vector, so every result here is reproducible:
+    corrupt the transmitted frame and watch the two layers answer.</p></div>
+
+    <div class="controls">
+      <label class="ctl">Instance
+        <select id="inst" style="background:rgba(4,13,29,.8);border:1px solid rgba(207,232,255,.25);border-radius:8px;color:var(--ice);font:inherit;font-size:14px;padding:7px 8px;">
+          <option value="0">C(7,48) — the filed instance</option>
+          <option value="1">C(8,100)</option>
+        </select>
+      </label>
+    </div>
+    <div class="panel">
+      <div class="k">Transmitted payload</div>
+      <div class="cells" id="payload"></div>
+      <div class="k" style="margin-top:10px;">Parity tail</div>
+      <div class="cells" id="parity"></div>
+      <div id="frameinfo" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="controls">
+      <label class="ctl">Symbol <input type="number" id="spike-idx" value="5" min="0" /></label>
+      <button class="btn warn" id="btn-spike" type="button">Spike one symbol (+3)</button>
+      <label class="ctl">Tail <input type="number" id="tail-idx" value="2" min="0" /></label>
+      <button class="btn warn" id="btn-tail" type="button">Edit one parity tail (+2)</button>
+    </div>
+    <div class="controls">
+      <label class="ctl">Symbol A <input type="number" id="pair-a" value="3" min="0" /></label>
+      <label class="ctl">Symbol B <input type="number" id="pair-b" value="17" min="0" /></label>
+      <button class="btn warn" id="btn-pair" type="button">Spike two (+2, +2)</button>
+      <button class="btn warn" id="btn-pairpm" type="button">Spike two (+2, −2)</button>
+      <button class="btn warn" id="btn-triple" type="button">Spike three, same sign (+1 ×3)</button>
+      <button class="btn" id="btn-reset" type="button">Reset frame</button>
+    </div>
+
+    <div class="panel">
+      <div class="k">Layer 1 — repair-or-refuse</div>
+      <div id="l1result" style="margin-top:8px;"></div>
+    </div>
+    <div class="panel">
+      <div class="k">Layer 2 — labeled-lane admission</div>
+      <div class="int-inputs" id="interiors"></div>
+      <div class="controls">
+        <button class="btn" id="preset-exact" type="button">Interiors = claims</button>
+        <button class="btn" id="preset-tight" type="button">Tighten lane 1</button>
+        <button class="btn" id="preset-missing" type="button">Remove lane 2's interior</button>
+      </div>
+      <div id="l2result"></div>
+      <div style="margin-top:12px;">Decision · <span id="verdict"></span></div>
+    </div>
+
+    <h2 class="section">Conformance Battery</h2>
+    <div class="body-text"><p>The reference battery for the selected instance, run live
+    in this page — construction checks, byte-format roundtrip, clean decodes, every
+    single spike, every tail edit, and every equal-magnitude pair.</p></div>
+    <div class="controls">
+      <button class="btn" id="btn-battery" type="button">Run the battery</button>
+    </div>
+    <div class="panel"><div id="battery-out">Not run yet.</div></div>
+
+    <h2 class="section">Verification</h2>
+    <div class="body-text">
+      <p>The engine on this page is a line-for-line port of the reference implementation,
+      rff.py. Before publication it was cross-verified against the reference on
+      deterministic vectors — construction masks, parity values, frame bytes, repair and
+      refusal outcomes, lane figures, and admission rows match exactly — and the battery
+      above reproduces the reference's counts: C(7,48) 48/48 · 7/7 · 1,128/1,128 · 0
+      miscorrections; C(8,100) 100/100 · 8/8 · 4,950/4,950 · 0.</p>
+      <p>Everything on this page is drawn from the RFF-1 specification and the verified
+      behavior of its reference implementation. Nothing beyond them is stated.</p>
+    </div>
+
+  </main>
+
+  <footer>SEQUESTERED&nbsp;YETI&nbsp;·&nbsp;BELLEVUE,&nbsp;NEBRASKA<br/>
+  LINKED FROM NOWHERE · FOUND ONLY BY THOSE WHO WERE TOLD</footer>
+</div>
+
+<script>
+(function(){
+  var PHRASE = "this is yeti the conductor";
+  var KEY = "rff1-accepted";
+  var wrong = 0;
+  var locked = false;
+  var form = document.getElementById('gateform');
+  var input = document.getElementById('voice');
+  var reply = document.getElementById('reply');
+  var button = document.getElementById('enter');
+  var acceptBtn = document.getElementById('accept');
+  var acceptedEl = document.getElementById('accepted');
+  var acceptedAt = null;
+  try { acceptedAt = window.localStorage.getItem(KEY); } catch (e) { acceptedAt = null; }
+  function showAccepted(ts){
+    acceptedEl.textContent = "Accepted: " + new Date(ts).toLocaleString();
+    acceptBtn.style.display = 'none';
+    input.disabled = false;
+    button.disabled = false;
+  }
+  if (acceptedAt) { showAccepted(isNaN(+acceptedAt) ? acceptedAt : +acceptedAt); }
+  acceptBtn.addEventListener('click', function(){
+    var ts = Date.now();
+    try { window.localStorage.setItem(KEY, String(ts)); } catch (e) {}
+    showAccepted(ts);
+    input.focus();
+  });
+  function normalize(s){
+    return (s || "")
+      .toLowerCase()
+      .replace(/[‘’]/g, "'")
+      .replace(/[“”]/g, '"')
+      .replace(/[^a-z0-9' ]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+  function lockout(){
+    locked = true;
+    input.disabled = true;
+    button.disabled = true;
+    setTimeout(function(){
+      input.disabled = false;
+      button.disabled = false;
+      locked = false;
+      wrong = 0;
+    }, 60000);
+  }
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if (locked || input.disabled) { return; }
+    var said = normalize(input.value);
+    if (said === PHRASE) {
+      reply.textContent = "The cave knows that voice.";
+      document.body.classList.add('open');
+      document.getElementById('floor').scrollIntoView({behavior:'smooth'});
+    } else {
+      wrong += 1;
+      if (wrong >= 5) { lockout(); }
+    }
+  });
+})();
+</script>
+<script>
+"use strict";
+/*
+ * RFF-1 — Refusal Frame Format, revision 1 — JavaScript port of rff.py.
+ * Faithful port of the Python reference (Monsters Ink LLC, 2026-10-06):
+ * C(r,N) common-bit family, repair-or-refuse Layer 1, labeled-lane
+ * admission Layer 2, self-describing frame bytes ("RFF1", r, N, L).
+ * Frame body float64 words are little-endian, matching the reference's
+ * native byte order; the 8-byte header is big-endian per the spec.
+ */
+const RFF_MAGIC = 0x52464631; /* "RFF1" */
+const RFF_TOL = 1e-9;
+const RFF_CLEAN = "CLEAN", RFF_REPAIRED = "REPAIRED",
+      RFF_TAIL_EDIT = "TAIL_EDIT", RFF_REFUSED = "REFUSED";
+
+function rffMaxN(r) { return Math.pow(2, r - 1) - 1; }
+
+function rffPopcount(x) { let c = 0; while (x) { c += x & 1; x >>= 1; } return c; }
+
+function rffBuildH(r, N) {
+  if (r < 2) throw new Error("r must be >= 2");
+  if (!(1 <= N && N <= rffMaxN(r)))
+    throw new Error("N must satisfy 1 <= N <= " + rffMaxN(r) + " for r=" + r);
+  const masks = [];
+  for (let m = 0; m < Math.pow(2, r) && masks.length < N; m++)
+    if ((m & 1) && rffPopcount(m) >= 2) masks.push(m);
+  const H = [];
+  for (let i = 0; i < r; i++) {
+    const row = new Float64Array(N);
+    for (let j = 0; j < N; j++) row[j] = (masks[j] >> i) & 1;
+    H.push(row);
+  }
+  const supports = [];
+  for (let j = 0; j < N; j++) {
+    const s = [];
+    for (let i = 0; i < r; i++) if (H[i][j] !== 0) s.push(i);
+    supports.push(s);
+  }
+  return { r: r, N: N, H: H, masks: masks, supports: supports };
+}
+
+function rffMatVec(code, v) {
+  const out = new Float64Array(code.r);
+  for (let i = 0; i < code.r; i++) {
+    let s = 0;
+    const row = code.H[i];
+    for (let j = 0; j < code.N; j++) s += row[j] * v[j];
+    out[i] = s;
+  }
+  return out;
+}
+
+function rffEncode(code, v) {
+  const par = rffMatVec(code, v);
+  const cw = new Float64Array(code.N + code.r);
+  cw.set(v, 0); cw.set(par, code.N);
+  return cw;
+}
+
+function rffNorm(a) { let s = 0; for (let i = 0; i < a.length; i++) s += a[i] * a[i]; return Math.sqrt(s); }
+
+function rffClassify(code, s) {
+  const r = code.r, N = code.N;
+  if (rffNorm(s) <= RFF_TOL) return { status: RFF_CLEAN };
+  const sup = [];
+  for (let i = 0; i < r; i++) if (Math.abs(s[i]) > RFF_TOL) sup.push(i);
+  const hits = [];
+  for (let j = 0; j < N; j++) {
+    const supp = code.supports[j];
+    if (sup.length !== supp.length) continue;
+    let same = true;
+    for (let k = 0; k < sup.length; k++) if (sup[k] !== supp[k]) { same = false; break; }
+    if (!same) continue;
+    const v0 = s[sup[0]];
+    const lim = RFF_TOL * Math.max(1.0, Math.abs(v0));
+    let uniform = true;
+    for (let k = 0; k < sup.length; k++)
+      if (Math.abs(s[sup[k]] - v0) > lim) { uniform = false; break; }
+    if (uniform) hits.push([j, v0]);
+  }
+  const axis = [];
+  for (let k = 0; k < r; k++) if (sup.length === 1 && sup[0] === k) axis.push(k);
+  if (hits.length === 1 && axis.length === 0) {
+    const j = hits[0][0], c = hits[0][1];
+    const resid = new Float64Array(r);
+    for (let i = 0; i < r; i++) resid[i] = s[i] - c * code.H[i][j];
+    if (rffNorm(resid) <= RFF_TOL * Math.max(1.0, Math.abs(c)))
+      return { status: RFF_REPAIRED, column: j, magnitude: c };
+    return { status: RFF_REFUSED };
+  }
+  if (axis.length === 1 && hits.length === 0)
+    return { status: RFF_TAIL_EDIT, axis: axis[0] };
+  return { status: RFF_REFUSED };
+}
+
+function rffDecodeLayer1(code, cw) {
+  const N = code.N;
+  const vp = cw.slice(0, N), tp = cw.slice(N, N + code.r);
+  const hv = rffMatVec(code, vp);
+  const s = new Float64Array(code.r);
+  for (let i = 0; i < code.r; i++) s[i] = hv[i] - tp[i];
+  const res = rffClassify(code, s);
+  if (res.status === RFF_CLEAN) return { status: RFF_CLEAN, payload: vp, info: {} };
+  if (res.status === RFF_REPAIRED) {
+    const fixed = Float64Array.from(vp);
+    fixed[res.column] -= res.magnitude;
+    const chk = rffMatVec(code, fixed);
+    let d2 = 0;
+    for (let i = 0; i < code.r; i++) { const d = chk[i] - tp[i]; d2 += d * d; }
+    if (Math.sqrt(d2) <= RFF_TOL * Math.max(1.0, Math.abs(res.magnitude)))
+      return { status: RFF_REPAIRED, payload: fixed,
+               info: { column: res.column, magnitude: res.magnitude } };
+    return { status: RFF_REFUSED, payload: vp, info: {} };
+  }
+  if (res.status === RFF_TAIL_EDIT)
+    return { status: RFF_TAIL_EDIT, payload: vp, info: { axis: res.axis } };
+  return { status: RFF_REFUSED, payload: vp, info: {} };
+}
+
+/* Python's int(round(x)) — round-half-even — for lane figures. */
+function rffRoundHalfEven(x) {
+  const f = Math.floor(x), d = x - f;
+  if (d > 0.5) return f + 1;
+  if (d < 0.5) return f;
+  return (Math.abs(f % 2) === 1) ? f + 1 : f;
+}
+
+/* figures: array of [label, claimed] in lane order.
+   interiors: Map label -> int. Mirrors rff.lane_admit row-for-row. */
+function rffLaneAdmit(figures, interiors) {
+  const rows = [];
+  let ok = true;
+  for (let idx = 0; idx < figures.length; idx++) {
+    const lab = figures[idx][0], claimed = figures[idx][1];
+    if (!interiors.has(lab)) {
+      rows.push([lab, claimed, null, null, "refuse (missing label)"]);
+      ok = false; continue;
+    }
+    const interior = interiors.get(lab);
+    const hr = interior - claimed;
+    if (hr < 0) { rows.push([lab, claimed, interior, hr, "refuse"]); ok = false; }
+    else if (hr > 0) rows.push([lab, claimed, interior, hr, "surplus held"]);
+    else rows.push([lab, claimed, interior, hr, "fit"]);
+  }
+  return { admitted: ok && rows.length > 0, rows: rows };
+}
+
+class RFFFrame {
+  constructor(r, N, L) {
+    if (N % L !== 0) throw new Error("N must be divisible by L");
+    this.r = r; this.N = N; this.L = L;
+    this.code = rffBuildH(r, N);
+    this.labels = [];
+    for (let i = 0; i < L; i++) this.labels.push("lane" + i);
+  }
+  pack(payload) {
+    const N = this.N, r = this.r;
+    const buf = new ArrayBuffer(8 + 8 * (N + r));
+    const dv = new DataView(buf);
+    dv.setUint32(0, RFF_MAGIC, false);
+    dv.setUint8(4, r);
+    dv.setUint16(5, N, false);
+    dv.setUint8(7, this.L);
+    const par = rffMatVec(this.code, payload);
+    for (let j = 0; j < N; j++) dv.setFloat64(8 + 8 * j, payload[j], true);
+    for (let i = 0; i < r; i++) dv.setFloat64(8 + 8 * N + 8 * i, par[i], true);
+    return new Uint8Array(buf);
+  }
+  unpack(bytes) {
+    const dv = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+    const magic = dv.getUint32(0, false);
+    if (magic !== RFF_MAGIC) throw new Error("bad RFF magic");
+    const r = dv.getUint8(4), N = dv.getUint16(5, false), L = dv.getUint8(7);
+    if (r !== this.r || N !== this.N || L !== this.L)
+      throw new Error("frame parameters do not match this decoder");
+    const payload = new Float64Array(N), par = new Float64Array(r);
+    for (let j = 0; j < N; j++) payload[j] = dv.getFloat64(8 + 8 * j, true);
+    for (let i = 0; i < r; i++) par[i] = dv.getFloat64(8 + 8 * N + 8 * i, true);
+    return { payload: payload, parity: par };
+  }
+  decode(bytes, interiors) {
+    const parts = this.unpack(bytes);
+    const cw = new Float64Array(this.N + this.r);
+    cw.set(parts.payload, 0); cw.set(parts.parity, this.N);
+    const dec = rffDecodeLayer1(this.code, cw);
+    const out = { frame_status: dec.status, payload: dec.payload,
+                  info: dec.info, lanes: null, admitted: null };
+    if (dec.status === RFF_REFUSED) return out; /* refusal propagates */
+    const per = this.N / this.L;
+    const figures = [];
+    for (let i = 0; i < this.L; i++) {
+      let sum = 0;
+      for (let j = i * per; j < (i + 1) * per; j++) sum += dec.payload[j];
+      figures.push([this.labels[i], rffRoundHalfEven(sum)]);
+    }
+    out.figures = figures;
+    if (interiors !== null && interiors !== undefined) {
+      const res = rffLaneAdmit(figures, interiors);
+      out.lanes = res.rows;
+      out.admitted = res.admitted;
+    }
+    return out;
+  }
+}
+
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = { RFF_MAGIC, RFF_TOL, rffMaxN, rffBuildH, rffMatVec, rffEncode,
+                     rffClassify, rffDecodeLayer1, rffRoundHalfEven, rffLaneAdmit,
+                     RFFFrame };
+}
+
+</script>
+<script>
+/* RFF-1 instrument UI — drives rff_core.js.
+ * Demo payload is the fixed vector v[j] = ((j*37+11) % 13) - 6 + 0.5*((j*7) % 3),
+ * so every result on this page is reproducible. Faults are applied to the
+ * transmitted codeword (payload + parity), exactly as a channel would. */
+(function () {
+  var INSTANCES = [{ r: 7, N: 48 }, { r: 8, N: 100 }];
+  var L = 4;
+  var state = {
+    idx: 0, frame: null, code: null,
+    orig: null,        /* clean payload Float64Array */
+    txP: null,         /* transmitted payload (faults applied) */
+    txT: null,         /* transmitted parity (faults applied) */
+    faults: {},        /* index -> true for payload; "t"+k for parity */
+  };
+
+  function $(id) { return document.getElementById(id); }
+  function fmt(x) {
+    if (Number.isInteger(x)) return String(x);
+    return String(Math.round(x * 1000) / 1000);
+  }
+  function demoPayload(N) {
+    var v = new Float64Array(N);
+    for (var j = 0; j < N; j++) v[j] = ((j * 37 + 11) % 13) - 6 + 0.5 * ((j * 7) % 3);
+    return v;
+  }
+  function mulberry32(seed) {
+    var a = seed >>> 0;
+    return function () {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      var t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  function setup(idx) {
+    state.idx = idx;
+    var inst = INSTANCES[idx];
+    state.frame = new RFFFrame(inst.r, inst.N, L);
+    state.code = state.frame.code;
+    state.orig = demoPayload(inst.N);
+    resetTx();
+    buildInteriorInputs();
+    renderAll();
+  }
+  function resetTx() {
+    state.txP = Float64Array.from(state.orig);
+    state.txT = rffMatVec(state.code, state.orig);
+    state.faults = {};
+  }
+
+  function cleanFigures() {
+    var per = state.code.N / L, figs = [];
+    for (var i = 0; i < L; i++) {
+      var s = 0;
+      for (var j = i * per; j < (i + 1) * per; j++) s += state.orig[j];
+      figs.push(["lane" + i, rffRoundHalfEven(s)]);
+    }
+    return figs;
+  }
+
+  function buildInteriorInputs() {
+    var figs = cleanFigures();
+    var box = $("interiors");
+    box.innerHTML = "";
+    figs.forEach(function (f) {
+      var lab = document.createElement("label");
+      lab.className = "int-input";
+      lab.innerHTML = "<span>" + f[0] + " interior</span>";
+      var inp = document.createElement("input");
+      inp.type = "number"; inp.id = "int-" + f[0]; inp.value = f[1];
+      lab.appendChild(inp);
+      box.appendChild(lab);
+    });
+  }
+  function readInteriors() {
+    var m = new Map();
+    state.frame.labels.forEach(function (lab) {
+      var el = $("int-" + lab);
+      if (el && el.value !== "") m.set(lab, parseInt(el.value, 10));
+    });
+    return m;
+  }
+
+  function renderPayload() {
+    var html = "";
+    for (var j = 0; j < state.code.N; j++) {
+      var cls = state.faults[j] ? "cell bad" : "cell";
+      html += "<span class=\"" + cls + "\" title=\"symbol " + j + "\">" + fmt(state.txP[j]) + "</span>";
+    }
+    $("payload").innerHTML = html;
+    var ph = "";
+    for (var i = 0; i < state.code.r; i++) {
+      var cls2 = state.faults["t" + i] ? "cell bad" : "cell par";
+      ph += "<span class=\"" + cls2 + "\" title=\"parity " + i + "\">" + fmt(state.txT[i]) + "</span>";
+    }
+    $("parity").innerHTML = ph;
+    var buf = state.frame.pack(state.orig);
+    var hexs = Array.from(buf.slice(0, 8)).map(function (x) {
+      return x.toString(16).padStart(2, "0");
+    }).join(" ");
+    $("frameinfo").innerHTML =
+      "Frame: <span class=\"mono\">" + buf.length + " bytes</span> · header " +
+      "<span class=\"mono\">" + hexs + "</span> · magic \"RFF1\" · r=" + state.code.r +
+      " · N=" + state.code.N + " · L=" + L;
+  }
+
+  function decodeNow() {
+    var cw = new Float64Array(state.code.N + state.code.r);
+    cw.set(state.txP, 0); cw.set(state.txT, state.code.N);
+    var dec = rffDecodeLayer1(state.code, cw);
+    var l1 = $("l1result");
+    var detail = "";
+    if (dec.status === "CLEAN") detail = "syndrome is zero — the frame is intact";
+    if (dec.status === "REPAIRED")
+      detail = "single spike at symbol " + dec.info.column +
+               ", magnitude " + fmt(dec.info.magnitude) + " — removed; payload restored exactly";
+    if (dec.status === "TAIL_EDIT")
+      detail = "parity tail " + dec.info.axis + " was edited — detected; the payload itself is intact and trusted";
+    if (dec.status === "REFUSED")
+      detail = "the syndrome matches no single-symbol repair and no single tail edit — the frame is refused";
+    l1.innerHTML = "<span class=\"status " + dec.status + "\">" + dec.status + "</span>" +
+                   "<div class=\"detail\">" + detail + "</div>";
+
+    var l2 = $("l2result");
+    if (dec.status === "REFUSED") {
+      l2.innerHTML = "<div class=\"propagate\">Layer 2 never runs. A frame refused at Layer 1 " +
+        "does not reach admission — refusal propagates. No lane is evaluated, no figure is trusted.</div>";
+      $("verdict").innerHTML = "<span class=\"status REFUSED\">FRAME REFUSED</span>";
+      return;
+    }
+    var per = state.code.N / L, figs = [];
+    for (var i = 0; i < L; i++) {
+      var s = 0;
+      for (var j = i * per; j < (i + 1) * per; j++) s += dec.payload[j];
+      figs.push([state.frame.labels[i], rffRoundHalfEven(s)]);
+    }
+    var res = rffLaneAdmit(figs, readInteriors());
+    var rows = "";
+    res.rows.forEach(function (row) {
+      rows += "<tr><td>" + row[0] + "</td><td>" + row[1] + "</td><td>" +
+        (row[2] === null ? "—" : row[2]) + "</td><td>" +
+        (row[3] === null ? "—" : (row[3] > 0 ? "+" + row[3] : row[3])) +
+        "</td><td class=\"res-" + (row[4].indexOf("refuse") === 0 ? "refuse" : "ok") + "\">" + row[4] + "</td></tr>";
+    });
+    l2.innerHTML = "<table class=\"lanes\"><thead><tr><th>lane</th><th>claimed</th>" +
+      "<th>interior</th><th>headroom</th><th>result</th></tr></thead><tbody>" + rows + "</tbody></table>";
+    $("verdict").innerHTML = res.admitted
+      ? "<span class=\"status CLEAN\">ADMITTED</span>"
+      : "<span class=\"status REFUSED\">REFUSED AT ADMISSION</span>";
+  }
+
+  function renderAll() { renderPayload(); decodeNow(); }
+
+  /* ---- fault controls ---- */
+  function spike(idx, amt) {
+    state.txP[idx] += amt; state.faults[idx] = true; renderAll();
+  }
+  $("btn-spike").addEventListener("click", function () {
+    var j = parseInt($("spike-idx").value, 10);
+    if (isNaN(j) || j < 0 || j >= state.code.N) return;
+    spike(j, 3.0);
+  });
+  $("btn-tail").addEventListener("click", function () {
+    var k = parseInt($("tail-idx").value, 10);
+    if (isNaN(k) || k < 0 || k >= state.code.r) return;
+    state.txT[k] += 2.0; state.faults["t" + k] = true; renderAll();
+  });
+  $("btn-pair").addEventListener("click", function () {
+    var a = parseInt($("pair-a").value, 10), b = parseInt($("pair-b").value, 10);
+    if (isNaN(a) || isNaN(b) || a === b) return;
+    if (a < 0 || b < 0 || a >= state.code.N || b >= state.code.N) return;
+    spike(a, 2.0); spike(b, 2.0);
+  });
+  $("btn-pairpm").addEventListener("click", function () {
+    var a = parseInt($("pair-a").value, 10), b = parseInt($("pair-b").value, 10);
+    if (isNaN(a) || isNaN(b) || a === b) return;
+    if (a < 0 || b < 0 || a >= state.code.N || b >= state.code.N) return;
+    spike(a, 2.0); spike(b, -2.0);
+  });
+  $("btn-triple").addEventListener("click", function () {
+    spike(1, 1.0); spike(2, 1.0); spike(3, 1.0);
+  });
+  $("btn-reset").addEventListener("click", function () { resetTx(); renderAll(); });
+
+  $("preset-exact").addEventListener("click", function () {
+    cleanFigures().forEach(function (f) { $("int-" + f[0]).value = f[1]; });
+    decodeNow();
+  });
+  $("preset-tight").addEventListener("click", function () {
+    var figs = cleanFigures();
+    $("int-lane0").value = figs[0][1] + 1;
+    $("int-lane1").value = figs[1][1] - 3;
+    $("int-lane2").value = figs[2][1];
+    $("int-lane3").value = figs[3][1];
+    decodeNow();
+  });
+  $("preset-missing").addEventListener("click", function () {
+    $("int-lane2").value = "";
+    decodeNow();
+  });
+  $("interiors").addEventListener("change", decodeNow);
+  $("inst").addEventListener("change", function () { setup(+$("inst").value); });
+
+  /* ---- conformance battery, run live in the page ---- */
+  $("btn-battery").addEventListener("click", function () {
+    var code = state.code, r = code.r, N = code.N, out = [];
+    function rep(name, cond) { out.push((cond ? "PASS" : "FAIL") + " · " + name); return cond; }
+    var cols = [], seen = new Set(), minW = 99, common = true;
+    for (var j = 0; j < N; j++) {
+      cols.push(code.masks[j]); seen.add(code.masks[j]);
+      var w = rffPopcount(code.masks[j]); if (w < minW) minW = w;
+      if ((code.masks[j] & 1) === 0) common = false;
+    }
+    rep("H is " + r + "x" + N, true);
+    rep("N distinct columns", seen.size === N);
+    rep("min column weight >= 2", minW >= 2);
+    rep("common bit in every column", common);
+    var colSet = new Set(cols), coll = 0;
+    for (var a = 0; a < N; a++) for (var b = a + 1; b < N; b++)
+      if ((cols[a] & cols[b]) === 0 && colSet.has(cols[a] | cols[b])) coll++;
+    rep("no pair-sum collision", coll === 0);
+
+    var fr = state.frame;
+    var vv0 = demoPayload(N);
+    var un = fr.unpack(fr.pack(vv0));
+    var rtOk = true;
+    for (var q = 0; q < N; q++) if (un.payload[q] !== vv0[q]) rtOk = false;
+    rep("byte-format roundtrip", rtOk);
+
+    var rng = mulberry32(99);
+    var rand = function () { return (rng() * 2 - 1) * 4; };
+    var randV = function () {
+      var v = new Float64Array(N);
+      for (var i = 0; i < N; i++) v[i] = rand();
+      return v;
+    };
+    var nClean = 0;
+    for (var t = 0; t < 3; t++)
+      if (rffDecodeLayer1(code, rffEncode(code, randV())).status === "CLEAN") nClean++;
+    rep("clean decodes", nClean === 3);
+    var nRep = 0;
+    for (var jj = 0; jj < N; jj++) {
+      var v0 = randV(), c2 = rffEncode(code, v0);
+      c2[jj] += 3.0;
+      var d = rffDecodeLayer1(code, c2);
+      if (d.status === "REPAIRED") {
+        var mx = 0;
+        for (var i2 = 0; i2 < N; i2++) mx = Math.max(mx, Math.abs(d.payload[i2] - v0[i2]));
+        if (mx < 1e-9 * 3) nRep++;
+      }
+    }
+    rep("single spikes repaired " + nRep + "/" + N, nRep === N);
+    var nTail = 0;
+    for (var k = 0; k < r; k++) {
+      var v1 = randV(), c3 = rffEncode(code, v1);
+      c3[N + k] += 2.0;
+      var d2 = rffDecodeLayer1(code, c3);
+      if (d2.status === "TAIL_EDIT" && d2.info.axis === k) nTail++;
+    }
+    rep("tail edits detected " + nTail + "/" + r, nTail === r);
+    var bad = 0, total = 0;
+    for (var a2 = 0; a2 < N; a2++) for (var b2 = a2 + 1; b2 < N; b2++) {
+      var v2 = randV(), c4 = rffEncode(code, v2);
+      c4[a2] += 2.0; c4[b2] += 2.0;
+      if (rffDecodeLayer1(code, c4).status !== "REFUSED") bad++;
+      total++;
+    }
+    rep("equal pairs refused " + (total - bad) + "/" + total + ", " + bad + " miscorrected", bad === 0);
+
+    var figs = cleanFigures();
+    var tight = new Map(figs.map(function (f) { return [f[0], f[1]]; }));
+    tight.set("lane0", figs[0][1] + 1); tight.set("lane1", figs[1][1] - 3);
+    var dec = fr.decode(fr.pack(state.orig), tight);
+    rep("two-layer decode runs, lane refusal detected",
+        (dec.frame_status === "CLEAN" || dec.frame_status === "REPAIRED") && dec.admitted === false);
+    var v3 = Float64Array.from(state.orig), c5 = rffEncode(code, v3);
+    c5[0] += 2.0; c5[1] += 2.0;
+    rep("dual-spike frame refused at layer 1",
+        rffDecodeLayer1(code, c5).status === "REFUSED");
+
+    var fails = out.filter(function (l) { return l.indexOf("FAIL") === 0; }).length;
+    $("battery-out").innerHTML =
+      out.map(function (l) {
+        return "<div class=\"" + (l.indexOf("PASS") === 0 ? "bpass" : "bfail") + "\">" + l + "</div>";
+      }).join("") +
+      "<div class=\"bverdict\">CONFORMANCE C(" + r + "," + N + "): " +
+      (fails === 0 ? "ALL PASS" : "FAILURES") + "</div>";
+  });
+
+  setup(0);
+})();
+
+</script>
+</body>
+</html>
