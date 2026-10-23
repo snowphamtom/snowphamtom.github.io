@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>V4 Sidon — Verilog Decoders (Both Matrices)</title>
+<style>body{background:#16130D;color:#F3E9C8;font-family:Georgia,serif;max-width:42em;margin:2em auto;padding:0 1em;line-height:1.55}
+h1{color:#C9A227;font-size:1.5em} a{color:#C9A227} code{color:#e8d9a0} li{margin:.35em 0}</style></head>
+<body>
+<h1>V4 Sidon — Verilog Decoders (Both Matrices)</h1>
+<p>Taylor Heller / Monsters Ink LLC. Two synthesizable repair-or-refuse
+decoders — the F₆₄ spec set and the fully closed GF(2⁷) set — sharing one
+architecture: syndrome calculator + admission classifier
+(0 → CLEAN, ±column → REPAIR, ±axis → TAIL, anything else → REFUSE).</p>
+<p><b>Verified:</b> exhaustive RTL simulation against an independent golden
+model — 143,005 vectors per decoder (every signed pattern of weight ≤ 3,
+plus tails): <b>PASS, 0 errors, both decoders</b>. Yosys generic synthesis:
+5,055 and 5,236 cells. <b>No Fmax and no throughput figure is claimed</b> —
+none has been measured against a target library.</p>
+<ul>
+<li><a href="README.md">README.md</a> — architecture, verification, scope</li>
+<li><a href="rtl/decoder_f64.v">rtl/decoder_f64.v</a> · <a href="rtl/decoder_gf128.v">rtl/decoder_gf128.v</a> · <a href="rtl/sidon_classifier.v">rtl/sidon_classifier.v</a> · <a href="rtl/syndrome_calc.v">rtl/syndrome_calc.v</a></li>
+<li><a href="tb/tb_decoder.v">tb/tb_decoder.v</a> · <a href="gen_vectors.py">gen_vectors.py</a> — testbench and golden model</li>
+<li><a href="sim_f64.log">sim_f64.log</a> · <a href="sim_gf128.log">sim_gf128.log</a> — PASS receipts</li>
+<li><a href="SHA256SUMS.txt">SHA256SUMS.txt</a></li>
+</ul></body></html>

@@ -1,0 +1,20 @@
+BUILD CHECK  W: sum lambda^2 = 191808.0 (canon 191808); distinct eigenvalues = 27 of 48 (PKT-014: 27); <r> = 0.1688 (PKT-014: 0.1688)
+W diagonal: min 0, max 0; off-diag range 0..32
+
+=== Construction A: uniform twist ===
+       theta = 0 (control): <r> = 0.2081 (sd of ratios 0.3024); distinct eigs = 27/48; zero-spacing frac = 0.000
+    LYNCHPIN 15.130102 deg: <r> = 0.2683 (sd of ratios 0.2766); distinct eigs = 48/48; zero-spacing frac = 0.000
+       CANON 53.130102 deg: <r> = 0.3139 (sd of ratios 0.2673); distinct eigs = 48/48; zero-spacing frac = 0.000
+
+=== Construction B: per-door twist (phi_ab = W_ab * 53.130102 deg) ===
+            per-door canon: <r> = 0.3224 (sd of ratios 0.3061); distinct eigs = 48/48; zero-spacing frac = 0.000
+
+=== Theta scan, construction A (deg : <r>) ===
+  0:0.208  2:0.254  5:0.255  8:0.248  10:0.250  12:0.254  15:0.267  18:0.277  20:0.294  22:0.344  25:0.325  28:0.304  30:0.304  32:0.294  35:0.318  38:0.325  40:0.296  42:0.272  45:0.278  48:0.261  50:0.273  52:0.313  55:0.299  58:0.317  60:0.304  62:0.312  65:0.293  68:0.286  70:0.279  72:0.275  75:0.272  78:0.269  80:0.266  82:0.264  85:0.263  88:0.262  90:0.261
+  scan max: theta = 22.5 deg, <r> = 0.3436
+
+=== Ensembles (same magnitudes |W|, 300 trials, seed 20261022) ===
+  random phases (complex Hermitian): <r> = 0.6012 +- 0.0394
+  random signs (real symmetric):      <r> = 0.5299 +- 0.0440
+
+Reference: Poisson 0.3863 | GOE 0.5359 | GUE 0.6027 | zeta zeros measured 0.6150 / 0.6183 (PKT-014)

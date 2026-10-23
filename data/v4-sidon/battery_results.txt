@@ -1,0 +1,25 @@
+=== closed_gf127 (r=14) ===
+masks: count=48 distinct=True nonzero=True
+row sums: [28, 27, 23, 26, 23, 24, 26, 28, 23, 25, 27, 26, 23, 19] total=348
+column weights: min=4 max=11; min Hamming distance=2
+XOR pair sums distinct: 1128/1128
+integer ++ distinct: 1128/1128; ordered +- distinct: 2256/2256
+triples +++ distinct: 17296/17296; ++- distinct: 51888/51888
+triple syndromes total distinct: 69184/69184
++++ and ++- shared syndromes: 0
+triple syndromes equal to a pair syndrome: 0
+weight-3 patterns accepted (misrepair): A=0 A+=0 B=0 of 69184
+
+=== seed6 (r=14) ===
+masks: count=48 distinct=True nonzero=True
+row sums: [31, 25, 22, 28, 20, 26, 27, 28, 23, 25, 25, 26, 22, 19] total=347
+column weights: min=2 max=11; min Hamming distance=2
+XOR pair sums distinct: 1128/1128
+integer ++ distinct: 1128/1128; ordered +- distinct: 2256/2256
+triples +++ distinct: 17286/17296; ++- distinct: 51798/51888
+triple syndromes total distinct: 69084/69184
++++ and ++- shared syndromes: 0
+triple syndromes equal to a pair syndrome: 10
+weight-3 patterns accepted (misrepair): A=0 A+=0 B=10 of 69184
+
+BATTERY DONE
