@@ -1,13 +1,13 @@
 {
- "exported_at": "2026-10-23T14:50:02Z",
+ "exported_at": "2026-10-23T15:51:01Z",
  "exporter": "djinn_mind/engine.py via export_for_living_site.py",
  "canon": 25,
  "corpus": 5681,
- "raw_bytes": 197133741,
- "raw_sha256": "ab51ef3ccbd335b9c24fe5f5c3f2b9326ee45bbf5d46f0e9a272cc0a9e507368",
+ "raw_bytes": 197133571,
+ "raw_sha256": "0a09f6d65c2aebab7f81f70d951969c9a21071f677a002d9dab038c24bc45d2d",
  "codec": "zstd",
  "encoding": "base64",
- "compressed_bytes": 40301018,
+ "compressed_bytes": 40300969,
  "slice_bytes": 3000000,
  "chunk_size": 3000000,
  "chunk_count": 14,
@@ -16,7 +16,7 @@
    "index": 0,
    "name": "seed-0000.b64",
    "bytes": 4000000,
-   "sha256": "f73f8b0e82877a95fa85608249c1fd1efef8c62f18d46ea5915b41e3f20b6d58",
+   "sha256": "bdad9284f28848ba924a25888a548cf094c78f8b52170609265d9847d937f09e",
    "slice_bytes": 3000000
   },
   {
@@ -106,9 +106,9 @@
   {
    "index": 13,
    "name": "seed-0013.b64",
-   "bytes": 1734692,
-   "sha256": "1c45a75d0d37f89dbfc6ef35aa48e5d3a476df3e11275763412497244f6cffc4",
-   "slice_bytes": 1301018
+   "bytes": 1734628,
+   "sha256": "fb94150ec3ef1c663dc774efaa8307bfb89616a1dfa985b8fe8a5dd3ea151785",
+   "slice_bytes": 1300969
   }
  ],
  "site_base": "https://sequesteredyeti.art/djinn/seed/",
