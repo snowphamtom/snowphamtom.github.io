@@ -1,13 +1,70 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Monsters Ink</title>
-  <meta http-equiv="refresh" content="0;url=https://snowphamtom.github.io/magpie/">
-  <link rel="canonical" href="https://snowphamtom.github.io/magpie/">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Monsters Ink</title>
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0a2547">
+<style>
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{margin:0;color:#cfe8ff;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+    background:radial-gradient(120% 70% at 50% -10%, #16407c 0%, #0a2547 42%, #071c38 78%, #051426 100%);
+    min-height:100vh;display:flex;flex-direction:column;align-items:center;
+    padding:calc(env(safe-area-inset-top) + 30px) 20px calc(env(safe-area-inset-bottom) + 26px);}
+  .emblem{width:118px;margin:4px auto 0;}
+  h1{font-size:16px;letter-spacing:.42em;text-transform:uppercase;font-weight:600;margin:16px 0 4px;text-align:center;}
+  .sub{font-size:12.5px;color:#8fb6dd;letter-spacing:.08em;text-align:center;margin-bottom:28px;}
+  .doors{width:min(92vw,430px);display:flex;flex-direction:column;gap:14px;}
+  a.door{display:block;text-decoration:none;color:#cfe8ff;background:linear-gradient(180deg,#0d2c55,#081f3e);
+    border:1px solid #2a5796;border-radius:18px;padding:18px 20px 16px;min-height:64px;
+    box-shadow:inset 0 8px 22px rgba(0,0,0,.45);}
+  a.door:active{transform:translateY(1px);}
+  .door .name{font-size:16px;letter-spacing:.3em;text-transform:uppercase;font-weight:600;}
+  .door .line{font-size:13.5px;color:#8fb6dd;margin-top:5px;letter-spacing:.03em;line-height:1.45;}
+  .door.cave{border-color:#e8b34b;}
+  .door.cave .name{color:#e8b34b;}
+  footer{margin-top:auto;padding-top:30px;font-size:11px;color:#46688f;letter-spacing:.14em;text-align:center;}
+</style>
 </head>
 <body>
-  <p>Site is Magpie. <a href="https://snowphamtom.github.io/magpie/">Continue</a>.</p>
+  <div class="emblem">
+    <svg viewBox="0 0 200 160" aria-hidden="true" style="display:block;width:100%;height:auto;">
+      <path d="M100 6 C150 6 188 52 188 108 L188 154 L12 154 L12 108 C12 52 50 6 100 6 Z" fill="#dceffb"/>
+      <path d="M100 22 C142 22 172 60 172 108 L172 154 L28 154 L28 108 C28 60 58 22 100 22 Z" fill="#9cc4e8"/>
+      <path d="M100 34 C136 34 162 66 162 108 L162 154 L38 154 L38 108 C38 66 64 34 100 34 Z" fill="#123a6e"/>
+      <path d="M100 44 C131 44 153 72 153 108 L153 154 L47 154 L47 108 C47 72 69 44 100 44 Z" fill="none" stroke="#e8b34b" stroke-width="3"/>
+      <path d="M100 50 C128 50 147 75 147 108 L147 154 L53 154 L53 108 C53 75 72 50 100 50 Z" fill="#050f22"/>
+      <g stroke="#9fd0ff" stroke-width="1" fill="#cfe8ff" opacity="0.9">
+        <circle cx="78" cy="86" r="2"/><circle cx="88" cy="102" r="2"/><circle cx="72" cy="116" r="2"/><circle cx="90" cy="128" r="2"/>
+        <path d="M78 86 L88 102 L72 116 M88 102 L90 128" fill="none"/>
+        <circle cx="124" cy="82" r="2"/><circle cx="114" cy="100" r="2"/><circle cx="130" cy="114" r="2"/><circle cx="116" cy="130" r="2"/>
+        <path d="M124 82 L114 100 L130 114 M114 100 L116 130" fill="none"/>
+      </g>
+    </svg>
+  </div>
+  <h1>Monsters Ink</h1>
+  <div class="sub">The mountain has four doors.</div>
+
+  <div class="doors">
+    <a class="door cave" href="/enter/">
+      <div class="name">The Cave</div>
+      <div class="line">Yeti is in there. Speak, and be known.</div>
+    </a>
+    <a class="door" href="/data/">
+      <div class="name">The Record</div>
+      <div class="line">The seven public data drops — measured work, published with its limits attached.</div>
+    </a>
+    <a class="door" href="/hall-looks/">
+      <div class="name">The Crown</div>
+      <div class="line">Heavy Is The Crown.</div>
+    </a>
+    <a class="door" href="https://snowphamtom.github.io/magpie/">
+      <div class="name">Trains of Thought</div>
+      <div class="line">Site is Magpie. Continue.</div>
+    </a>
+  </div>
+
+  <footer>MONSTERS INK LLC&nbsp;·&nbsp;BELLEVUE,&nbsp;NEBRASKA</footer>
 </body>
 </html>
