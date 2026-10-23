@@ -65,7 +65,7 @@ one.
 
 ## Files
 
-- `spectral_class.py` — controls, H14, W, zeta zeros
+- `spectral_class.py` — controls, H14, W, zeta zeros · `results_spectral_class.txt` — fresh run, 2026-10-22 (all figures reproduce the recorded run)
 - `phase_twist.py` — the twist experiment · `phase_twist_results.md` —
   its recorded results · `results_phase_twist.txt` — fresh run, 2026-10-22
 - `riemann_check.py` · `results_riemann_check.txt` — fresh run, 2026-10-22

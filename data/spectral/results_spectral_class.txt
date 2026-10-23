@@ -1,0 +1,10 @@
+     GOE control: <r> = 0.5332 +- 0.0461  (n=48, 300 trials)
+     GUE control: <r> = 0.5993 +- 0.0424  (n=48, 300 trials)
+ Poisson control: <r> = 0.3892 +- 0.0494  (n=48, 300 trials)
+
+H14 syndrome: rank 7, nonzero eigenvalues 7 of 48 -> spacing statistics undefined on 41-fold degenerate zero; distinct nonzero eigs: [-64.    -49.317 -48.    -48.    -48.    -23.153 280.471]
+W (GENESIS pair-adjacency): <r> raw = 0.1688; zero-spacing fraction = 0.021; <r> over nonzero spacings = 0.2298; distinct eigenvalues = 27 of 48
+zeta zeros 1..200: <r> = 0.6150  (raw ordinates; r-ratio needs no unfolding)
+zeta zeros 1001..1200: <r> = 0.6183
+
+Reference constants (Atas et al.): Poisson 0.3863 | GOE 0.5359 | GUE 0.6027
