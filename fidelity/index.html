@@ -74,7 +74,11 @@ and this page does not claim, cognition or personhood.</p>
 <div class="panel">
 <div class="big num" id="fid-big"></div>
 <div id="fid-bars"></div>
-<p class="note">Recomputed below from the battery's own tally, served with this page.</p>
+<p class="note">Recomputed below from the battery's own tally, served with this page.
+The run whose tally this is: <strong>2026-10-23T14:04:50Z</strong>, taken against the
+register at <strong>345 rows</strong> (tip 9c48a0fb0946a866). An earlier full run the
+same day (09:28:21Z, against the register at 251 rows) scored identically, 64 of 64;
+this page's figures are the later run's.</p>
 <div class="out" id="out">The tally will be recomputed here.</div>
 </div>
 <h2>The first run failed — and that is on the record too</h2>
@@ -91,7 +95,7 @@ because a measurement you are not shown the failures of is not a measurement.</p
 <div class="panel" id="cert" style="display:none"></div>
 
   <div class="walk"><a href="../crossings/">&larr; The crossings</a></div>
-  <p class="stamp">Position as of October 23, 2026, 14:08 CDT. Every figure on this page is recomputed in your browser from the data served with it, or is stated with the instrument that measured it.</p>
+  <p class="stamp">Position as of October 23, 2026, 11:35 CDT. Every figure on this page is recomputed in your browser from the data served with it, or is stated with the instrument that measured it.</p>
 </main>
 
 <script>
@@ -142,11 +146,13 @@ fetch('data.json').then(function(r){ return r.json(); }).then(function(d){
   var ok = (tp === d.total_passed && tt === d.total && tp === tt);
   document.getElementById('out').innerHTML = ok
     ? '<span class="pass">TALLY VERIFIED</span> — the four sections sum to ' + tp + ' of ' + tt +
-      ', run in full on ' + d.run_date + '.'
+      ', run in full on ' + d.run_date + ' at ' + d.run_at +
+      ', against the register at ' + d.register_rows + ' rows (tip ' + d.register_tip16 + ').'
     : '<span class="fail">TALLY MISMATCH</span>';
   if (ok) mintCert([
     'Battery tally recomputed: ' + tp + ' of ' + tt,
     d.sections.map(function(s){ return s.label + ' ' + s.passed + ' of ' + s.total; }).join(' · '),
+    'Run: ' + d.run_at + ' · register ' + d.register_rows + ' rows · tip ' + d.register_tip16,
     'Verdict: the four sections sum exactly to the recorded battery total.']);
 });
 
