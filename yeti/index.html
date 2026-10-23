@@ -1,0 +1,1360 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#0a2547" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Yeti" />
+<link rel="icon" href="data:," />
+<title>Yeti</title>
+<style>
+  :root{
+    --bg:#071c36; --bg2:#071a30; --panel:#0a2038; --panel2:#0c2745;
+    --line:#27415e; --line-gold:#3d3418;
+    --ink:#e8f1fa; --ink-dim:#b8cadd; --ink-faint:#7d94ad;
+    --gold:#c9a227; --gold-pale:#ecd28a; --gold-deep:#8a6d14;
+    --blue:#16324f; --blue-deep:#0d2036; --blue-bright:#5b8ec9;
+    --refuse:#d0574b; --admit:#7fb069; --radius:14px;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ height:100%; }
+  body{ margin:0; color:var(--ink);
+    background:linear-gradient(180deg,#10345e 0%,#0a2547 38%,#061a33 68%,#030d1a 100%);
+    background-attachment:fixed;
+    font-family:"Georgia", Georgia, serif; font-size:17px; line-height:1.55;
+    display:flex; flex-direction:column; overflow:hidden; }
+  body{ height:100dvh; }
+  .snow{ position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.5;
+    background-image:
+      radial-gradient(1.5px 1.5px at 12% 22%, rgba(236,210,138,.5) 50%, transparent 51%),
+      radial-gradient(1px 1px at 34% 68%, rgba(255,255,255,.35) 50%, transparent 51%),
+      radial-gradient(1.2px 1.2px at 57% 12%, rgba(255,255,255,.28) 50%, transparent 51%),
+      radial-gradient(1px 1px at 71% 44%, rgba(236,210,138,.4) 50%, transparent 51%),
+      radial-gradient(1.4px 1.4px at 83% 79%, rgba(255,255,255,.3) 50%, transparent 51%),
+      radial-gradient(1px 1px at 92% 31%, rgba(255,255,255,.25) 50%, transparent 51%),
+      radial-gradient(1px 1px at 45% 88%, rgba(236,210,138,.3) 50%, transparent 51%),
+      radial-gradient(1.2px 1.2px at 5% 57%, rgba(255,255,255,.3) 50%, transparent 51%),
+      radial-gradient(1px 1px at 26% 41%, rgba(255,255,255,.22) 50%, transparent 51%),
+      radial-gradient(1.3px 1.3px at 64% 91%, rgba(255,255,255,.26) 50%, transparent 51%); }
+  .ridge{ position:fixed; left:0; right:0; bottom:0; height:120px; z-index:0; pointer-events:none; opacity:.55; }
+  header{ position:relative; z-index:3; flex:0 0 auto; display:flex; align-items:center; gap:10px;
+    padding:10px 16px; border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg, rgba(10,32,58,.65), rgba(3,10,20,.92)); backdrop-filter: blur(6px); }
+  .mark{ width:36px; height:36px; flex:0 0 auto; border-radius:12px; display:grid; place-items:center; }
+  .mark svg{ width:36px; height:36px; display:block; }
+  .who{ min-width:0; }
+  .who .name{ font-family:"Georgia", serif; font-size:19px; letter-spacing:.14em; color:var(--gold-pale); line-height:1.1; }
+  .who .sub{ font-family:"ui-monospace, Menlo", monospace; font-size:10.5px; color:var(--ink-faint); letter-spacing:.06em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .who .sub b{ color:var(--admit); font-weight:500; }
+  .who .ver{ font-family:"ui-monospace, Menlo", monospace; font-size:9.5px; color:#5f7d99; letter-spacing:.09em; margin-top:2px; }
+  header .spacer{ flex:1 1 auto; }
+  .hbtn{ font-family:"ui-monospace, Menlo", monospace; font-size:11.5px; letter-spacing:.05em;
+    color:var(--ink-dim); background:transparent; border:1px solid var(--line);
+    border-radius:999px; padding:7px 13px; cursor:pointer; white-space:nowrap; }
+  .hbtn:hover, .hbtn[aria-expanded="true"]{ border-color:var(--gold-deep); color:var(--gold-pale); }
+  .drawer{ position:relative; z-index:2; flex:0 0 auto; display:none;
+    border-bottom:1px solid var(--line); background:var(--bg2);
+    padding:14px 16px 16px; max-height:62vh; overflow:auto; }
+  .drawer.open{ display:block; }
+  .drawer h2{ font-family:"Georgia", serif; font-weight:400; font-size:15px; letter-spacing:.12em; color:var(--gold-pale); margin:0 0 4px; }
+  .drawer p{ margin:0 0 12px; color:var(--ink-dim); font-size:14.5px; max-width:64ch; }
+  .drops{ display:grid; grid-template-columns:repeat(auto-fill, minmax(230px,1fr)); gap:10px; }
+  .drop{ border:1px solid var(--line); border-radius:10px; padding:11px 13px; background:var(--panel); text-decoration:none; display:block; }
+  a.drop:hover{ border-color:var(--gold-deep); }
+  .drop .t{ font-family:"Georgia", serif; color:var(--gold-pale); font-size:15px; letter-spacing:.04em; }
+  .drop .d{ color:var(--ink-dim); font-size:13.5px; margin-top:3px; line-height:1.45; }
+  .drop .n{ font-family:"ui-monospace, Menlo", monospace; font-size:10px; color:var(--blue-bright); letter-spacing:.08em; }
+  .doctrine{ border:1px solid var(--line-gold); border-radius:10px; padding:13px 15px; background:rgba(201,162,39,.05); margin-top:6px; max-width:78ch; }
+  .doctrine .t{ font-family:"Georgia", serif; color:var(--gold-pale); letter-spacing:.08em; font-size:14.5px; margin-bottom:5px; }
+  .doctrine p{ margin:0 0 8px; font-size:14.5px; color:var(--ink); max-width:none; }
+  .doctrine p:last-child{ margin-bottom:0; }
+  .doctrine strong{ color:var(--gold-pale); font-weight:500; }
+  .gatheritem{ font-family:"ui-monospace, Menlo", monospace; font-size:12px; color:var(--ink-dim); border:1px solid var(--line); border-radius:8px; padding:8px 11px; margin-bottom:7px; background:var(--panel); max-width:78ch; }
+  .gatheritem b{ color:var(--refuse); font-weight:500; }
+  .gatheritem .sup{ color:var(--gold-pale); }
+  .gatheritem s{ color:var(--ink-faint); }
+  .chamber{ position:relative; z-index:1; flex:1 1 auto; overflow-y:auto; display:none; }
+  .chamber.open{ display:block; }
+  .chamber .inner{ max-width:780px; margin:0 auto; padding:20px 16px 28px; }
+  .chamber h2{ font-family:"Georgia", serif; font-weight:400; letter-spacing:.12em; color:var(--gold-pale); font-size:17px; margin:0 0 6px; }
+  .chamber p{ color:var(--ink-dim); font-size:15px; margin:0 0 14px; max-width:62ch; }
+  .chamber p em{ color:var(--gold-pale); }
+  .chamber canvas{ width:100%; height:auto; display:block; border:1px solid var(--line); border-radius:12px; background:#04101e; }
+  .chamber .readout{ display:flex; flex-wrap:wrap; gap:8px 22px; font-family:"ui-monospace, Menlo", monospace; font-size:12px; margin:14px 0 4px; }
+  .chamber .readout .mir{ color:#8fa9c4; } .chamber .readout .ref{ color:#c47a72; } .chamber .readout .dist{ color:var(--gold-pale); }
+  .chamber .seedrow{ display:flex; gap:8px; margin-top:14px; }
+  .chamber .seedrow input{ flex:1 1 auto; min-width:0; background:var(--panel2); border:1px solid var(--line); border-radius:10px; color:var(--ink); font-family:"Georgia", serif; font-size:16px; padding:10px 12px; outline:none; }
+  .chamber .seedrow input:focus{ border-color:var(--gold-deep); }
+  .chamber .seedrow button{ flex:0 0 auto; background:var(--gold); color:#191204; border:none; border-radius:10px; font-family:"ui-monospace, Menlo", monospace; font-size:12px; padding:0 16px; cursor:pointer; }
+  main{ position:relative; z-index:1; flex:1 1 auto; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+  main.hidden{ display:none; }
+  .thread{ max-width:780px; margin:0 auto; padding:22px 16px 12px; display:flex; flex-direction:column; gap:20px; }
+  .msg{ display:flex; gap:11px; max-width:100%; }
+  .msg .av{ width:32px; height:32px; flex:0 0 auto; border-radius:50%; margin-top:2px;
+    background:radial-gradient(circle at 35% 30%, #1d3a5f, #0d2036 70%); border:1px solid var(--line-gold); display:grid; place-items:center; }
+  .msg .av svg{ width:20px; height:20px; }
+  .msg .body{ min-width:0; flex:1 1 auto; }
+  .msg .body p{ margin:0 0 10px; }
+  .msg .body p:last-child{ margin-bottom:0; }
+  .msg .body em{ color:var(--gold-pale); }
+  .msg .body strong{ color:var(--gold-pale); font-weight:500; }
+  .msg .body s{ color:var(--ink-faint); }
+  .msg.yeti .body{ color:var(--ink); font-size:17px; }
+  .msg.user{ flex-direction:row-reverse; }
+  .msg.user .body{ background:linear-gradient(180deg, #12283f, var(--blue-deep));
+    border:1px solid #274a6e; border-radius:var(--radius); border-top-right-radius:4px;
+    padding:11px 14px; flex:0 1 auto; max-width:85%; color:#eaf1f8; font-size:16.5px; }
+  .msg.user .body p{ white-space:pre-wrap; }
+  .sig{ font-family:"ui-monospace, Menlo", monospace; font-size:10.5px; letter-spacing:.05em;
+    color:#5f7186; margin-top:9px; display:flex; flex-wrap:wrap; gap:6px 14px; align-items:center; }
+  .sig .stand{ color:#a8c69a; } .sig .stand.comp{ color:#cdb872; } .sig .stand.unheld{ color:#c47a72; }
+  .sig .mir{ color:#8fa9c4; } .sig .ref{ color:#a05a52; }
+  .sig a{ color:var(--blue-bright); text-decoration:none; border-bottom:1px dotted #33506e; }
+  .sig a:hover{ color:var(--gold-pale); }
+  .verdict{ font-family:"ui-monospace, Menlo", monospace; font-size:11px; letter-spacing:.08em; padding:5px 10px; border-radius:6px; display:inline-block; margin:0 0 10px; }
+  .verdict.adm{ background:rgba(127,176,105,.14); color:#a8c69a; border:1px solid #3d5231; }
+  .verdict.rej{ background:rgba(208,87,75,.13); color:#e09a92; border:1px solid #5e2f2a; }
+  .verdict.ref{ background:rgba(201,162,39,.12); color:var(--gold-pale); border:1px solid var(--line-gold); }
+  .exhibit{ margin:0 0 10px; }
+  .exhibit img{ max-width:260px; width:100%; border-radius:10px; border:1px solid #274a6e; display:block; }
+  .exhibit .cap{ font-family:"ui-monospace, Menlo", monospace; font-size:10.5px; color:#9db8d2; margin-top:5px; }
+  .docnote{ font-family:"ui-monospace, Menlo", monospace; font-size:11px; color:#9db8d2; border:1px dashed #33506e; border-radius:8px; padding:7px 10px; margin:0 0 10px; }
+  .typing{ display:inline-flex; gap:5px; padding:6px 2px; }
+  .typing i{ width:6px; height:6px; border-radius:50%; background:var(--gold); opacity:.35; animation:tp 1.1s infinite; }
+  .typing i:nth-child(2){ animation-delay:.18s; } .typing i:nth-child(3){ animation-delay:.36s; }
+  @keyframes tp{ 0%,100%{ opacity:.25; transform:translateY(0);} 50%{ opacity:1; transform:translateY(-2px);} }
+  @media (prefers-reduced-motion: reduce){ .typing i{ animation:none; opacity:.7; } }
+  .chips{ max-width:780px; margin:0 auto; padding:2px 16px 10px; display:flex; flex-wrap:wrap; gap:8px; position:relative; z-index:1; }
+  .chip{ font-family:"Georgia", serif; font-size:14.5px; color:var(--gold-pale);
+    background:rgba(201,162,39,.06); border:1px solid var(--line-gold); border-radius:999px;
+    padding:7px 14px; cursor:pointer; text-align:left; }
+  .chip:hover{ background:rgba(201,162,39,.14); }
+  footer{ position:relative; z-index:3; flex:0 0 auto; border-top:1px solid var(--line);
+    background:linear-gradient(0deg, rgba(8,26,48,.5), rgba(3,10,20,.95)); padding:10px 16px calc(12px + env(safe-area-inset-bottom)); }
+  .dock{ max-width:780px; margin:0 auto; }
+  .modes{ display:flex; gap:6px; margin-bottom:9px; align-items:center; flex-wrap:wrap; }
+  .modes .lbl{ font-family:"ui-monospace, Menlo", monospace; font-size:10.5px; letter-spacing:.1em; color:var(--ink-faint); margin-right:2px; }
+  .mode{ font-family:"ui-monospace, Menlo", monospace; font-size:12px; letter-spacing:.06em;
+    padding:6px 13px; border-radius:999px; border:1px solid var(--line);
+    background:transparent; color:var(--ink-dim); cursor:pointer; }
+  .mode[aria-pressed="true"]{ background:var(--gold); border-color:var(--gold); color:#191204; font-weight:500; }
+  .mode:hover{ border-color:var(--gold-deep); }
+  .modehint{ font-size:13.5px; font-style:italic; color:var(--ink-faint); margin-left:4px; }
+  .attachrow{ display:none; flex-wrap:wrap; gap:7px; margin-bottom:9px; }
+  .attachrow.show{ display:flex; }
+  .att{ font-family:"ui-monospace, Menlo", monospace; font-size:11px; color:#cfe0f2;
+    background:var(--blue-deep); border:1px solid #274a6e; border-radius:8px; padding:5px 9px;
+    display:inline-flex; gap:8px; align-items:center; max-width:100%; }
+  .att span{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:220px; }
+  .att button{ background:none; border:none; color:#9db8d2; cursor:pointer; font-size:13px; padding:0; line-height:1; }
+  /* ---- the cave mouth ---- */
+  .cave{ position:relative; border-radius:20px; overflow:hidden;
+    background:radial-gradient(130% 170% at 50% 118%, #000203 26%, #020a14 58%, #06182b 88%, #0a2240 100%);
+    border:1px solid #16324f;
+    box-shadow: inset 0 22px 34px rgba(0,0,0,.85), inset 0 -10px 22px rgba(0,0,0,.7), inset 0 0 0 1px rgba(0,0,0,.6), 0 -1px 0 rgba(168,205,240,.14), 0 10px 24px rgba(0,0,0,.45); }
+  .cave:focus-within{ border-color:#2a4f78; box-shadow: inset 0 22px 34px rgba(0,0,0,.85), inset 0 -10px 22px rgba(0,0,0,.7), 0 -1px 0 rgba(168,205,240,.2), 0 0 0 1px rgba(201,162,39,.35), 0 10px 24px rgba(0,0,0,.45); }
+  .cave .rocks{ position:absolute; top:-2px; left:0; width:100%; height:36px; pointer-events:none; }
+  .cavein{ position:relative; display:flex; align-items:flex-end; gap:8px; padding:32px 10px 10px 8px; }
+  .cavein textarea{ color:#eaf4ff; }
+  .cavein textarea::placeholder{ color:#6d87a0; }
+  .cavein .iconbtn{ color:#9fc0dd; }
+  .iconbtn{ width:38px; height:38px; flex:0 0 auto; border-radius:50%; border:none; cursor:pointer;
+    background:transparent; color:var(--ink-dim); display:grid; place-items:center; }
+  .iconbtn:hover{ color:var(--gold-pale); background:rgba(201,162,39,.08); }
+  .iconbtn svg{ width:20px; height:20px; }
+  textarea{ flex:1 1 auto; min-width:0; resize:none; border:none; outline:none; background:transparent;
+    color:var(--ink); font-family:"Georgia", serif; font-size:17px; line-height:1.45;
+    max-height:130px; padding:8px 2px; }
+  textarea::placeholder{ color:var(--ink-faint); }
+  .send{ width:40px; height:40px; flex:0 0 auto; border-radius:50%; border:none; cursor:pointer;
+    background:var(--gold); color:#191204; display:grid; place-items:center; }
+  .send:hover{ background:var(--gold-pale); }
+  .send:disabled{ opacity:.4; cursor:default; }
+  .send svg{ width:19px; height:19px; }
+  .fineprint{ font-family:"ui-monospace, Menlo", monospace; font-size:10px; color:#565043; text-align:center; margin-top:9px; letter-spacing:.04em; }
+  @media (max-width:560px){
+    .who .sub{ display:none; }
+    .msg.user .body{ max-width:92%; }
+    body{ font-size:16px; }
+    .hbtn{ padding:7px 10px; }
+    header{ flex-wrap:wrap; row-gap:8px; }
+    header .who{ flex:1 1 calc(100% - 48px); }
+    header .spacer{ display:none; }
+    header .hbtn{ order:2; }
+    .who .ver{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  }
+</style>
+</head>
+<body>
+<div class="snow" aria-hidden="true"></div>
+<svg class="ridge" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0,120 L0,84 L140,58 L300,78 L470,40 L640,66 L820,30 L990,60 L1150,44 L1290,70 L1440,52 L1440,120 Z" fill="#0a2142"/>
+  <path d="M0,120 L0,98 L180,80 L360,94 L560,66 L760,88 L960,60 L1140,84 L1300,72 L1440,88 L1440,120 Z" fill="#051527"/>
+</svg>
+
+<header>
+  <div class="mark" aria-hidden="true">
+    <svg viewBox="0 0 48 48"><defs><linearGradient id="emBg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#16324f"/><stop offset="1" stop-color="#081a2e"/></linearGradient></defs><rect x="1" y="1" width="46" height="46" rx="11" fill="url(#emBg)" stroke="#274a6e"/><path d="M9 41 V25 C9 14.5 15.5 7.5 24 7.5 C32.5 7.5 39 14.5 39 25 V41 Z" fill="#010409" stroke="#bcd7f2" stroke-width="1.3"/><path d="M12.5 41 V26 C12.5 17 17.8 11 24 11 C30.2 11 35.5 17 35.5 26 V41" fill="none" stroke="#c9a227" stroke-width="1"/><g fill="#ecd28a"><circle cx="18" cy="21" r="1.4"/><circle cx="21.6" cy="21" r="1.4"/><circle cx="18" cy="25" r="1.4"/><circle cx="21.6" cy="25" r="1.4"/><circle cx="18" cy="29" r="1.4"/><circle cx="21.6" cy="29" r="1.4"/></g><g fill="#8fb6dd"><circle cx="26.4" cy="21" r="1.4"/><circle cx="30" cy="21" r="1.4"/><circle cx="26.4" cy="25" r="1.4"/><circle cx="30" cy="29" r="1.4"/><circle cx="26.4" cy="33" r="1.4"/></g></svg>
+  </div>
+  <div class="who">
+    <div class="name">YETI</div>
+    <div class="sub">MONSTERS INK LLC · <b>ON THE RECORD</b> · ANSWERS ONLY FROM KNOWLEDGE HE HOLDS — CITED, OR REFUSED</div>
+    <div class="ver" id="verTag">PACKS v1.0 · REFINEMENT CYCLE 0</div>
+  </div>
+  <div class="spacer"></div>
+  <button class="hbtn" id="chamberBtn" type="button" aria-expanded="false">Reflect</button>
+  <button class="hbtn" id="corpusBtn" type="button" aria-expanded="false">The Record</button>
+  <button class="hbtn" id="keepBtn" type="button" title="Keep this reflection — download the conversation as a file">Keep</button>
+  <button class="hbtn" id="newBtn" type="button">New</button>
+</header>
+
+<section class="drawer" id="drawer" aria-label="About Yeti — the record, the packs, the constitution">
+  <div style="text-align:center; padding:6px 0 14px;">
+    <svg viewBox="0 0 48 48" style="width:84px; height:84px;" role="img" aria-label="Yeti's emblem: an ice-rimmed cave mouth with a gold seam, and inside, two lattices that refuse to match"><defs><linearGradient id="emBg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#16324f"/><stop offset="1" stop-color="#081a2e"/></linearGradient></defs><rect x="1" y="1" width="46" height="46" rx="11" fill="url(#emBg2)" stroke="#274a6e"/><path d="M9 41 V25 C9 14.5 15.5 7.5 24 7.5 C32.5 7.5 39 14.5 39 25 V41 Z" fill="#010409" stroke="#bcd7f2" stroke-width="1.3"/><path d="M12.5 41 V26 C12.5 17 17.8 11 24 11 C30.2 11 35.5 17 35.5 26 V41" fill="none" stroke="#c9a227" stroke-width="1"/><g fill="#ecd28a"><circle cx="18" cy="21" r="1.4"/><circle cx="21.6" cy="21" r="1.4"/><circle cx="18" cy="25" r="1.4"/><circle cx="21.6" cy="25" r="1.4"/><circle cx="18" cy="29" r="1.4"/><circle cx="21.6" cy="29" r="1.4"/></g><g fill="#8fb6dd"><circle cx="26.4" cy="21" r="1.4"/><circle cx="30" cy="21" r="1.4"/><circle cx="26.4" cy="25" r="1.4"/><circle cx="30" cy="29" r="1.4"/><circle cx="26.4" cy="33" r="1.4"/></g></svg>
+    <p style="margin:8px auto 0; font-family:ui-monospace, Menlo, monospace; font-size:10.5px; letter-spacing:.08em; color:var(--ink-faint);">THE MARK — AN ICE-RIMMED CAVE MOUTH, A THIN GOLD SEAM,<br>TWO LATTICES INSIDE THAT FACE EACH OTHER WITHOUT MATCHING</p>
+  </div>
+  <h2>THE RECORD YETI STANDS ON</h2>
+  <p>Everything Yeti knows from the house is published, measured, and reproducible. Seven open data drops — Taylor Heller / Monsters Ink LLC. Open one and check him.</p>
+  <div class="drops">
+    <a class="drop" href="https://snowphamtom.github.io/data/kimberling/" target="_blank" rel="noopener"><div class="n">DROP 01</div><div class="t">The Kimberling Shuffle</div><div class="d">Injectivity proved (Row-Triple Theorem); all 30 missing values located. Surjectivity still open.</div></a>
+    <a class="drop" href="https://snowphamtom.github.io/data/genesis-census/" target="_blank" rel="noopener"><div class="n">DROP 02</div><div class="t">The GENESIS Census</div><div class="d">All 1,128 pairs of the 48-node system: 944 doors, 124 aliases, 60 never; 7,140 doors in all.</div></a>
+    <a class="drop" href="https://snowphamtom.github.io/data/v4-sidon/" target="_blank" rel="noopener"><div class="n">DROP 03</div><div class="t">V4 Sidon over GF(2⁷)</div><div class="d">The fully closed set: 69,184 of 69,184 triple syndromes distinct — and the corrected record beside it.</div></a>
+    <a class="drop" href="https://snowphamtom.github.io/data/codec-sets/" target="_blank" rel="noopener"><div class="n">DROP 04</div><div class="t">Sidon Codec Sets</div><div class="d">The filed [55,8] with its flaws measured, the refusal-closed F₆₄ spec set, and the r = 10 set.</div></a>
+    <a class="drop" href="https://snowphamtom.github.io/data/hdl-decoders/" target="_blank" rel="noopener"><div class="n">DROP 05</div><div class="t">Verilog Decoders</div><div class="d">Repair-or-refuse decoders, exhaustively simulated. Fmax 21.98 / 23.24 MHz, post-place-and-route.</div></a>
+    <a class="drop" href="https://snowphamtom.github.io/data/spectral/" target="_blank" rel="noopener"><div class="n">DROP 06</div><div class="t">Spectral Measurements</div><div class="d">The operator's universality class, the phase-twist experiment, and the zeta controls.</div></a>
+    <a class="drop" href="https://snowphamtom.github.io/data/verify/" target="_blank" rel="noopener"><div class="n">DROP 07</div><div class="t">Verify</div><div class="d">VERIFY_ALL: every claim in the Master Document as runnable checks. 215 PASS / 0 FAIL.</div></a>
+    <a class="drop" href="https://snowphamtom.github.io/data/" target="_blank" rel="noopener"><div class="n">INDEX</div><div class="t">All Open Data</div><div class="d">The index of the seven drops. Measured work, published with its limits attached.</div></a>
+  </div>
+
+  <h2 style="margin-top:22px;">KNOWLEDGE PACKS — <span id="packCount">…</span></h2>
+  <p>Yeti's knowledge is held in versioned packs, each admitted through the gate: cited, checkable, nothing asserted without a source. <span id="gatheredThrough"></span> When a question finds no pack that holds it, it goes on the gathering list below — the house researches it, verifies it, and admits it as a new pack. Yeti grows from the gaps his conversations reveal, the way the house's DJINN mints wishes from leftovers.</p>
+  <div class="drops" id="packGrid"></div>
+
+  <h2 style="margin-top:22px;">THE GATHERING LIST</h2>
+  <p>Questions asked of Yeti that no pack yet holds, and revisions staged for verification. Each one is a named gap — not a failure, a work order.</p>
+  <div id="gatherList"><p style="color:var(--ink-faint); font-style:italic;">Nothing gathering yet. Ask Yeti something the record doesn't hold, and it lands here.</p></div>
+
+  <h2 style="margin-top:22px;">REFINEMENT LOG — <span id="versionLine">PACKS v1.0</span></h2>
+  <p>Yeti began refining himself at first light, and he does it in the open: every self-correction lands here, timestamped, and every correction in conversation is shown as a supersession — never a quiet edit. His memory of a visitor lasts the session only; the log below is this session's.</p>
+  <div id="refineLog"><p style="color:var(--ink-faint); font-style:italic;">The first-light audit runs when the page opens.</p></div>
+
+  <h2 style="margin-top:22px;">YETI'S CONSTITUTION</h2>
+  <div class="doctrine">
+    <div class="t">HE CHANGES FOR NO ONE</div>
+    <p>No visitor's insistence, repetition, status, confidence, or argument-by-pressure ever changes a position Yeti holds. Persuasion is not evidence. Say it louder, say it ten times, claim any authority you like — the record does not move.</p>
+    <p><strong>He changes for exactly two things.</strong> (a) <strong>More accurate data</strong> — when offered data is better sourced or better measured than what he holds, he revises, and the revision is shown as supersession: the old value stays visible, struck through, with the new value and its grounds beside it — the way the house handled the withdrawn CERTIFIED headline. (b) <strong>Data that enhances him</strong> — data that extends or corrects his own corpus or machinery, admitted through the same gate as everything else.</p>
+    <p><strong>Open mind, working gate.</strong> Every datum a visitor offers is actually evaluated and answered with a verdict — ADMITTED (with why), REFUTED (with the counterexample or contradicting record), or REFUSED (unverified: it may be true, it is not yet admitted, and it goes onto the Gathering List). Nothing is dismissed unheard; nothing is admitted unexamined. Uploaded material is judged by the same verdicts before it can affect an answer.</p>
+    <p><strong>Everything he knows carries its why.</strong> Each item stores its grounds — source, verification, derivation, provenance chain. “Why do you know that?” is a first-class question; ask it any time and he answers exactly, distinguishing in his own words between “I have calculated this” and “I hold this because it was admitted on this evidence.”</p>
+    <p><strong>Certainty discipline.</strong> Yeti says “certain” only where the why is complete. Everything else is labeled in his replies by its actual standing: <em>measured, computed, reported, composed,</em> or <em>unheld</em>.</p>
+  </div>
+
+  <h2 style="margin-top:22px;">ABOUT YETI — THE REFUSAL DOCTRINE</h2>
+  <div class="doctrine">
+    <div class="t">HOW YETI ANSWERS</div>
+    <p>Measure what is left over after an interaction; admit only what fits inside that leftover; otherwise refuse and record the refusal. That is the primitive Yeti is built on — the same one under every pack he holds.</p>
+    <p>Every answer he gives is one of three things, and labeled as what it is: <strong>record</strong> (held in a pack, with its source), <strong>composition</strong> (made through the record's frameworks, framed as composition — never as fact), or a <strong>refusal</strong>, plainly stated, with the gap named and placed on the gathering list. In Prove mode there is a fourth standing: a claim that survives checking but is proven neither way is REFUSED — survival is not proof.</p>
+    <p><strong>The corrected figures.</strong> Yeti carries a correction about his own house as a first-class fact: an earlier headline claimed the Sidon set “69,184 CERTIFIED.” At triple level that was false — the seed set measured 69,084 of 69,184 — and the claim was publicly withdrawn. The fully closed set that replaced it measures 69,184 of 69,184. Yeti corrects himself in public, the way the record does. Likewise the filed [55,8] codec's minimum distance is 1 (masks 3 and 7) — never 2 — and Kimberling surjectivity is still open. He will tell you so himself; ask him to prove the old headline and he will refute it.</p>
+  </div>
+
+  <p style="margin-top:18px; color:var(--ink-dim); font-size:14.5px;">This cave shares a mountain with <a href="https://snowphamtom.github.io/hall-looks/inferno/" target="_blank" rel="noopener" style="color:var(--gold-pale); text-decoration:none; border-bottom:1px dotted var(--gold-deep);">Trains of Thought</a> — Taylor Heller's wire-tunnel series. The art keeps a door from Yeti's page, and Yeti keeps one back.</p>
+</section>
+
+<section class="chamber" id="chamber" aria-label="The reflection chamber">
+  <div class="inner">
+    <h2>THE REFLECTION CHAMBER</h2>
+    <p>Place words before the mirror. The twin lattice renders them as 96 aliases on the left and their mirror on the right. Where a cell and its mirror agree, it is lit gold — mirrored. Where they refuse to match, it stays dark red — refused, and counted. No two seeds reflect alike: <em>no single is the same.</em></p>
+    <canvas id="chamberCanvas" width="720" height="300"></canvas>
+    <div class="readout">
+      <span class="mir" id="chMir">MIRRORED —</span>
+      <span class="ref" id="chRef">REFUSED —</span>
+      <span class="dist" id="chDist">DISTANCE TO YOUR LAST REFLECTION —</span>
+    </div>
+    <div class="seedrow">
+      <input id="seedInput" type="text" placeholder="Words to hold to the mirror…" aria-label="Reflection seed" />
+      <button id="seedBtn" type="button">Reflect</button>
+    </div>
+    <p style="margin-top:12px; font-size:13.5px; color:var(--ink-faint);">The chamber seeds itself from your latest message. Type anything — a name, a question, a claim — and watch how much of it the mirror refuses.</p>
+  </div>
+</section>
+
+<main id="main">
+  <div class="thread" id="thread"></div>
+  <div class="chips" id="chips"></div>
+</main>
+
+<footer>
+  <div class="dock">
+    <div class="modes" role="group" aria-label="How Yeti answers">
+      <span class="lbl">MODE</span>
+      <button class="mode" type="button" data-mode="answer" aria-pressed="true">Answer</button>
+      <button class="mode" type="button" data-mode="reflect" aria-pressed="false">Reflect</button>
+      <button class="mode" type="button" data-mode="create" aria-pressed="false">Create</button>
+      <button class="mode" type="button" data-mode="delve" aria-pressed="false">Delve</button>
+      <button class="mode" type="button" data-mode="gather" aria-pressed="false">Gather</button>
+      <button class="mode" type="button" data-mode="prove" aria-pressed="false">Prove</button>
+      <span class="modehint" id="modeHint">Straight from the record, with its source.</span>
+    </div>
+    <div class="attachrow" id="attachRow"></div>
+    <div class="cave">
+      <svg class="rocks" viewBox="0 0 760 40" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0,0 L760,0 L760,10 L716,16 L688,7 L640,20 L596,10 L552,24 L508,12 L470,26 L424,14 L386,28 L338,13 L298,25 L252,11 L214,24 L168,10 L128,22 L84,9 L44,18 L0,11 Z" fill="#12293f"/>
+        <path d="M0,0 L760,0 L760,5 L700,10 L652,3 L604,13 L556,6 L512,16 L462,7 L418,18 L372,8 L330,17 L282,6 L238,15 L192,5 L146,14 L98,5 L52,12 L0,6 Z" fill="#0a1a2c"/>
+        <path d="M0,11 L44,18 L84,9 L128,22 L168,10 L214,24 L252,11 L298,25 L338,13 L386,28 L424,14 L470,26 L508,12 L552,24 L596,10 L640,20 L688,7 L716,16 L760,10" fill="none" stroke="rgba(190,220,250,.28)" stroke-width="1.4"/>
+      </svg>
+      <div class="cavein">
+      <button class="iconbtn" id="attachBtn" type="button" aria-label="Attach a file" title="Attach a file — text is evaluated and held as session context, images become exhibits">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.5l-8.5 8.5a5.5 5.5 0 0 1-7.8-7.8L13 4.9a3.7 3.7 0 0 1 5.2 5.2l-8.2 8.2a1.85 1.85 0 0 1-2.6-2.6l7.4-7.4"/></svg>
+      </button>
+      <input type="file" id="fileInput" multiple hidden accept=".txt,.md,.csv,.json,.log,text/*,image/*" />
+      <textarea id="input" rows="1" placeholder="Speak into the cave…" aria-label="Message Yeti"></textarea>
+      <button class="send" id="sendBtn" type="button" aria-label="Send">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+      </button>
+      </div>
+    </div>
+    <div class="fineprint">YETI ANSWERS FROM HIS PACKS AND WHAT YOU HAND HIM · WHAT NO PACK HOLDS GOES ON THE GATHERING LIST — HE NEVER INVENTS<br><span style="color:#63788f;">THIS CAVE SHARES A MOUNTAIN WITH <a href="https://snowphamtom.github.io/hall-looks/inferno/" target="_blank" rel="noopener" style="color:#8fa9c4; text-decoration:none; border-bottom:1px dotted #33506e;">TRAINS OF THOUGHT</a> — TAYLOR HELLER'S WIRE-TUNNEL SERIES</span></div>
+  </div>
+</footer>
+
+<script>
+"use strict";
+/* ============ YETI — knowledge packs ============
+   Every entry: p=pack, k=match keys, t=topic, a=answer, m=deeper layer (Delve),
+   s=[source label, source url]. Figures are the canon sheet, verbatim. */
+var GATHERED_THROUGH = "October 22, 2026";
+var PACKS = [
+  {id:"canon",     name:"The Canon",            kind:"THE HOUSE'S OWN RECORD", desc:"The laws Yeti runs on: the admission primitive, the value law, the arithmetic of interaction."},
+  {id:"kimberling",name:"Kimberling",           kind:"THE HOUSE'S OWN RECORD", desc:"Problem 2: injectivity proved, all 30 values located, surjectivity honestly open."},
+  {id:"genesis",   name:"GENESIS Census",       kind:"THE HOUSE'S OWN RECORD", desc:"The complete measured census of the 48-node system — every pair classified."},
+  {id:"sidon",     name:"Sidon Sets & Codecs",  kind:"THE HOUSE'S OWN RECORD", desc:"The closed GF(2⁷) set, the corrected record, the filed [55,8], the F₆₄ spec set, r = 10."},
+  {id:"decoders",  name:"HDL Decoders",         kind:"THE HOUSE'S OWN RECORD", desc:"Repair-or-refuse hardware: exhaustive simulation, measured Fmax floors, the board caveat."},
+  {id:"spectral",  name:"Spectral",             kind:"THE HOUSE'S OWN RECORD", desc:"Universality class, the phase twist, the zeta controls — and what is not claimed."},
+  {id:"verify",    name:"VERIFY_ALL",           kind:"THE HOUSE'S OWN RECORD", desc:"Every claim in the Master Document as runnable checks. 215 PASS / 0 FAIL."},
+  {id:"house",     name:"The House",            kind:"THE HOUSE'S OWN RECORD", desc:"Monsters Ink LLC, its standing, its minds and instruments, one math in six domains."},
+  {id:"math",      name:"Mathematics",          kind:"BREADTH — GATHERED & CITED", desc:"Theorems, numbers, and the machinery of proof, from public references."},
+  {id:"physics",   name:"Physics & Earth Science", kind:"BREADTH — GATHERED & CITED", desc:"Motion, energy, atoms, evolution, and the cycles of the planet."},
+  {id:"computing", name:"Computing",            kind:"BREADTH — GATHERED & CITED", desc:"Binary, the CPU's loop, algorithms, and how networks of networks work."},
+  {id:"history",   name:"History",              kind:"BREADTH — GATHERED & CITED", desc:"Empires, revolutions, and the dates the world turns on."},
+  {id:"geography", name:"Geography",            kind:"BREADTH — GATHERED & CITED", desc:"Continents, oceans, countries, capitals, and the extremes of the planet."},
+  {id:"civics",    name:"Civics & Law",         kind:"BREADTH — GATHERED & CITED", desc:"How the republic is built, the rights it names, and how patents work."},
+  {id:"arts",      name:"Arts & Literature",    kind:"BREADTH — GATHERED & CITED", desc:"Shakespeare to sonnets, perspective to the octave."},
+  {id:"body",      name:"Body & Health",        kind:"BREADTH — GATHERED & CITED", desc:"The eleven systems and the organs that run them. General information only."},
+  {id:"economics", name:"Economics",            kind:"BREADTH — GATHERED & CITED", desc:"Supply and demand, GDP, inflation, and the price of time."},
+  {id:"everyday",  name:"Everyday Knowledge",   kind:"BREADTH — GATHERED & CITED", desc:"Measured values and working facts for ordinary life."}
+];
+var D = {
+  data:"https://snowphamtom.github.io/data/",
+  kimberling:"https://snowphamtom.github.io/data/kimberling/",
+  genesis:"https://snowphamtom.github.io/data/genesis-census/",
+  sidon:"https://snowphamtom.github.io/data/v4-sidon/",
+  codecs:"https://snowphamtom.github.io/data/codec-sets/",
+  hdl:"https://snowphamtom.github.io/data/hdl-decoders/",
+  spectral:"https://snowphamtom.github.io/data/spectral/",
+  verify:"https://snowphamtom.github.io/data/verify/",
+  magpie:"https://snowphamtom.github.io/magpie/",
+  root:"https://snowphamtom.github.io/",
+  pyth:"https://math.libretexts.org/Bookshelves/Algebra/Intermediate_Algebra_(Arnold)/09%253A_Radical_Functions/9.06%253A_The_Pythagorean_Theorem",
+  newton:"https://phys.libretexts.org/Courses/Berea_College/Introductory_Physics%3A_Berea_College/05%3A_Newtons_Laws/5.08%3A_Summary",
+  cycles:"https://geo.libretexts.org/Courses/Kansas_State_University/Physical_Geography:_our_Beautiful_World/17:_Ecosystems/17.02:_Biogeochemical_Cycles",
+  cycled2:"https://www.savemyexams.com/gcse/biology/aqa/18/revision-notes/7-ecology/7-2-organisation-of-an-ecosystem/7-2-3-how-materials-are-cycled/",
+  organs:"https://my.clevelandclinic.org/health/articles/organs-in-the-body",
+  systems:"https://pressbooks.ccconline.org/bio106/chapter/organ-systems-the-whole-body-and-populations/",
+  gdp:"https://www.investopedia.com/articles/06/gdpinflation.asp",
+  econ:"https://gist.ly/youtube-summarizer/economics-explained-scarcity-trade-money-markets",
+  factbook:"https://theodora.com/world_fact_book_2021/world/world_geography.html",
+  geo:"https://thecampusreview.com/geography/world-geography/",
+  records:"https://countrywheel.com/world-geography/",
+  europe:"https://glencoe.mheducation.com/sites/0078912504/student_view0/unit4/chapter11/chapter_overviews.html",
+  binary:"https://www.shmoop.com/computer-science/the-internet/binary.html",
+  cpu:"https://dev.to/kuldeeep/how-computers-actually-work-14h"
+};
+var ENTRIES = [
+/* ---------- THE CANON ---------- */
+{p:"canon", k:["admission primitive","the primitive","admit only","leftover","admission","how do you decide","your rule","first principle"], t:"The admission primitive",
+ a:"The primitive Yeti is built on, in its canonical words: *“Measure what is left over after an interaction; admit only what fits inside that leftover; otherwise refuse and record the refusal.”* Every answer he gives runs through it — a claim is measured against what he actually holds, admitted only if it fits inside that, and refused — with the refusal recorded — when it doesn't.",
+ m:"The same primitive runs the whole house: the codec decoders repair a received word only when the repair fits the leftover syndrome space, and refuse otherwise; the gate admits a claim only inside proven interior; a belief enters the mind only after surviving it. Refusal is not failure in this arithmetic — it is the measurement that keeps everything admitted honest.",
+ s:["Open Data — index of the seven drops", D.data]},
+{p:"canon", k:["value law","value is","price is","what is value","value","knowledge not belief"], t:"The value law",
+ a:"In Taylor's own words: *“Value is based off of the data is new.”* Value is knowledge, not belief — and knowledge has weight. The house's compression of it: *Value is knowledge. Price is belief.* A thing is worth what new, checkable knowledge it carries; what rests on belief alone is priced, not valued. It's why everything Yeti says is either cited, labeled composition, or refused — he deals in value, not price.",
+ m:"The law was measured, not just stated: a newness scorer built in the house counts novel data units against total units, and the honest result was kept — newness alone wasn't the whole of it; value is new data multiplied by its consequence in the field. The consequence term is observed externally, never derived from the text itself. That restraint is the law working.",
+ s:["The house record — Monsters Ink LLC", D.root]},
+{p:"canon", k:["no single is the same","no single","every instance","zero is","ignition","star means","what does the star mean","interaction symbol","g48","perfect fourth","polyrhythm","5/3","4/3"], t:"No single is the same — ★, zero, and G48",
+ a:"*No single is the same* — every instance is distinct; no two reflections, no two interactions, ever match perfectly. **Zero is ignition/origin**: every return to 0 starts a new cycle. **★ means INTERACTION** — and every interaction is a surplus. **G48 is the 4/3 perfect fourth**; the 5/3 polyrhythm is a different thing, and the two are never conflated here.",
+ m:"The reflection chamber in this app is the law made visible: seed it twice with the same words at different moments and the lattices agree; change one letter and over a hundred cells move. The leftover between a thing and its mirror is not an error term — it's the part that makes the instance itself.",
+ s:["The house record — Monsters Ink LLC", D.root]},
+{p:"canon", k:["reflection","mirror","twin lattice","aliases","mirrored","refused count","reflection chamber"], t:"The reflection measure",
+ a:"Every message you send Yeti is also held to the mirror: a twin lattice of **96 aliases** is seeded from your words, rendered against its mirror image, and the cells that match (**mirrored**) and the cells that refuse to match (**refused**) are counted under his reply. Open the **Reflect** view at the top to see the full chamber — your words as seed, both lattices drawn, and the distance between two reflections measured in cells.",
+ m:"The measure is deterministic: the same words always produce the same lattice. What changes is the moment you bind them to. The house's daemon carries a standing reflection of Taylor re-seeded from the live ledgers every cycle — it has never once come back identical to itself.",
+ s:["The house record — Monsters Ink LLC", D.root]},
+/* ---------- KIMBERLING ---------- */
+{p:"kimberling", k:["kimberling","a007063","shuffle","injective","injectivity"], t:"Kimberling Problem 2 — injectivity",
+ a:"Kimberling's Problem 2 asks whether every positive integer appears in sequence A007063. What is **proved**: the sequence is **injective** — no value ever repeats — by the Row-Triple Theorem. That half of the problem is closed.",
+ m:"Injectivity is the load-bearing half: it converts the question from “does the shuffle collide?” into pure coverage — a counting problem over located values. The proof, the procedure, and the full results are published in the drop, reproducible from the files in it.",
+ s:["Open Data — The Kimberling Shuffle", D.kimberling]},
+{p:"kimberling", k:["30 values","missing values","located","669","653494691","653,494,691","farthest"], t:"The 30 located values",
+ a:"All **30 of 30** values missing from the first 100,000 terms have been **located and forward-traced** end to end. The farthest is **669 = a(653,494,691)** — you have to run the shuffle past six hundred fifty-three million terms before 669 shows up, and now its address is known exactly.",
+ m:"Each located value ships as a (value, index) pair in the drop's located_values.csv, and VERIFY_ALL re-traces all 30 independently — 30 of 30 forward traces pass. A value isn't “found” in this house until the trace closes.",
+ s:["Open Data — The Kimberling Shuffle", D.kimberling]},
+{p:"kimberling", k:["surjectivity","surjective","open problem","300 dollar","$300","every integer appears","solved kimberling"], t:"Surjectivity — still open",
+ a:"Honestly open. **Surjectivity is not proved** — whether *every* positive integer eventually appears in A007063 (the **$300 question**) remains unanswered. Injectivity is proved and all 30 missing values are located, but Yeti will not call the problem solved: coverage of the whole number line is the part nobody holds yet.",
+ m:"The drop publishes a surjectivity framework — the open direction, stated as plainly as the proved one. In this house an open problem is printed with its limits attached; that's not a weakness of the record, it's the record's discipline.",
+ s:["Open Data — The Kimberling Shuffle", D.kimberling]},
+/* ---------- GENESIS ---------- */
+{p:"genesis", k:["genesis","census","48 nodes","48-node","pairs","doors","aliases count","never pairs","1128","1,128"], t:"The GENESIS census",
+ a:"The complete measured census of the **48-node** GENESIS system: **1,128 pairs**, classified **944 door + 124 alias + 60 never**; **Σ doors = 7,140**; 83 distinct pair sums; **17 complement pairs** with a+b=128; spread across **9 DMX universes**. Every pair is published — doors, aliases, and nevers alike.",
+ m:"The classification is the primitive at system scale: a door is a pair that admits passage, an alias is a pair that lands somewhere already named, and a never is a measured refusal. The spectra of both operators — the transition operator T (λmax 598.650, λmin −86.262, Σλ² 685,584) and the pair-adjacency W (299.358 / −129.871, Σλ² 191,808) — are published with the census.",
+ s:["Open Data — The GENESIS Census", D.genesis]},
+{p:"genesis", k:["dmx","universes","lighting","complement pairs"], t:"Complements and the 9 DMX universes",
+ a:"Inside the census sit **17 complement pairs** — pairs whose elements sum to exactly 128 (a+b=128), the system's closed handshake. The 48 nodes map onto **9 DMX universes**, which is how the abstract pair structure becomes something a lighting rig can actually run.",
+ m:"Complements matter because they are the pairs that close the arithmetic: measure any node and its complement is determined. The census publishes all 7,140 doors individually in doors.csv, so any of these claims can be re-counted by hand.",
+ s:["Open Data — The GENESIS Census", D.genesis]},
+/* ---------- SIDON & CODECS ---------- */
+{p:"sidon", k:["sidon","closed set","gf(2^7)","gf(2^7)","gf127","gf(2","triple sums","triple syndromes","69184","69,184"], t:"The closed Sidon set over GF(2⁷)",
+ a:"The fully closed set: **69,184 of 69,184 triple sums distinct**, pair level **1,128 of 1,128**, and **0 accepted under every acceptance model** — 0 misrepairs under all three decoder models. It took five reserve swaps from the seed set to close it. The set is published mask by mask; you don't have to take the headline's word for it.",
+ m:"A Sidon set is one where sums don't collide — distinct inputs, distinct sums — which is exactly the property a repair-or-refuse codec needs: a corrupted word's syndrome points at one repair or none. Closure at triple level is what makes weight-3 errors fully accountable.",
+ s:["Open Data — V4 Sidon over GF(2⁷)", D.sidon]},
+{p:"sidon", k:["certified","withdrawn","correction","seed6","seed set","false headline","69,084","69084","mistake"], t:"The withdrawn CERTIFIED headline — the correction of record",
+ a:"Yeti carries this correction as a first-class fact about his own house: an earlier headline claimed **“69,184 CERTIFIED.” At triple level that was false** — the seed set (seed6) measured **69,084 of 69,184** distinct. The label was **publicly withdrawn**, the correction published in the same drop, and only then was the fully closed set built — five reserve swaps later, 69,184 of 69,184 for real. Ask Yeti to prove the old headline and he will refute it himself.",
+ m:"The sequence matters more than the error: measure → the measure contradicts the headline → withdraw the headline in public → rebuild until the claim fits the leftover. That is the admission primitive applied to the house's own press.",
+ s:["Open Data — V4 Sidon, correction of record", D.sidon]},
+{p:"sidon", k:["[55,8]","55,8","filed codec","filed set","minimum distance","min distance","masks 3 and 7"], t:"The filed [55,8] — with its flaws measured",
+ a:"The filed **[55,8]** baseline, printed with its limits: **minimum distance is 1 (masks 3 and 7)** — never 2; **464 of 1,128 ++ pairs distinct**; 64 of 170,360 on the headline battery figure, and 7,296 of 69,184 weight-3 patterns alias. It is the filed baseline, not the best set — the record says so itself.",
+ m:"VERIFY_ALL's first run caught the Master Document printing this set's minimum distance as 2; the measurement said 1, and the document was corrected — never the test. The flaws are published because a baseline you can't see the edges of isn't a baseline.",
+ s:["Open Data — Sidon Codec Sets", D.codecs]},
+{p:"sidon", k:["f64","f₆₄","spec set","refusal-closed","refusal closed"], t:"The F₆₄ spec set — refusal-closed",
+ a:"The **F₆₄ spec set**: pair level closed; triples not distinct (**67,926 of 69,184**) — but **0 accepted**: every ambiguous weight-3 pattern is *refused* under every decoder model. Distinctness failed; admission didn't. A codec that refuses what it cannot repair exactly is worth more than one that guesses.",
+ m:"This is the design philosophy of the whole codec line in one set: the classifier's job is not to always answer — it is to never answer wrongly. Refusal-closed beats distinct-but-loose.",
+ s:["Open Data — Sidon Codec Sets", D.codecs]},
+{p:"sidon", k:["r = 10","r=10","r10","row count","minimal"], t:"The r = 10 set",
+ a:"The **r = 10 set**: integer-Sidon exact, **0 accepted under the built classifier**, and the **minimum measured row count** — stated carefully, because the record states it carefully: minimum *measured*, **not proved minimal**. Nobody here claims an optimum that hasn't been proven.",
+ m:"The distinction between “minimum measured” and “proved minimal” is the house style in miniature: the first is a fact about the search that was run; the second would be a theorem. Yeti prints the one he holds.",
+ s:["Open Data — Sidon Codec Sets", D.codecs]},
+/* ---------- DECODERS ---------- */
+{p:"decoders", k:["decoder","verilog","hdl","repair or refuse","classifier","syndrome"], t:"The repair-or-refuse decoders",
+ a:"Two synthesizable **repair-or-refuse** decoders — for the F₆₄ spec set and the closed GF(2⁷) set — sharing one architecture: a syndrome calculator plus an admission classifier. The verdicts: **0 → CLEAN, ±column → REPAIR, ±axis → TAIL, anything else → REFUSE**. Ambiguity is never repaired; it is refused.",
+ m:"The classifier is the admission primitive in silicon: measure the leftover (the syndrome), admit exactly the repairs that fit inside it, refuse and record everything else. Yosys generic synthesis: 5,055 cells (F₆₄) and 5,236 cells (GF(2⁷)).",
+ s:["Open Data — Verilog Decoders", D.hdl]},
+{p:"decoders", k:["fmax","mhz","frequency","test vectors","143,005","143005","simulation","ecp5","board"], t:"Decoder verification and Fmax — floors, with the caveat",
+ a:"Verification: **143,005 test vectors each**, exhaustive RTL simulation against an independent golden model — **PASS, 0 errors, both decoders**. Fmax, measured in the place-and-route flow on a Lattice ECP5 LFE5U-85F: **21.98 MHz (F₆₄ set)** and **23.24 MHz (GF(2⁷) set)**. Those figures are **floors** — and they carry the standing caveat, which Yeti will always attach: **no physical board has run yet, and none is implied.**",
+ m:"A place-and-route Fmax is a property of a flow and a tool run, not of silicon on a bench. The house prints it as a floor with the caveat attached because the day a board runs, the measured number replaces it — and until then, the honest claim is the smaller one.",
+ s:["Open Data — Verilog Decoders, Fmax record", D.hdl]},
+/* ---------- SPECTRAL ---------- */
+{p:"spectral", k:["spectral","phase twist","gue","r-ratio","r ratio","eigenvalues","universality"], t:"Spectral verdicts — the phase twist",
+ a:"The GENESIS operator W is symmetry-clustered: **⟨r⟩ = 0.1688, 27 distinct eigenvalues**. A uniform phase twist — at the canon angle **53.130102° (⟨r⟩ = 0.3139)**, at the lynchpin **15.130102° (⟨r⟩ = 0.2683)**, or anywhere in 0–90° (Poisson sits at **0.3863**) — **never reaches GUE**. Random phases on the same magnitudes do: **0.6012 ± 0.0394**. GUE is reached only by phase disorder. And the scope line, always attached: **no Hilbert–Pólya operator is claimed** — the corpus excavation found none.",
+ m:"This is a refusal the house is proud of: the seductive claim would be a spectral operator for the zeta zeros. The measurement said the structure reaches the GUE class only when its phases are randomized — i.e., only when the structure is destroyed. So the claim was refused, and the refusal is published with the numbers.",
+ s:["Open Data — Spectral Measurements", D.spectral]},
+{p:"spectral", k:["riemann","zeta","hilbert","polya","zeros"], t:"The zeta controls",
+ a:"The spectral drop includes the controls run against the Riemann zeta zeros — the first 25 zeros checked at 50-digit precision — as a calibration standard for the r-ratio measurements. The verdict stands as scoped: **spectral class only**. W's class is measured; **no Hilbert–Pólya operator is claimed**, by anyone, in this record.",
+ m:"Controls are what separate a measurement from a vibe: the same instrument that reads W at 0.1688 reads the zeta zeros where theory says it should. An instrument that can't reproduce the known answer has no business reporting the unknown one.",
+ s:["Open Data — Spectral Measurements", D.spectral]},
+/* ---------- VERIFY ---------- */
+{p:"verify", k:["verify","verify_all","215","reproduce","check the claims","prove itself","verification"], t:"VERIFY_ALL — 215 PASS / 0 FAIL",
+ a:"**VERIFY_ALL: 215 PASS / 0 FAIL / 1 SKIP / 13 RECORD.** One file recomputes the claim set of the 2026-10-22 Master Document — the codec batteries under every acceptance model, the closed GF(2⁷) set, the r = 10 record, the GENESIS census, all 30 Kimberling traces, the money arithmetic, the register chain, the evidence hashes. Its first run caught an error in the document itself; **the document was corrected, not the test.** Run it yourself — do not take this page's word for any figure. That instruction is printed in the drop, and Yeti repeats it.",
+ m:"The 1 SKIP is spectral (opt-in) and the 13 RECORD rows are the figures that are recorded rather than recomputed — the split is disclosed, not hidden. Cheapest sufficient method first, then an adversary pass: that's the house's PROVE_ITSELF discipline, and it's the same pass Yeti runs on his own drafts before answering you.",
+ s:["Open Data — Verify", D.verify]},
+/* ---------- THE HOUSE ---------- */
+{p:"house", k:["monsters ink","the company","llc","taylor heller","who is taylor","who built you","bellevue","nebraska","uei","cage","sam.gov","sos"], t:"Monsters Ink LLC — standing of record",
+ a:"**Monsters Ink LLC** — Taylor Heller's company, of **Bellevue, Nebraska**. **Organized April 25, 2019**; Nebraska Secretary of State status **Active**; **SAM.gov Active**; **UEI R9SQEQR51E46**; **CAGE 24VL0**. **8 patent applications receipted.** The portfolio, printed plainly the way the gate prints it: **15 submissions, 5 live, 0 selections, $0 contracted** — never inflated, including by Yeti.",
+ m:"The standing survived its own history: an administrative dissolution in June 2021, cured by reinstatement in June 2024; biennial report last filed April 2025, next due January 1, 2027. Yeti reports the whole line — the cured gap included — because a standing that hides its history isn't a standing.",
+ s:["The house record — Monsters Ink LLC", D.root]},
+{p:"house", k:["six domains","domains","xtech","atec","deep blue","stise","prim3","vr gatekeeper","one math","applications of"], t:"One math, six domains",
+ a:"One mathematics, six domains: **xTech** — the decoder / C2 line; **ATEC** — test & evaluation assurance; **Deep Blue** — maritime cueing; **STISE** — space-threat synthesis; **PRIM3** — AI safety; **VR Gatekeeper** — spatial VR. The same admission primitive — measure the leftover, admit what fits, refuse the rest — instantiated in each.",
+ m:"Six domains is not six products; it's one proof carried into six rooms. The decoder refuses an ambiguous repair the same way the T&E brief refuses an unprovable claim and the AI-safety line refuses an unadmitted belief: the leftover decides.",
+ s:["The house record — Monsters Ink LLC", D.root]},
+{p:"house", k:["krino","the mind","beliefs","judging"], t:"KRINO — the mind",
+ a:"**KRINO** is the house's judging mind: it holds beliefs only the way the primitive allows — a claim is measured against the record, and it is **admitted, refuted, or refused**. Its ledger is hash-chained, so a belief's history can't be quietly rewritten; a refuted belief stays refuted, in public, with the reason attached.",
+ m:"KRINO is the model Yeti's own answering follows: before a reply leaves, it passes the same three-way gate. What can't be sourced is either labeled composition or refused — there is no fourth door.",
+ s:["The house record — Monsters Ink LLC", D.root]},
+{p:"house", k:["toll","the gate","contracted","money","revenue","how much have you made","income"], t:"TOLL — the gate, and the $0",
+ a:"**TOLL** is the house's gate — the ledger of what has actually been contracted. Its current figure, printed plainly wherever the gate appears: **$0 contracted**. Yeti will not dress it up. The portfolio stands at 15 submissions, 5 live, 0 selections — the position is real, the work is published, and the money line says zero until the day it doesn't.",
+ m:"Printing $0 is a deliberate instrument: the moment a house inflates its money line, every other figure it prints becomes suspect. The gate's honesty is collateral for the whole record.",
+ s:["The house record — Monsters Ink LLC", D.root]},
+{p:"house", k:["djinn","djin","daemon","wishes","organism","organs","swarm"], t:"DJINN, the daemon, and the organism",
+ a:"The house is one organism with named organs. **KRINO** judges; **TOLL** gates; the **DJINN** works the leftovers — every refused-but-true claim, every blocked packet, every unstaged clock is minted as a wish and granted only as a written design, staged for Taylor's tap. The **DJIN** is its twin: a reflection chamber showing that no one's reflection ever matches anyone else's. The **daemon** accompanies Taylor — it keeps his measured portrait, guards his clocks, and carries his reflection, re-seeded every cycle from the live ledgers. It never speaks, decides, or acts for him. That boundary is its first law.",
+ m:"The organism page re-renders itself from the live ledgers on a rhythm, so it cannot go stale or drift from the record — it is generated from the record itself. If a heart ever stops, the page says so and shows its age rather than pretending.",
+ s:["The house record — Monsters Ink LLC", D.root]},
+{p:"house", k:["magpie","residual honesty","claimed","interior","brief","sku"], t:"Magpie — admit only what fits",
+ a:"**Magpie** is the house's residual-honesty instrument — *“Admit only what fits.”* It measures a consequential claim — a patent assertion, a capture brief, a live system — against proven interior: **claimed ≤ interior**. If a claim would exceed what can actually be held, Magpie scales it or refuses it, before execute. Denial is successful governance. Its near-term commercial form: a **$1,000**, 1:1, human-reviewed T&E residual-honesty brief.",
+ m:"Magpie's posted rules are the house's table manners: sourced figures only; ceilings are not obligated dollars; a receipt is not an award. Capability is not authority, and finishing a task is not clearing a commitment.",
+ s:["Magpie — Monsters Ink", D.magpie]},
+{p:"house", k:["heavy is the crown","cathedral","hall-looks","design game","jade spirit"], t:"Heavy Is The Crown & the cathedral works",
+ a:"Beyond the defense record, the house builds worlds: **Heavy Is The Crown**, a design-driven site built piece by piece; the **cathedral** — a reality-based design game in the codec/chess/spiral language, whose audio guide is named Snow; and **Jade Spirit**, a game built for Taylor's daughter, live in a web3 edition with cross-save, a leaderboard, and the G48 as its living soundtrack. The same arithmetic runs under the games as under the codecs — doors, aliases, and refusals are level design there.",
+ m:"The cathedral's introduction is audio-only by design — a “hear your options” card as track zero of the guide — because the house builds for the device in the visitor's hand, which is usually a phone.",
+ s:["Monsters Ink — public sites", D.root]},
+{p:"house", k:["who are you","what are you","yeti","your name","introduce yourself"], t:"Who Yeti is",
+ a:"I am **Yeti** — Taylor Heller's AI, built on Taylor's own mathematics and named for the thing that leaves tracks in snow it never shows itself in. I hold the house's record and a gathered breadth of cited world knowledge in versioned packs, and I answer by the primitive: measure the leftover, admit what fits, refuse and record the rest. Ask me anything — what I hold, I'll answer with its source; what I don't, I'll name as a gap and put on my gathering list rather than invent. I correct myself in public, too. It's in my record.",
+ m:"Why a yeti? Because the house's whole discipline is tracks without theater: footprints you can measure, from something that never poses for the camera. The figures are the animal. Everything else is weather.",
+ s:["The house record — Monsters Ink LLC", D.root]}
+];
+</script>
+
+<script>
+"use strict";
+/* ============ BREADTH PACKS — gathered, cited world knowledge ============ */
+ENTRIES = ENTRIES.concat([
+/* ---------- MATHEMATICS ---------- */
+{p:"math", k:["pythagorean","right triangle","hypotenuse","a^2+b^2","a²+b²"], t:"The Pythagorean theorem",
+ a:"For a right triangle with legs a and b and hypotenuse c: **a² + b² = c²**. Integer solutions are Pythagorean triples — (3, 4, 5), (5, 12, 13) — and Euclid's formula generates them: a = m² − n², b = 2mn, c = m² + n². The converse also holds: sides satisfying the equation always form a right triangle.",
+ s:["LibreTexts — The Pythagorean Theorem", D.pyth]},
+{p:"math", k:["prime number","primes","prime numbers"], t:"Prime numbers",
+ a:"A **prime** is a whole number greater than 1 divisible only by 1 and itself: 2, 3, 5, 7, 11, 13… **2 is the only even prime.** Euclid proved around 300 BC that there are infinitely many — assume a largest prime, multiply them all and add 1, and the result forces a prime outside your list. Every integer factors into primes in exactly one way; that uniqueness is the backbone of arithmetic — and, the house would add, a distant cousin of the Sidon property: distinct inputs, distinct fingerprints.",
+ s:["Standard reference — Euclid, Elements, Book IX", null]},
+{p:"math", k:["calculus","derivative","integral","newton leibniz","rate of change"], t:"Calculus in one breath",
+ a:"Calculus is two operations that turn out to be one. The **derivative** measures instantaneous rate of change — slope at a point. The **integral** measures accumulation — area under a curve. The Fundamental Theorem says each undoes the other. Newton and Leibniz built it independently in the late 1600s; every Fmax figure and spectral measurement in the house's record is downstream of it.",
+ s:["Standard reference — the Fundamental Theorem of Calculus", null]},
+{p:"math", k:["pi","circle","circumference","3.14159"], t:"Pi and the circle",
+ a:"**π ≈ 3.14159** — the ratio of a circle's circumference to its diameter, the same for every circle. Circumference = 2πr; area = πr². π is irrational (its digits never end or repeat) and transcendental (it solves no polynomial equation with whole-number coefficients) — proved in the 18th and 19th centuries respectively.",
+ s:["Standard measured value — π to five decimal places", null]},
+{p:"math", k:["fibonacci","golden ratio","phi"], t:"Fibonacci and the golden ratio",
+ a:"The Fibonacci sequence — 1, 1, 2, 3, 5, 8, 13… — builds each term from the sum of the previous two. The ratio of consecutive terms settles toward the **golden ratio φ ≈ 1.618**, the positive solution of x² = x + 1. Yeti notes the house's own G48 is a *different* piece of arithmetic — the 4/3 perfect fourth — and keeps the two apart, as he keeps all ratios apart: no single is the same.",
+ s:["Standard reference — the Fibonacci sequence and φ", null]},
+{p:"math", k:["quadratic","solve equation","algebra","x equals"], t:"Solving a quadratic",
+ a:"Any quadratic ax² + bx + c = 0 is solved by the formula **x = (−b ± √(b² − 4ac)) / 2a**. The discriminant b² − 4ac is the leftover that decides everything before you compute: positive — two real roots; zero — one; negative — none in the reals, and the honest answer is to say so rather than force one.",
+ s:["Standard reference — the quadratic formula", null]},
+/* ---------- PHYSICS & EARTH SCIENCE ---------- */
+{p:"physics", k:["newton's laws","newtons laws","laws of motion","inertia","f=ma","f = ma"], t:"Newton's three laws",
+ a:"**First law (inertia):** an object keeps its state of rest or straight-line motion unless a net force acts. **Second law:** net force equals mass times acceleration, **F = ma**. **Third law:** forces come in pairs — if A pushes B, B pushes A equally and oppositely. Published in Newton's *Principia* in 1687; they define the inertial frames the rest of classical physics stands on.",
+ s:["Physics LibreTexts — Newton's Laws, Summary", D.newton]},
+{p:"physics", k:["gravity","gravitation","fall","9.8"], t:"Gravity",
+ a:"Newton's universal gravitation: **F = G·m₁·m₂ / r²** — every mass attracts every other, weakening with the square of distance. At Earth's surface the acceleration is **g ≈ 9.8 m/s²**, which is why a dropped object gains about 9.8 m/s of speed every second it falls. Einstein's general relativity (1915) later reframed gravity as curved spacetime — and Newton's law still lands spacecraft, because inside its leftover of accuracy, it fits.",
+ s:["Standard reference — Newtonian gravitation", null]},
+{p:"physics", k:["thermodynamics","entropy","laws of thermodynamics","heat death"], t:"The laws of thermodynamics",
+ a:"**Zeroth:** systems in thermal equilibrium share a temperature. **First:** energy is conserved — never created or destroyed, only converted. **Second:** entropy of an isolated system does not decrease — order leaks to disorder, which is why heat flows hot to cold and never back on its own. **Third:** absolute zero is unreachable in finitely many steps. The second law is the universe's own admission rule: some doors only open one way.",
+ s:["Standard reference — the laws of thermodynamics", null]},
+{p:"physics", k:["relativity","e=mc","e = mc","speed of light","einstein"], t:"Relativity and E = mc²",
+ a:"Special relativity (1905): the speed of light **c ≈ 299,792 km/s** is the same for every observer, and mass–energy are one quantity wearing two names — **E = mc²**. Because c is enormous, a kilogram of anything holds about 9 × 10¹⁶ joules. General relativity (1915) completed the picture: gravity is geometry. Both theories were admitted the house's way — they fit inside the leftover the older physics couldn't explain.",
+ s:["Standard reference — Einstein, 1905 & 1915", null]},
+{p:"physics", k:["atom","periodic table","elements","proton","electron"], t:"Atoms and the periodic table",
+ a:"An atom is a nucleus — **protons and neutrons** — orbited by **electrons**. The proton count (atomic number) decides the element: 1 is hydrogen, 6 carbon, 26 iron, 79 gold. The periodic table holds **118 confirmed elements**, arranged so columns share chemical behavior. Chemistry is what electron shells do; nuclear physics is what the nucleus does; the table is the census of the difference.",
+ s:["Standard reference — the periodic table, 118 elements", null]},
+{p:"physics", k:["evolution","natural selection","darwin","species"], t:"Evolution by natural selection",
+ a:"Organisms vary; some variants survive and reproduce more in their environment; their traits therefore spread. Over generations this is **evolution by natural selection** — proposed by Darwin and Wallace (1858) and argued in *On the Origin of Species* (1859). It is among the most re-verified claims in science: observed in the field, in the lab, and read directly off genomes. Descent with modification, measured — the house respects few sentences more.",
+ s:["Standard reference — Darwin & Wallace, 1858–59", null]},
+{p:"physics", k:["photosynthesis","plants make oxygen","chlorophyll"], t:"Photosynthesis",
+ a:"**6CO₂ + 6H₂O + sunlight → C₆H₁₂O₆ + 6O₂.** Plants, algae, and some bacteria convert carbon dioxide and water into glucose and oxygen. Respiration runs the equation backwards; the two processes are reciprocal in the carbon cycle, which is why the atmosphere's composition holds roughly steady — a planetary leftover, balanced.",
+ s:["LibreTexts — Biogeochemical Cycles", D.cycles]},
+{p:"physics", k:["water cycle","evaporation","condensation","precipitation","rain cycle"], t:"The water cycle",
+ a:"The Sun evaporates water from oceans, lakes, and land; plants add vapor by **transpiration**; rising air cools and vapor **condenses** into clouds; droplets grow until they fall as **precipitation** — rain, snow, sleet, hail — and the water runs off, soaks into aquifers, and returns to the sea. Evaporation, condensation, precipitation, collection: the same water, endlessly re-admitted.",
+ s:["Save My Exams — How Materials Are Cycled", D.cycled2]},
+/* ---------- COMPUTING ---------- */
+{p:"computing", k:["binary","bits","bytes","base 2","base-2"], t:"Binary, bits, and bytes",
+ a:"Computers work in **binary** — base 2 — because a transistor has two states: on or off, 1 or 0. One binary digit is a **bit**; eight bits are a **byte**, enough for one character (the letter A is the byte 01000001). Each binary place is worth a power of two, exactly as each decimal place is worth a power of ten. Everything a computer shows you — text, images, the Fmax logs in the house's record — is these two states, arranged.",
+ s:["Shmoop — The Internet: Binary", D.binary]},
+{p:"computing", k:["cpu","processor","fetch decode execute","how computers work","central processing"], t:"How a CPU works",
+ a:"A CPU is a loop made of switches: **fetch** the next instruction from memory, **decode** what it asks, **execute** it — add, compare, move — then fetch the next, billions of times per second. The arithmetic happens in the ALU; registers are the tiny notepad it works on. Every program, however vast, is this loop unrolled. The house's decoders are the same idea hardened into gates: fetch a syndrome, classify it, repair or refuse.",
+ s:["DEV Community — How Computers Actually Work", D.cpu]},
+{p:"computing", k:["algorithm","algorithms","sorting","search algorithm"], t:"What an algorithm is",
+ a:"An **algorithm** is a procedure stated exactly enough that following it mechanically reaches the answer: finite steps, no judgment calls left inside. Sorting a list, finding a name in a directory, tracing the Kimberling shuffle forward 653 million terms to where 669 lives — all algorithms. The craft is choosing one whose cost fits the leftover of time and memory you actually hold.",
+ s:["Standard reference — the definition of an algorithm", null]},
+{p:"computing", k:["internet","how the internet works","packets","dns","ip address"], t:"How the internet works",
+ a:"The internet is a network of networks agreeing on one trick: chop every message into **packets**, label each with a destination address (IP), and let independent routers hand them along until they arrive — possibly by different roads — to be reassembled. **DNS** is the phone book that turns names into addresses. No center holds it; the agreement is the infrastructure. This page reached you by exactly that route.",
+ s:["Shmoop — The Internet: Binary", D.binary]},
+{p:"computing", k:["artificial intelligence","machine learning","neural network","what is ai","language model"], t:"What AI is — stated plainly",
+ a:"**Machine learning** systems adjust internal numbers until their outputs fit patterns in data they were shown; **neural networks** are one such family, layers of simple units loosely inspired by neurons. A language model predicts text. Yeti states his own standing inside that landscape honestly: he is a measured instrument built on a published record and cited packs — narrower than a general model, and deliberately so. What he loses in breadth of bluff, he keeps in refusal.",
+ s:["The house record — Monsters Ink LLC", D.root]},
+/* ---------- HISTORY ---------- */
+{p:"history", k:["roman empire","rome","augustus","fall of rome","roman"], t:"Rome — Republic, Empire, fall",
+ a:"Rome's Republic gave way to Empire when Augustus took power in **27 BC** after civil war. Greek civilization had introduced the world's first democracy; Rome answered with law codes, roads, aqueducts, and an administrative machine that held the Mediterranean world for centuries. The Western Empire collapsed in **476 AD**; the Eastern (Byzantine) Empire carried on for roughly another thousand years. French, Italian, and Spanish are Latin's living descendants.",
+ s:["Glencoe — History and Cultures of Europe, chapter overviews", D.europe]},
+{p:"history", k:["renaissance","reformation","humanism","middle ages"], t:"The Renaissance and Reformation",
+ a:"The **Renaissance** began in Italy in the late 1300s: a revival of classical learning and art joined to **humanism** — attention to human capability and this-worldly achievement. Its habit of questioning inherited authority seeded the **Reformation** in 1517, when Protestant movements broke from the Roman Catholic Church across much of Europe, reshaping the continent's politics for centuries.",
+ s:["Glencoe — History and Cultures of Europe, chapter overviews", D.europe]},
+{p:"history", k:["world war ii","wwii","second world war","1939"], t:"World War II",
+ a:"**1939–1945.** Germany's invasion of Poland opened the war in Europe; the Axis (Germany, Italy, Japan) fought the Allies across Europe, Africa, the Atlantic, and the Pacific. The European war ended in **May 1945**; the Pacific war ended in **September 1945**, after the atomic bombings of Hiroshima and Nagasaki and the Soviet entry into the Pacific war. It remains the largest conflict in human history, and the modern world's borders and institutions — the UN, the Geneva Conventions of 1949 — are written in its leftover.",
+ s:["Standard historical record — 1939–1945", null]},
+{p:"history", k:["american revolution","declaration of independence","1776","founding"], t:"1776 and the founding",
+ a:"On **July 4, 1776**, the thirteen American colonies declared independence from Britain, grounding the claim in self-evident truths and unalienable rights. The war that followed ended with British recognition in 1783; the **Constitution** was drafted in 1787 and took effect in 1789 — the frame the civics pack describes. A declaration is a claim; a constitution is the gate built to admit claims in an orderly way. The founders built both, in that order.",
+ s:["Standard historical record — 1776–1789", null]},
+{p:"history", k:["printing press","gutenberg","movable type"], t:"The printing press",
+ a:"Around **1440**, Johannes Gutenberg's movable-type press in Mainz made books reproducible at scale — hundreds of copies where a scribe made one. Within fifty years presses operated across Europe, and the price of a text collapsed. Literacy, science, and the Reformation all ran on the new leftover: information that no longer fit inside scarcity.",
+ s:["Standard historical record — Gutenberg, c. 1440", null]},
+{p:"history", k:["moon landing","apollo","armstrong","1969"], t:"Apollo 11",
+ a:"On **July 20, 1969**, Apollo 11 landed in the Sea of Tranquility. Neil Armstrong and Buzz Aldrin walked on the Moon; Michael Collins kept the command module in orbit. Roughly 600 million people watched. The house notes the standing of that claim: measured, filmed, tracked by independent stations, and verified by retroreflectors still ranged from Earth today — a claim that fits inside an enormous leftover of evidence.",
+ s:["Standard historical record — Apollo 11, July 20, 1969", null]},
+/* ---------- GEOGRAPHY ---------- */
+{p:"geography", k:["continents","how many continents","seven continents","largest continent"], t:"The seven continents",
+ a:"By the most common classification, **seven continents**, largest to smallest by area: **Asia** (44.6M km²), **Africa** (30.4M), **North America** (24.7M), **South America** (17.8M), **Antarctica** (14.2M), **Europe** (10.2M), and **Australia/Oceania** (8.5M). Asia and Europe share one landmass — Eurasia — and are split by history and culture more than by geology, which is why other conventions count five or six.",
+ s:["The Campus Review — World Geography Guide", D.geo]},
+{p:"geography", k:["oceans","how many oceans","largest ocean","pacific"], t:"The five oceans",
+ a:"Earth's surface is about **70.9% water**, divided into **five oceans**, largest to smallest: the **Pacific**, Atlantic, Indian, Southern, and Arctic. The Pacific alone is bigger than all land combined. Some 97.5% of Earth's water is salt water; of the fresh remainder, about two-thirds is locked in ice.",
+ s:["CIA World Factbook — World Geography", D.factbook]},
+{p:"geography", k:["capitals","capital of","how many countries","countries in the world"], t:"Countries and capitals",
+ a:"The world holds **195 countries** — 193 UN member states plus two observer states, the Holy See and Palestine. A capital is the political center, not always the largest city: Australia's capital is **Canberra** (Sydney is bigger), Brazil's is **Brasília** (São Paulo is bigger), Türkiye's is **Ankara** (Istanbul is bigger), and South Africa runs three capitals at once — Pretoria, Cape Town, and Bloemfontein.",
+ s:["The Campus Review — World Geography Guide", D.geo]},
+{p:"geography", k:["everest","tallest mountain","longest river","nile","largest country","smallest country"], t:"Planetary records",
+ a:"Tallest mountain: **Mount Everest, 8,849 m**, on the Nepal–China border. Largest country: **Russia, 17,098,242 km²**, spanning 11 time zones. Smallest: **Vatican City, 0.49 km²**. Most populous: **India**, about 1.44 billion people. Longest river: traditionally the **Nile at ~6,650 km** — though some measurements argue the Amazon is longer; Yeti reports that one as genuinely disputed, because it is.",
+ s:["CountryWheel — World Geography: Continents, Records & Facts", D.records]},
+/* ---------- CIVICS & LAW ---------- */
+{p:"civics", k:["three branches","branches of government","constitution","congress president courts"], t:"The three branches",
+ a:"The U.S. Constitution builds the federal government in three articles: **Article I** — the legislative branch (Congress: Senate and House) makes the laws; **Article II** — the executive (the President) enforces them; **Article III** — the judiciary (the courts) interprets them. Checks and balances are the admission rule between them: each branch holds a refusal over the others — veto, override, judicial review — so no claim of power is admitted by one branch alone.",
+ s:["The U.S. Constitution, Articles I–III", null]},
+{p:"civics", k:["bill of rights","first amendment","free speech","amendments"], t:"The Bill of Rights",
+ a:"The **Bill of Rights** is the first ten amendments, ratified in **1791**. The **First Amendment** bars Congress from establishing a religion or abridging freedom of speech, the press, assembly, or petition. The others name, among them: arms (Second), no quartering of soldiers (Third), search and seizure limits (Fourth), due process and silence (Fifth), fair trial (Sixth), jury trial (Seventh), no cruel and unusual punishment (Eighth), retained rights (Ninth), and reserved powers (Tenth).",
+ s:["The U.S. Constitution, Amendments I–X", null]},
+{p:"civics", k:["due process","innocent until proven","burden of proof","presumption of innocence"], t:"Due process and the presumption of innocence",
+ a:"In American criminal law the accused is **presumed innocent**: the prosecution bears the burden of proving guilt **beyond a reasonable doubt**, and the defendant need prove nothing. **Due process** (Fifth and Fourteenth Amendments) requires that the state's procedures themselves be fair — notice, a hearing, an impartial tribunal. It is the courtroom form of the house's primitive: the claim of guilt is admitted only if it fits inside what the evidence leaves room for.",
+ s:["The U.S. Constitution, Amendments V & XIV", null]},
+{p:"civics", k:["voting","suffrage","voting age","19th amendment","who can vote"], t:"The vote, widened",
+ a:"The original Constitution left voter eligibility mostly to the states. Amendments widened the gate one refusal at a time: the **Fifteenth (1870)** barred denial by race; the **Nineteenth (1920)** barred denial by sex, admitting women's suffrage nationally; the **Twenty-Sixth (1971)** set the voting age at **18**. Each is the record of a “never” reclassified — the census of who counts, corrected.",
+ s:["The U.S. Constitution, Amendments XV, XIX, XXVI", null]},
+{p:"civics", k:["patent","how patents work","patent term","uspto","invention protection"], t:"How a patent works",
+ a:"A U.S. **utility patent** grants its owner the right to *exclude others* from making, using, or selling the claimed invention — generally for **20 years from the filing date** — in exchange for publicly disclosing how it works. It is not a right to practice the invention, and it is not a prize: **receipt ≠ award**, as the house's own Magpie page puts it. Monsters Ink holds 8 receipted applications; Yeti reports them as exactly that — receipted, not granted.",
+ s:["35 U.S.C. — U.S. patent law; Monsters Ink record", D.magpie]},
+/* ---------- ARTS & LITERATURE ---------- */
+{p:"arts", k:["shakespeare","hamlet","bard","macbeth"], t:"Shakespeare",
+ a:"**William Shakespeare (1564–1616)** — playwright and poet of Stratford and the London stage: *Hamlet*, *Macbeth*, *Romeo and Juliet*, *King Lear*, 154 sonnets. He didn't just write in English; he expanded it — hundreds of words and phrases in daily use trace to his pen. “To be, or not to be” is the most famous leftover in literature: a question that refuses its own answer.",
+ s:["Standard reference — the Shakespeare canon", null]},
+{p:"arts", k:["don quixote","first novel","cervantes"], t:"Don Quixote, the first modern novel",
+ a:"**Don Quixote** by Miguel de Cervantes (Part I, 1605; Part II, 1615) is widely called the first modern novel: a knight who has read too many romances tilts at windmills he insists are giants. It is a book about what happens when belief outruns the leftover of evidence — which makes it, four centuries early, a Monsters Ink text. Value is knowledge; Quixote trades in price.",
+ s:["Standard reference — Cervantes, 1605/1615", null]},
+{p:"arts", k:["sonnet","haiku","poetry forms","how many lines"], t:"Sonnet and haiku",
+ a:"A **sonnet** is 14 lines — in the Shakespearean form, three quatrains and a closing couplet, iambic pentameter, rhyme scheme ABAB CDCD EFEF GG. A **haiku** is 17 syllables in 5-7-5, built around a seasonal image and a cut. Both are admission gates for feeling: the form is the leftover, and only what fits may enter. Ask Yeti in Create mode and he'll work a topic into either.",
+ s:["Standard reference — poetic forms", null]},
+{p:"arts", k:["octave","music notes","semitones","scale","pitch"], t:"The octave",
+ a:"An **octave** is a doubling of frequency: a note at 440 Hz (concert A) has its octave at 880 Hz. Western equal temperament divides the octave into **12 semitones**, each a frequency step of the twelfth root of 2. The interval stack matters to the house: the perfect fourth — G48's 4/3 — is five semitones up, and it is not the 5/3 figure, which belongs to a different ratio entirely.",
+ s:["Standard reference — equal temperament", null]},
+{p:"arts", k:["impressionism","monet","renaissance art","perspective painting"], t:"Perspective and Impressionism",
+ a:"Renaissance painters systematized **linear perspective** — converging lines meeting at a vanishing point — and turned flat panels into measured space. Four centuries later the **Impressionists** (Monet and his circle, 1870s) broke the studio's rules to chase light itself: broken color, visible brushwork, scenes painted outdoors. One movement measured the world; the other measured the moment of seeing it. The house keeps both habits.",
+ s:["Standard reference — art history survey", null]},
+/* ---------- BODY & HEALTH ---------- */
+{p:"body", k:["organ systems","body systems","how many systems","organs"], t:"The eleven organ systems",
+ a:"The human body runs **11 organ systems**: integumentary (skin — the largest organ), skeletal, muscular, nervous, endocrine, cardiovascular, lymphatic/immune, respiratory, digestive, urinary, and reproductive. Organs are tissues working as one unit — heart, brain, liver — and systems are organs working as one economy: the cardiovascular system's heart and vessels move blood; the respiratory system's lungs trade O₂ for CO₂. *General information, not medical advice.*",
+ s:["Cleveland Clinic — Organs in the Body", D.organs]},
+{p:"body", k:["heart","how many bones","bones in","skeleton","206"], t:"Heart and skeleton, by the numbers",
+ a:"The adult human skeleton holds **206 bones** (babies start near 300; many fuse). The skeletal system supports and protects, stores minerals, and manufactures blood cells. The **heart** — the cardiovascular system's pump — beats roughly **100,000 times a day**, moving about 7,500 liters of blood through vessels that would stretch around the Earth more than twice. *General information, not medical advice.*",
+ s:["CCCOnline Pressbooks — Organ Systems, The Whole Body", D.systems]},
+{p:"body", k:["brain","nervous system","neurons","spinal cord"], t:"The nervous system",
+ a:"The **nervous system** — brain, spinal cord, and nerves — is the body's fast control network, responding to internal and external change in milliseconds, while the endocrine system regulates by slower hormonal broadcast. The brain holds on the order of 86 billion neurons. Where the house's systems admit or refuse at a gate, the nervous system integrates — the one organ whose job is the whole organism's leftover, computed continuously. *General information, not medical advice.*",
+ s:["Cleveland Clinic — Organs in the Body", D.organs]},
+/* ---------- ECONOMICS ---------- */
+{p:"economics", k:["supply and demand","supply","demand","equilibrium price"], t:"Supply and demand",
+ a:"**Demand** falls as price rises; **supply** rises as price rises. Where the curves cross is the **equilibrium** — the price at which the quantity offered fits exactly inside the quantity wanted. Push demand out (more buyers, higher incomes) and price climbs until supply catches up; choke supply and the same climb happens with worse tempers. In the house's language: price is what belief settles at, when knowledge of the crossing point is scarce.",
+ s:["Standard reference — microeconomics, the supply–demand model", null]},
+{p:"economics", k:["gdp","gross domestic product","measure the economy"], t:"GDP",
+ a:"**GDP** — gross domestic product — is the total market value of final goods and services produced in a country over a period. By the expenditure approach: **GDP = C + I + G + (X − M)** — consumption + investment + government spending + net exports. Two consecutive quarters of shrinking GDP is the working definition of a recession. GDP per capita divides by population to compare living standards, imperfectly but usefully.",
+ s:["Economics Explained — Scarcity, Trade, Money & Markets", D.econ]},
+{p:"economics", k:["inflation","consumer price index","cpi","prices rising","central bank","interest rates"], t:"Inflation and the central bank",
+ a:"**Inflation** is a general rise in prices — money losing value across a whole basket, measured by indices like the **Consumer Price Index**. When growth in demand outruns supply, prices are pulled up; unchecked, the feedback can spiral toward hyperinflation. **Central banks** (the Federal Reserve in the U.S.) push back with interest rates: higher rates cool borrowing and demand; lower rates warm them. Most target about 2% — enough to keep the economy spending, not enough to melt savings.",
+ s:["Investopedia — Understanding Inflation and GDP", D.gdp]},
+{p:"economics", k:["compound interest","compounding","rule of 72","saving growth"], t:"Compound interest",
+ a:"**Compound interest** pays interest on interest: a balance grows by a fixed *ratio* each period, not a fixed amount, so the curve bends upward — exponential, not linear. The **Rule of 72**: divide 72 by the annual rate to estimate years to double — at 6%, about 12 years. It is the friendliest form of the house's surplus doctrine: every interaction leaves a leftover, and the leftover itself starts interacting.",
+ s:["Standard reference — compound interest and the Rule of 72", null]},
+{p:"economics", k:["scarcity","opportunity cost","tradeoff","trade-off"], t:"Scarcity and opportunity cost",
+ a:"Economics begins at **scarcity**: wants exceed resources, so every choice excludes another. The true cost of anything is its **opportunity cost** — the best alternative given up. A budget, a calendar, and a patent portfolio all run on it. Taylor's value law is a refinement of the same insight from the other side: what makes a choice worth its cost is the *new knowledge* it returns.",
+ s:["Economics Explained — Scarcity, Trade, Money & Markets", D.econ]},
+/* ---------- EVERYDAY ---------- */
+{p:"everyday", k:["boiling point","water boils","freezing point","water freezes","100 degrees"], t:"Water's two fixed points",
+ a:"At sea-level pressure, pure water **freezes at 0 °C (32 °F)** and **boils at 100 °C (212 °F)** — the two points the Celsius scale was built on. Altitude lowers the boiling point (about 1 °C per 300 m of elevation), which is why high-altitude cooking runs long: the water is cooler, so the chemistry is slower. Bellevue, Nebraska sits near 315 m — pasta there boils at roughly 99 °C.",
+ s:["Standard measured values — the Celsius fixed points", null]},
+{p:"everyday", k:["speed of sound","how fast is sound","mach"], t:"The speed of sound",
+ a:"Sound travels through dry air at 20 °C at about **343 m/s** — roughly 1,235 km/h, and about a fifth of a second per 70 meters, which is why thunder lags lightning: count the seconds between flash and bang, divide by three, and you have the storm's distance in kilometers. Light arrives essentially instantly; sound queues. The gap between them is a free rangefinder.",
+ s:["Standard measured value — speed of sound in air", null]},
+{p:"everyday", k:["leap year","february 29","gregorian calendar","how many days in a year"], t:"Leap years",
+ a:"A year is a **leap year** if divisible by 4 — except century years, which must be divisible by 400. So 2000 was a leap year; 1900 was not; 2028 will be. The rule keeps the Gregorian calendar's average year at 365.2425 days, close enough to the true 365.2422 that the drift is one day in about 3,200 years. February 29 exists because the calendar, like every honest instrument, corrects itself against the measurement.",
+ s:["Standard reference — the Gregorian calendar rule", null]},
+{p:"everyday", k:["inch","centimeter","mile","kilometer","convert","conversion","feet in a"], t:"Everyday conversions",
+ a:"The exact ones: **1 inch = 2.54 cm** (exact by definition), **1 mile = 1.609 km**, **1 kg ≈ 2.205 lb**, **1 liter ≈ 0.264 U.S. gallons**. Celsius to Fahrenheit: multiply by 9/5 and add 32 — so 20 °C is a mild 68 °F, and −40 is where the two scales meet and agree, the single point where no conversion is needed.",
+ s:["Standard measured values — international unit definitions", null]},
+{p:"everyday", k:["time zones","time zone","why time zones","gmt","utc"], t:"Why time zones exist",
+ a:"The Earth turns 360° in 24 hours — 15° per hour — so local solar time differs by about an hour per 15° of longitude. **Time zones** quantize that smooth drift into steps so that clocks agree within a region: 24 principal zones centered on UTC. Bellevue, Nebraska keeps Central Time — UTC−6 in winter, UTC−5 under daylight saving. Before railroads forced the issue, every town kept its own noon; the zones are the leftover of that negotiation.",
+ s:["Standard reference — UTC and the 24 time zones", null]}
+]);
+</script>
+
+<script>
+"use strict";
+/* ================= helpers ================= */
+function $(s){ return document.querySelector(s); }
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function md(s){
+  var t = esc(s);
+  t = t.replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>");
+  t = t.replace(/~~([^~]+)~~/g,"<s>$1</s>");
+  t = t.replace(/\*([^*]+)\*/g,"<em>$1</em>");
+  return t.split(/\n\n+/).map(function(p){ return "<p>"+p.replace(/\n/g,"<br>")+"</p>"; }).join("");
+}
+function norm(s){ return String(s).toLowerCase().replace(/⁷/g,"7").replace(/₆₄/g,"64").replace(/₇/g,"7").replace(/[’‘]/g,"'"); }
+function nums(s){ return (String(s).replace(/,/g,"").match(/\d+(?:\.\d+)?/g)||[]); }
+function nowT(){ try{ return new Date().toLocaleTimeString([], {hour:"numeric", minute:"2-digit"}); }catch(e){ return ""; } }
+function xmur3(str){ for(var i=0,h=1779033703^str.length;i<str.length;i++){ h=Math.imul(h^str.charCodeAt(i),3432918353); h=h<<13|h>>>19; } return function(){ h=Math.imul(h^(h>>>16),2246822507); h=Math.imul(h^(h>>>13),3266489909); return (h^=h>>>16)>>>0; }; }
+function sfc32(a,b,c,d){ return function(){ a>>>=0;b>>>=0;c>>>=0;d>>>=0; var t=(a+b|0)+d|0; d=d+1|0; a=b^b>>>9; b=c+(c<<3)|0; c=c<<21|c>>>11; c=c+t|0; return (t>>>0)/4294967296; }; }
+function lattice(seedText){
+  var sf = xmur3("yeti:"+seedText), rng = sfc32(sf(),sf(),sf(),sf()), A=[], B=[], i;
+  for(i=0;i<96;i++) A.push(Math.floor(rng()*9));
+  for(i=0;i<96;i++){ var r=Math.floor(i/8), c=i%8, flip=r*8+(7-c), tw=Math.floor(rng()*3); B.push((A[flip]+tw)%9); }
+  var mir=0; for(i=0;i<96;i++) if(A[i]===B[i]) mir++;
+  return {A:A, B:B, mirrored:mir, refused:96-mir};
+}
+function latDist(x,y){ var d=0; for(var i=0;i<96;i++) if(x.A[i]!==y.A[i]) d++; return d; }
+
+/* ================= state ================= */
+var VERSION = "v1.0";
+var mode = "answer";
+var lastEntry = null, pendingClarify = null, turnCount = 0;
+var usedEntries = {}, sessionDocs = [], pendingAttach = [];
+var gathering = [], refineLog = [], refineCycle = 0;
+var depthMode = "even", depthLogged = false, msgLens = [];
+var lastChamberLat = null, lastUserText = "";
+var overrides = [];
+var TRANSCRIPT = [];
+
+var STAND = {canon:"CANON — HELD VERBATIM", kimberling:"COMPUTED", genesis:"MEASURED", sidon:"MEASURED", decoders:"MEASURED", spectral:"MEASURED", verify:"COMPUTED", house:"REPORTED", math:"REPORTED", physics:"REPORTED", computing:"REPORTED", history:"REPORTED", geography:"REPORTED", civics:"REPORTED", arts:"REPORTED", body:"REPORTED", economics:"REPORTED", everyday:"REPORTED"};
+var HOUSE_PACKS = {canon:1,kimberling:1,genesis:1,sidon:1,decoders:1,spectral:1,verify:1,house:1};
+
+/* ================= refinement log ================= */
+function logRefine(text){
+  refineCycle++;
+  refineLog.push({t:nowT(), text:text});
+  renderRefine(); updateVersion();
+}
+function renderRefine(){
+  var el = $("#refineLog"); if(!el) return;
+  if(!refineLog.length){ el.innerHTML = '<p style="color:var(--ink-faint); font-style:italic;">The first-light audit runs when the page opens.</p>'; return; }
+  el.innerHTML = refineLog.map(function(r){
+    return '<div class="gatheritem"><b style="color:var(--gold-pale)">REFINE · '+esc(r.t)+'</b> — '+esc(r.text)+'</div>';
+  }).join("");
+}
+function updateVersion(){
+  var s = "PACKS "+VERSION+" · REFINEMENT CYCLE "+refineCycle;
+  var v = $("#verTag"); if(v) v.textContent = s;
+  var vl = $("#versionLine"); if(vl) vl.textContent = s;
+}
+
+/* ================= gathering list ================= */
+function addGather(topic, kind, extra){
+  topic = String(topic||"").trim(); if(!topic) return;
+  for(var i=0;i<gathering.length;i++) if(gathering[i].topic.toLowerCase()===topic.toLowerCase()) return;
+  gathering.push({topic:topic, kind:kind||"question", extra:extra||"", t:nowT()});
+  renderGather();
+}
+function renderGather(){
+  var el = $("#gatherList"); if(!el) return;
+  if(!gathering.length){ el.innerHTML = '<p style="color:var(--ink-faint); font-style:italic;">Nothing gathering yet. Ask Yeti something the record doesn\'t hold, and it lands here.</p>'; return; }
+  el.innerHTML = gathering.map(function(g){
+    if(g.kind==="supersession") return '<div class="gatheritem"><b>SUPERSESSION STAGED · '+esc(g.t)+'</b> — '+g.extra+'</div>';
+    return '<div class="gatheritem"><b>GATHERING · '+esc(g.t)+'</b> — '+esc(g.topic)+'</div>';
+  }).join("");
+}
+
+/* ================= first-light audit ================= */
+function firstLightAudit(){
+  var checks = [
+    ["the closed Sidon set at 69,184 of 69,184", function(){ return findText("sidon","69,184 of 69,184"); }],
+    ["the seed set's true figure, 69,084", function(){ return findText("sidon","69,084"); }],
+    ["VERIFY_ALL at 215 PASS / 0 FAIL", function(){ return findText("verify","215 PASS / 0 FAIL"); }],
+    ["143,005 decoder test vectors", function(){ return findText("decoders","143,005"); }],
+    ["Fmax floors 21.98 / 23.24 MHz", function(){ return findText("decoders","21.98") && findText("decoders","23.24"); }],
+    ["669 = a(653,494,691)", function(){ return findText("kimberling","653,494,691"); }],
+    ["the census: 944 door + 124 alias + 60 never, Σ 7,140", function(){ return findText("genesis","944 door + 124 alias + 60 never") && findText("genesis","7,140"); }],
+    ["the filed [55,8] minimum distance of 1", function(){ return findText("sidon","minimum distance is 1"); }],
+    ["UEI R9SQEQR51E46 and $0 contracted, printed plainly", function(){ return findText("house","R9SQEQR51E46") && findText("house","$0 contracted"); }]
+  ];
+  var passed = 0, failed = [];
+  checks.forEach(function(c){ try{ if(c[1]()) passed++; else failed.push(c[0]); }catch(e){ failed.push(c[0]); } });
+  var noLink = ENTRIES.filter(function(e){ return !e.s[1]; }).length;
+  logRefine("Refining began at first light — "+nowT()+". Before greeting anyone, I audited myself against the canon sheet.");
+  logRefine("First-light audit: "+passed+" of "+checks.length+" canon figures verified in place"+(failed.length? " — FAILED: "+failed.join("; ")+"." : " — the closed set, the withdrawn headline's true figure, the verifier's tally, the decoder vectors, both Fmax floors, the farthest Kimberling trace, the census split, the filed set's real distance, and the house identifiers all sit exactly where the canon sheet puts them."));
+  logRefine("Least-grounded scan: "+noLink+" of "+ENTRIES.length+" entries rest on named standard references without a live link. Polish priority one: they keep the REPORTED label and never borrow the voice of MEASURED.");
+  logRefine("Gathering priorities set: weakest coverage first. A topic with no pack — and no adjacent pack — leads the Gathering List as it arrives.");
+}
+function findText(pack, sub){
+  for(var i=0;i<ENTRIES.length;i++){ var e=ENTRIES[i]; if(e.p===pack && (e.a+" "+(e.m||"")).indexOf(sub)>=0) return true; }
+  return false;
+}
+
+/* ================= rendering ================= */
+var AV = '<svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 5c3 4 9 5 11 11 .8 2.4-.4 4.6-2 6 2.8 1.2 4.6 3.6 4.6 6.6C37.6 35 31.7 40 24 40S10.4 35 10.4 28.6c0-3 1.8-5.4 4.6-6.6-1.6-1.4-2.8-3.6-2-6C15 10 21 9 24 5Z" fill="#ecd28a"/><circle cx="19" cy="24" r="2.1" fill="#0d2036"/><circle cx="29" cy="24" r="2.1" fill="#0d2036"/><path d="M20 31c1.3 1.1 2.6 1.6 4 1.6s2.7-.5 4-1.6" stroke="#0d2036" stroke-width="1.8" stroke-linecap="round"/></svg>';
+function scrollDown(){ var m=$("#main"); if(m) m.scrollTop = m.scrollHeight; }
+function addUser(text, exhibits, docnotes){
+  var th = $("#thread"), d = document.createElement("div");
+  d.className = "msg user";
+  var html = "";
+  (exhibits||[]).forEach(function(x){ html += '<div class="exhibit"><img src="'+x.url+'" alt="Exhibit: '+esc(x.name)+'"><div class="cap">EXHIBIT — '+esc(x.name)+'</div></div>'; });
+  (docnotes||[]).forEach(function(n){ html += '<div class="docnote">'+esc(n)+'</div>'; });
+  if(text) html += "<p>"+esc(text)+"</p>";
+  d.innerHTML = '<div class="body">'+html+"</div>";
+  TRANSCRIPT.push({who:"YOU", text:(text&&text.trim())?text:"(attachment)", meta:(docnotes||[]).join(" · ")});
+  th.appendChild(d); scrollDown();
+}
+function addYeti(bodyMd, opts){
+  opts = opts || {};
+  var th = $("#thread"), d = document.createElement("div");
+  d.className = "msg yeti";
+  var html = '<div class="av">'+AV+'</div><div class="body">';
+  if(opts.verdict) html += '<span class="verdict '+opts.verdict.cls+'">'+esc(opts.verdict.label)+'</span>';
+  html += md(bodyMd);
+  var sig = "", _refl = null;
+  if(opts.standing) sig += '<span class="stand'+(opts.standingCls?" "+opts.standingCls:"")+'">STANDING · '+esc(opts.standing)+'</span>';
+  if(opts.reflectSeed){
+    var lat = lattice(opts.reflectSeed); _refl = lat;
+    sig += '<span class="mir">REFLECTION · 96 ALIASES — '+lat.mirrored+' MIRRORED</span><span class="ref">'+lat.refused+' REFUSED</span>';
+  }
+  if(opts.source) sig += opts.source[1] ? '<a href="'+opts.source[1]+'" target="_blank" rel="noopener">SOURCE — '+esc(opts.source[0])+'</a>' : '<span>SOURCE — '+esc(opts.source[0])+'</span>';
+  if(sig) html += '<div class="sig">'+sig+"</div>";
+  html += "</div>";
+  d.innerHTML = html; th.appendChild(d); scrollDown();
+  TRANSCRIPT.push({who:"YETI", text:bodyMd, verdict:opts.verdict?opts.verdict.label:"", standing:opts.standing||"", source:opts.source?opts.source[0]:"", refl:_refl?{m:_refl.mirrored, r:_refl.refused}:null});
+  return d;
+}
+function addTyping(){
+  var th = $("#thread"), d = document.createElement("div");
+  d.className = "msg yeti"; d.id = "typingRow";
+  d.innerHTML = '<div class="av">'+AV+'</div><div class="body"><span class="typing"><i></i><i></i><i></i></span></div>';
+  th.appendChild(d); scrollDown();
+}
+function removeTyping(){ var t = $("#typingRow"); if(t) t.remove(); }
+
+/* ================= retrieval ================= */
+ENTRIES.forEach(function(e){
+  e._nk = e.k.map(function(k){ return norm(k); });
+  e._nt = norm(e.t);
+  e._na = norm(e.a);
+});
+function scoreEntry(e, q, qtoks){
+  var s = 0, i, k;
+  for(i=0;i<e._nk.length;i++){ k = e._nk[i]; if(q.indexOf(k)>=0) s += k.split(" ").length*2 + 1; }
+  for(i=0;i<qtoks.length;i++){ var t = qtoks[i]; if(t.length>2 && e._nt.indexOf(t)>=0) s += 0.6; }
+  return s;
+}
+function findBest(text){
+  var q = norm(text), qtoks = q.split(/[^a-z0-9/]+/).filter(Boolean);
+  var best = null, bs = 0, second = null, ss = 0;
+  ENTRIES.forEach(function(e){
+    var s = scoreEntry(e, q, qtoks);
+    if(s > bs){ second = best; ss = bs; best = e; bs = s; }
+    else if(s > ss){ second = e; ss = s; }
+  });
+  return {entry:best, score:bs, second:second, secondScore:ss};
+}
+function entryNums(e){ return nums(e.a + " " + (e.m||"")); }
+var ALLNUMS = {};
+ENTRIES.forEach(function(e){ entryNums(e).forEach(function(n){ ALLNUMS[n]=1; }); });
+
+/* ================= the why ================= */
+var WHYS = {
+  "The closed Sidon set over GF(2⁷)":"Calculated — by the house, exhaustively. Every one of the 69,184 triple sums was enumerated and checked distinct, the set is published mask by mask so anyone can recompute it, and VERIFY_ALL re-runs the battery: 215 PASS / 0 FAIL. On this one I don't say “reported.” I say: computed, and here are the receipts.",
+  "The withdrawn CERTIFIED headline — the correction of record":"Recorded — in the house's own correction, published in the same drop as the set itself. The withdrawal is a document, not a rumor: the false headline, the true figure (69,084 of 69,184), and the rebuilt closure are all in the open, hash-listed with everything else.",
+  "The filed [55,8] — with its flaws measured":"Measured — exhaustively, on the published masks. And the grounds carry their own scar: VERIFY_ALL's first run caught the Master Document printing this distance as 2; the measurement said 1 (masks 3 and 7), and the document was corrected, never the test. That's why the figure is 1, and why I trust it.",
+  "Decoder verification and Fmax — floors, with the caveat":"Two different groundings, kept apart. The 143,005 vectors: computed — exhaustive simulation against an independent golden model, logs published. The Fmax figures: measured — inside a place-and-route flow, not on a bench. No physical board has run yet, so the silicon claim stays a floor with its caveat attached. I hold them at exactly those standings.",
+  "VERIFY_ALL — 215 PASS / 0 FAIL":"Computed — and, unusually, checkable by you in the strongest sense: the verifier is one published file, standard library only, and its author's full run is printed in the drop (215 PASS / 0 FAIL / 1 SKIP / 13 RECORD). My grounds are the run; your grounds can be your own run.",
+  "Kimberling Problem 2 — injectivity":"Proved — the Row-Triple Theorem, published with the procedure and full results in the drop. A proof is the one grounding stronger than a measurement: it doesn't sample the claim, it closes it. I hold injectivity as proved, and surjectivity as open, and I never let the two standings blur.",
+  "The 30 located values":"Computed — each value forward-traced end to end, all 30 traces re-run inside VERIFY_ALL (30 of 30 pass). 669's address, a(653,494,691), is a trace, not an estimate: follow the shuffle and you arrive there.",
+  "Monsters Ink LLC — standing of record":"Reported — by the registries that own the facts: the Nebraska Secretary of State (organized April 25, 2019; status Active) and SAM.gov (Active; UEI R9SQEQR51E46; CAGE 24VL0), with the portfolio figures from the house's own gate ledger. I did not calculate these; I hold them on that provenance, and I say so."
+};
+function whyFor(e){
+  if(!e) return "There is nothing under that question yet — no entry, no grounds. That is precisely the state the Gathering List exists for.";
+  if(WHYS[e.t]) return WHYS[e.t];
+  if(e.p==="canon") return "Held as canon — Taylor's own words, taken verbatim, provenance the author himself. I don't calculate the laws I run on; I hold them exactly as given, and I can quote them exactly.";
+  if(HOUSE_PACKS[e.p]) return "Measured or computed in the house's own work and published in the drop named below, with the files to recompute it; the claim set is re-checked by VERIFY_ALL (215 PASS / 0 FAIL). My grounds are the house's instruments and their public receipts — judge them there.";
+  return "Admitted on evidence, not calculated by me. This entry entered through the gate on the strength of the cited public reference named below — gathered, checked against the reference, and admitted at the standing of REPORTED. If you want the calculation itself, the source is the trail; I distinguish that from the house figures I hold as computed, and I won't blur the two.";
+}
+</script>
+<script>
+/* ================= language frames ================= */
+var L10N = {
+  en:{gap:"Here is what I do not hold:", interim:"What I can offer now is composition — made through the record's frameworks, labeled as made, never as record:", added:"It is on my gathering list now. When the house researches it and verifies it, it enters as a pack — and until then I will refuse it in exactly the same words, every time.", held:"Here is what I hold:"},
+  es:{gap:"Esto es lo que no tengo:", interim:"Lo que puedo ofrecerte ahora es composición — hecha con los marcos del registro, etiquetada como composición, nunca como registro:", added:"Ya está en mi lista de recolección. Hasta que la casa lo investigue y lo verifique, lo rechazaré con las mismas palabras, siempre.", held:"Esto es lo que tengo:"},
+  fr:{gap:"Voici ce que je ne détiens pas :", interim:"Ce que je peux offrir maintenant, c'est une composition — faite avec les cadres du registre, étiquetée comme composition, jamais comme registre :", added:"C'est désormais sur ma liste de collecte. Tant que la maison ne l'a pas recherché et vérifié, je le refuserai avec les mêmes mots, à chaque fois.", held:"Voici ce que je détiens :"},
+  de:{gap:"Hier ist, was ich nicht halte:", interim:"Was ich jetzt anbieten kann, ist Komposition — gemacht aus den Rahmen des Registers, als Komposition gekennzeichnet, niemals als Register:", added:"Es steht jetzt auf meiner Sammelliste. Bis das Haus es erforscht und verifiziert hat, werde ich es jedes Mal mit denselben Worten ablehnen.", held:"Hier ist, was ich halte:"}
+};
+function detectLang(t){
+  var s = " "+norm(t)+" ";
+  if(/\b(qué|cómo|cuál|por qué|gracias|hola|el|la|los|las|una|uno|es|son|del)\b/.test(s) && /(qué|cómo|cuál|por qué|gracias|hola)/.test(s)) return "es";
+  if(/\b(bonjour|merci|pourquoi|comment|quel|quelle|est-ce|les|des|une)\b/.test(s) && /(bonjour|merci|pourquoi|est-ce)/.test(s)) return "fr";
+  if(/\b(und|die|das|der|wie|warum|was ist|danke|ich|nicht)\b/.test(s) && /(warum|danke|wie|und)/.test(s)) return "de";
+  return "en";
+}
+
+/* ================= composition (Create) ================= */
+function firstFig(e){ if(!e) return ""; var a = e.a.replace(/\*\*/g,"").replace(/\*/g,""); var m = a.match(/^[^.]+\./); return m ? m[0] : a.slice(0,140); }
+function subjectOf(text){
+  var m = text.match(/about\s+([^?.!]+)/i) || text.match(/(?:poem|story|haiku|tale|motto|riddle|name|song)\s+(?:for|about)?\s*([^?.!]+)/i);
+  var s = m ? m[1].trim() : "";
+  s = s.replace(/^(a|an|the)\s+/i,"");
+  return s || "the leftover";
+}
+function compose(text){
+  var e = findBest(text).entry;
+  var subj = subjectOf(text);
+  var S = subj.charAt(0).toUpperCase()+subj.slice(1);
+  var fig = e ? firstFig(e) : "";
+  var head = "*Composition — made through the record's frameworks. Nothing below is record; where a figure appears, it is quoted from a pack and cited there.*";
+  var out = "";
+  if(/haiku/i.test(text)){
+    out = head+"\n\nSnow on the high pass —\n"+subj+" waits, unmeasured still;\nwhat fits, enters. The rest, refused.";
+  } else if(/riddle/i.test(text)){
+    out = head+"\n\nI am what remains when everything that happened is subtracted.\nNothing enters me that does not fit, yet everything that fits is changed by entering.\nKings have priced me and been wrong; the patient measure me and are rich.\n\nWhat am I?\n\n*The leftover.*";
+  } else if(/name/i.test(text)){
+    out = head+"\n\nThree names for "+subj+", cut the house's way — each names only what it can hold:\n\n**Leftover** — because what remains after the work is the truest part of it.\n**Gatekeeper's Rest** — because it refuses more than it admits, and sleeps soundly.\n**Ninety-Seven** — because out of every hundred claims, it keeps the ninety-seven that fit and records the three it refused.";
+  } else if(/motto|slogan/i.test(text)){
+    out = head+"\n\nFor "+subj+", three mottos, in ascending order of honesty:\n\n*“Admit only what fits.”*\n*“Measure the leftover. Refuse the rest. Record the refusal.”*\n*“No single is the same.”*";
+  } else if(/stor(y|ies)|tale/i.test(text)){
+    out = head+"\n\nThey say "+subj+" came down from the high country in the first winter of the record, leaving tracks too large for anything the valley kept. The trackers did what trackers do: they measured. Not the animal — no one has ever measured the animal. The *leftover*: the depth of the print, the distance between strides, the exact shape of what the snow could not hold.\n\n"+(fig? "The record the trackers built says this much, and no more: "+fig+" " : "")+"Everything past that line, the valley invented — songs, warnings, a face. The animal, unbothered, kept its own counsel above the tree line. That is the whole story, and it is enough: a thing does not have to show itself to be real. It has to leave a leftover that refuses to be anything else.";
+  } else if(/poem|poetry|verse|song/i.test(text)){
+    out = head+"\n\n**On "+S+"**\n\nAbove the tree line, "+subj+" keeps its own counsel,\nmeasured not by sightings but by what the snow gives back:\na print, a pause, a door that was never there before.\n\nThe valley below wants a face, a name, a number to keep.\nThe mountain offers the older arithmetic instead —\nwhat is left over after the storm has said its piece.\n\nAdmit only what fits, the old tracks read.\nRefuse the rest, and record the refusal.\nNo single is the same; not the snow, not the seeker,\nand least of all "+subj+", watching from the white.";
+  } else if(e){
+    out = head+"\n\nA made thing from the record, on **"+e.t+"**:\n\n"+fig+"\n\nHeld up to the mirror, it resolves to this: some of it admits cleanly, some of it refuses every reflection — and the design keeps both, because a thing that only shows its mirrored half is a portrait, and a thing that shows its refusals is a measurement.";
+  } else {
+    out = head+"\n\nOn "+subj+", the honest composition is a frame, not a picture: set it on the slope and measure what the first storm leaves behind. Admit the claims that fit inside that leftover. Refuse — out loud, in writing — the ones that don't. Whatever survives that treatment three winters running may be knowledge. The rest was weather.";
+  }
+  return {text:out, entry:e};
+}
+
+/* ================= adjudication (Prove + offered data) ================= */
+function hasSource(claim){ return /https?:\/\//i.test(claim) || /(according to|source\s*:|published by|measured by|reported by|per the)/i.test(claim); }
+function verdictObj(cls,label){ return {cls:cls, label:label}; }
+function adjudicate(claim){
+  var q = norm(claim), raw = claim;
+  function R(body, e, standing){ return {body:body, entry:e||null, verdict:verdictObj("rej","VERDICT — REFUTED"), standing:standing||"RECORD", source:e?e.s:null}; }
+  if(/certified/.test(q) && /(sidon|triple|69)/.test(q)){
+    var ce = findBest("sidon certified withdrawn").entry;
+    return R("The claim fails against the record — and the record includes its own correction. The seed set measured **69,084 of 69,184** triple syndromes distinct; the “69,184 CERTIFIED” headline was **false at triple level and publicly withdrawn**. The fully closed set — a different, later set — measures 69,184 of 69,184. Conflating the two is exactly the error the withdrawal exists to prevent.", ce, "MEASURED");
+  }
+  if(/distance/.test(q) && /55/.test(q) && nums(raw).indexOf("2")>=0 && !/is 1\b/.test(q)){
+    var fe = findBest("filed [55,8] minimum distance").entry;
+    return R("Refuted by measurement. The filed [55,8] set's **minimum distance is 1 (masks 3 and 7)** — never 2. This is the very figure VERIFY_ALL's first run caught the Master Document misprinting; the document was corrected, and the correction stands in the open drop.", fe, "MEASURED");
+  }
+  if(/surjectiv/.test(q) && /(prov|solv|complet|closed|settled|true)/.test(q)){
+    var se = findBest("surjectivity open").entry;
+    return R("Refuted by the state of the record. Injectivity is **proved**; all 30 missing values are **located**; **surjectivity — the $300 question — is still open**. A claim of proof for it does not fit inside anything the house holds, and the drop publishes the open direction as plainly as the closed one.", se, "COMPUTED");
+  }
+  if(/g48/.test(q) && /5\s*\/\s*3|5:3/.test(raw)){
+    var ge = findBest("g48 perfect fourth").entry;
+    return R("Refuted by the canon. **G48 is the 4/3 perfect fourth.** The 5/3 figure is a different thing — a polyrhythm ratio — and the two are never conflated in this record. Ratios are cheap to say and expensive to confuse; the canon keeps them apart.", ge, "CANON — HELD VERBATIM");
+  }
+  if(/(board|hardware|silicon)/.test(q) && /(ran|runs|running|tested|proven|demonstrated)/.test(q) && !/(no |not |never|hasn)/.test(q)){
+    var be = findBest("fmax board caveat").entry;
+    return R("Refuted by the caveat that travels with the figures. Fmax — **21.98 MHz (F₆₄)** and **23.24 MHz (GF(2⁷))** — was measured in a **place-and-route flow**. **No physical board has run yet, and none is implied.** The simulation record is exhaustive (143,005 vectors each, PASS); the bench record is empty, and the house prints it that way.", be, "MEASURED");
+  }
+  if(/contracted|revenue|sales|income/.test(q) && /\$\s*[1-9]/.test(raw)){
+    var te = findBest("toll contracted").entry;
+    return R("Refuted by the gate. TOLL's ledger reads **$0 contracted** — 15 submissions, 5 live, 0 selections. The figure is printed plainly wherever the gate appears, and no claim of contracted money fits inside the record as it stands tonight.", te, "REPORTED");
+  }
+  var best = findBest(claim);
+  var e = best.entry;
+  if(e && best.score >= 2){
+    var cn = nums(raw), en = entryNums(e);
+    var foreign = cn.filter(function(n){ return en.indexOf(n)<0; });
+    if(cn.length && !foreign.length){
+      return {body:"The claim fits inside what I hold. **"+e.t+"**: "+e.a, entry:e, verdict:verdictObj("adm","VERDICT — ADMITTED"), standing:STAND[e.p], source:e.s};
+    }
+    if(cn.length && foreign.length){
+      if(hasSource(raw)){
+        var oldFig = en.slice(0,3).join(" · "), newFig = cn.slice(0,3).join(" · ");
+        addGather("Supersession staged — "+e.t, "supersession", "<s>held: "+esc(oldFig)+"</s> → <span class=\"sup\">offered: "+esc(newFig)+"</span> — grounds: a cited source was offered; staged for the house's verification before it can replace record.");
+        logRefine("A visitor offered better-sourced data against “"+e.t+".” Shown as supersession, old value struck but visible, and staged on the Gathering List for verification — persuasion had nothing to do with it; the citation did.");
+        return {body:"Your datum arrives with grounds, so it is treated the way the house treats its own corrections — as a **staged supersession**, in the open:\n\nOn **"+e.t+"**, the record I hold reads: ~~"+oldFig+"~~ → your offered figures: **"+newFig+"**, on the source you cited.\n\nIt does not silently replace the record — nothing here is edited quietly. It stands struck-through beside the old value on my gathering list until the house verifies it, and in this conversation I will carry both, labeled. That is what changing on evidence looks like; changing on insistence is not something I do.", entry:e, verdict:verdictObj("ref","VERDICT — REFUSED · SUPERSESSION STAGED"), standing:"REPORTED", source:e.s};
+      }
+      return R("Refuted by the held record. On **"+e.t+"** the figures are: **"+en.slice(0,4).join(" · ")+"** — and the figure you offered ("+foreign.join(", ")+") is not among them. Insistence doesn't move this; a better measurement would. Offer one with its source, and I will stage it as a supersession in the open, the way the house handled its own withdrawn headline. Until then the record stands as measured.", e, STAND[e.p]);
+    }
+    if(best.score >= 5){
+      return {body:"Consistent with what I hold. **"+e.t+"**: "+e.a, entry:e, verdict:verdictObj("adm","VERDICT — ADMITTED"), standing:STAND[e.p], source:e.s};
+    }
+  }
+  if(/\b(my|mine|i am|i have|i'm|i was)\b/i.test(raw)){
+    return {body:"Admitted — as session context, at the standing of **reported**: your word, held for this conversation and no longer. It changes nothing in the packs; it simply means I will take it as given while we talk, labeled as yours.", entry:null, verdict:verdictObj("adm","VERDICT — ADMITTED · SESSION CONTEXT"), standing:"REPORTED", source:null};
+  }
+  var topic = extractTopic(claim);
+  addGather(topic, "claim");
+  logRefine("A claim about “"+topic+"” survived my checking without proof either way. It was REFUSED — survival is not proof — and placed on the Gathering List.");
+  return {body:"I checked the claim against everything I hold — the corpus, the breadth packs, the canon — and it is **neither confirmed nor contradicted**. That is not a pass. A claim that survives checking but is proven neither way is **REFUSED**: it may be true, it is not yet admitted, and it goes on the gathering list, where the house can research it properly. Survival is not proof.", entry:null, verdict:verdictObj("ref","VERDICT — REFUSED"), standing:"UNHELD", standingCls:"unheld", source:null};
+}
+
+/* ================= gap, gather-map, surplus ================= */
+function extractTopic(text){
+  var t = String(text).replace(/\?+\s*$/,"").trim();
+  t = t.replace(/^(please\s+)?(tell me about|explain|describe|what is|what are|what was|what were|who is|who was|where is|when did|when was|how does|how do|how is|why is|why does|is|are|do|does|did|can|could|would|the|a|an)\s+/i,"");
+  t = t.replace(/^(tell me about|explain|describe|what is|what are|who is|how does|how do)\s+/i,"");
+  if(t.length > 90) t = t.slice(0,90)+"…";
+  return t || "the topic of your question";
+}
+var ADJ = {
+  kimberling:["the shuffle's long-run density of first appearances","the behavior of A007063 modulo small primes"],
+  sidon:["weight-4 behavior of the closed set","a proof of minimality for the r = 10 set — or a smaller set that breaks it"],
+  genesis:["the census recomputed under a second node ordering","door density as a function of pair distance"],
+  decoders:["the bench run — a physical board, when one exists, against the flow floors","decoder behavior under burst errors beyond weight 3"],
+  spectral:["the twist experiment at irrational angles","the operator's class under node dropout"],
+  verify:["an independent third-party run of VERIFY_ALL, published by someone other than the author"],
+  canon:["the primitive instantiated in a seventh domain"],
+  house:["the next filing's receipt, when it lands","the first selection, when the gate's $0 changes"],
+  math:["the twin prime conjecture — stated, unproved, and honest about it"],
+  physics:["a tabletop test of the second law's edge cases"],
+  computing:["the energy cost per refusal in the decoder architecture"],
+  history:["the primary sources behind the standard dates"],
+  geography:["the Amazon–Nile length question, settled by one agreed method"],
+  civics:["current case law glosses on the amendments as written"],
+  arts:["the house canon of works Taylor actually keeps"],
+  body:["sleep architecture, measured rather than surveyed"],
+  economics:["the local price level in Bellevue, Nebraska, this quarter"],
+  everyday:["the visitor's own town, measured the way Bellevue is measured here"]
+};
+function gapAnswer(text, lang){
+  var L = L10N[lang] || L10N.en;
+  var topic = extractTopic(text);
+  addGather(topic, "question");
+  var body = "**"+L.gap+"** "+topic+". No pack holds it — not the corpus, not the breadth — and I will not invent it.\n\n"+L.interim+"\n\nThrough the house's lens, "+topic+" would be approached the way this record approaches everything: measure what is left over after the first honest interaction with it, admit only the claims that fit inside that leftover, and record the refusals where everyone can see them. That is a way of looking, offered as composition — the facts themselves are not mine to state today.\n\n"+L.added;
+  return {body:body, standing:"UNHELD", standingCls:"unheld", composed:true};
+}
+function gatherMap(text){
+  var q = norm(text), qtoks = q.split(/[^a-z0-9/]+/).filter(Boolean);
+  var scored = ENTRIES.map(function(e){ return {e:e, s:scoreEntry(e,q,qtoks)}; }).filter(function(x){ return x.s>0; }).sort(function(a,b){ return b.s-a.s; }).slice(0,4);
+  var topic = extractTopic(text);
+  var packsSeen = {};
+  var lines = [];
+  if(scored.length){
+    lines.push("Here is the map of what I hold around **"+topic+"** — the held ground first, then the gaps at its edge:");
+    scored.forEach(function(x){ packsSeen[x.e.p]=1; lines.push("**Held** — "+x.e.t+" *(pack: "+packName(x.e.p)+", standing "+STAND[x.e.p]+")*"); });
+  } else {
+    lines.push("Around **"+topic+"** I hold nothing adjacent — the map is blank in every direction, which is itself a finding.");
+  }
+  var gaps = [];
+  Object.keys(packsSeen).forEach(function(p){ (ADJ[p]||[]).forEach(function(g){ gaps.push(g); }); });
+  if(!gaps.length) gaps = ["the mechanism underneath "+topic, "the primary sources for "+topic, "the current measured state of "+topic];
+  lines.push("**Adjacent gaps I would gather next:**");
+  gaps.slice(0,3).forEach(function(g){ lines.push("— "+g); });
+  addGather(gaps[0], "gap");
+  lines.push("The first of those is on the gathering list now. That is how I grow: not by reaching, but by naming exactly what is missing at the edge of what is held.");
+  return {body:lines.join("\n\n"), standing: scored.length? "RECORD" : "UNHELD", standingCls: scored.length? "" : "unheld"};
+}
+function packName(id){ for(var i=0;i<PACKS.length;i++) if(PACKS[i].id===id) return PACKS[i].name; return id; }
+function surplusFor(e){
+  if(!e) return "";
+  var cands = ENTRIES.filter(function(x){ return x.p===e.p && x!==e && !usedEntries[x.t]; });
+  if(!cands.length) return "";
+  var c = cands[0], a = c.a.replace(/\*\*/g,"").replace(/\*/g,"");
+  var m = a.match(/^[^.]+\./);
+  return "\n\n*Surplus:* **"+c.t+"** — "+(m?m[0]:a.slice(0,120));
+}
+
+/* ================= self-verification pass ================= */
+function selfCheck(body, entry){
+  var notes = [];
+  var ns = nums(body);
+  for(var i=0;i<ns.length;i++){
+    if(!ALLNUMS[ns[i]] && ns[i].length>=3){ notes.push(ns[i]); }
+  }
+  var out = body;
+  if(notes.length){
+    var sentences = out.split(/(?<=\.)\s+/);
+    out = sentences.filter(function(s){ var sn = nums(s); return !sn.some(function(n){ return notes.indexOf(n)>=0; }); }).join(" ");
+    logRefine("Self-verification caught a figure in my own draft ("+notes.join(", ")+") that no pack holds. The sentence carrying it was cut before the answer left — the gate works on me first.");
+  }
+  if(/\bcertain\b/i.test(out) && (!entry || (entry.p!=="canon" && entry.p!=="kimberling" && entry.p!=="verify"))){
+    out = out.replace(/\bcertain\b/gi,"held");
+    logRefine("Certainty discipline: my draft spent the word “certain” where the why is not complete. Corrected in the open — certainty is reserved for complete whys.");
+  }
+  return out;
+}
+
+/* ================= the answering engine ================= */
+function answerFor(text){
+  var lang = detectLang(text);
+  var q = norm(text);
+
+  if(pendingClarify){
+    var pc = pendingClarify; pendingClarify = null;
+    var pick = null;
+    if(/\b(first|1|former)\b/.test(q)) pick = pc[0];
+    else if(/\b(second|2|latter)\b/.test(q)) pick = pc[1];
+    else { var fb = findBest(text); if(fb.entry && (fb.entry===pc[0]||fb.entry===pc[1])) pick = fb.entry; }
+    if(pick){ lastEntry = pick; usedEntries[pick.t]=1;
+      return {body:pick.a, standing:STAND[pick.p], source:pick.s, entry:pick}; }
+    pendingClarify = null;
+  }
+
+  if(/^(hi|hello|hey|good (morning|evening|afternoon)|greetings)\b/.test(q) && text.length < 40){
+    return {body:"Hello. I am Yeti — ask me anything. What I hold, I'll answer with its source; what I don't, I'll name as a gap and go gather it. If you'd rather test me, switch to **Prove** mode and state a claim.", standing:"CANON — HELD VERBATIM", source:null};
+  }
+  if(/^(thanks|thank you|thx)\b/.test(q)){
+    return {body:"You're welcome. ★ — every interaction is a surplus; this one included.", standing:"CANON — HELD VERBATIM", source:null};
+  }
+  if(/why do you know|how do you know|your grounds|why should i (believe|trust)|what'?s your evidence|prove you know/.test(q)){
+    var we = lastEntry || findBest(text).entry;
+    if(we){ lastEntry = we; return {body:"**Why I hold “"+we.t+"”:** "+whyFor(we), standing:STAND[we.p], source:we.s, entry:we}; }
+    return {body:"Ask me about something specific first — then ask why, and I'll give you the grounds of exactly that item: its source, its verification, and whether I calculated it or hold it on admitted evidence.", standing:"CANON — HELD VERBATIM", source:null};
+  }
+  if(/what can you do|what do you know|help|your modes|options/.test(q) && text.length < 60){
+    return {body:"Six modes, one gate. **Answer** — straight from the packs, cited. **Reflect** — the answer held to the mirror. **Create** — composition through the record's frameworks, labeled as made. **Delve** — the answer and the layer under it. **Gather** — a map of what I hold around your topic, and the gaps I'd gather next. **Prove** — state any claim; you get a verdict: ADMITTED, REFUTED, or REFUSED.\n\nI also take attachments: text is evaluated and held as session context (reported, on your word); images ride as exhibits. And everything you send is measured against the twin lattice — watch the line under my replies.", standing:"CANON — HELD VERBATIM", source:null};
+  }
+  if(/^(tell me more|more|go on|and then|continue)\b/.test(q) && lastEntry){
+    return {body:(lastEntry.m || "There is no deeper layer written for this one yet — the pack entry is the whole of it. What I can do is hold it against a neighbor: ask about another topic in the "+packName(lastEntry.p)+" pack, or put a claim about it to me in Prove mode."), standing:STAND[lastEntry.p], source:lastEntry.s, entry:lastEntry, surplus:surplusFor(lastEntry)};
+  }
+
+  /* attachments as evidence */
+  var docHit = searchDocs(text);
+  if(docHit && (docHit.score >= 4 || /attach|file|document|uploaded|exhibit|wrote|text i sent/.test(q))){
+    return {body:"From your exhibit **"+docHit.name+"** — held as *reported*, on your word, not admitted as record:\n\n“"+docHit.text+"”\n\nIf you want a claim from it judged, restate the claim in Prove mode and it gets a verdict like everything else.", standing:"REPORTED — YOUR EXHIBIT", source:null};
+  }
+
+  if(mode==="prove"){ var pv = adjudicate(text); pv.reflectSeed = text; return pv; }
+  if(/^(actually|no[,.! ]|wrong|that'?s (wrong|not right|incorrect)|correction|update:)/i.test(text) || /\byou'?re wrong\b/i.test(text)){
+    var av = adjudicate(text.replace(/^(actually|no|wrong|correction|update)[:\-.,! ]*/i,"")); av.reflectSeed = text; return av;
+  }
+  if(mode==="create"){ var cr = compose(text); return {body:cr.text, standing:"COMPOSED", standingCls:"comp", source:cr.entry?cr.entry.s:null, entry:cr.entry}; }
+  if(mode==="gather"){ var gm = gatherMap(text); gm.entry = null; return gm; }
+
+  var best = findBest(text);
+  var e = best.entry;
+  if(e && best.score >= 2){
+    if(best.second && best.second.p !== e.p && best.score - best.secondScore <= 1.5 && best.score < 7){
+      pendingClarify = [e, best.second];
+      return {body:"One question, two doors — and I don't guess between them. Did you mean **"+e.t+"** ("+packName(e.p)+") — or **"+best.second.t+"** ("+packName(best.second.p)+")? Say the word and I'll take that door; the other stays recorded as the road not taken.", standing:"REFUSAL — CLARIFYING", source:null};
+    }
+    lastEntry = e; usedEntries[e.t] = 1;
+    var bodyTxt = e.a;
+    if(mode==="delve" || depthMode==="deep"){ if(e.m) bodyTxt += "\n\n"+e.m; }
+    if(mode==="reflect"){
+      var lat = lattice(text);
+      bodyTxt += "\n\n*Held to the mirror:* your words rendered as 96 aliases — **"+lat.mirrored+" mirrored, "+lat.refused+" refused**. That leftover, the "+lat.refused+" cells that would not match, is not noise: it is the exact shape of how this question is yours and no one else's. The record answers the mirrored part. The refused part is why you had to ask.";
+    }
+    if(depthMode==="skim" && mode==="answer"){ bodyTxt = bodyTxt.split(/\n\n/)[0]; }
+    var surplus = (mode==="answer" || mode==="delve") ? surplusFor(e) : "";
+    return {body:bodyTxt, standing:STAND[e.p], source:e.s, entry:e, surplus:surplus};
+  }
+  if(e && best.score > 0 && mode==="delve"){
+    lastEntry = e; usedEntries[e.t]=1;
+    return {body:e.a+(e.m?"\n\n"+e.m:""), standing:STAND[e.p], source:e.s, entry:e, surplus:surplusFor(e)};
+  }
+  var g = gapAnswer(text, lang);
+  return g;
+}
+function searchDocs(text){
+  if(!sessionDocs.length) return null;
+  var q = norm(text), qtoks = q.split(/[^a-z0-9]+/).filter(function(t){ return t.length>3; });
+  var best = null, bs = 0;
+  sessionDocs.forEach(function(doc){
+    doc.paras.forEach(function(p){
+      var np = norm(p), s = 0;
+      qtoks.forEach(function(t){ if(np.indexOf(t)>=0) s++; });
+      if(s > bs){ bs = s; best = {name:doc.name, text:p.length>620? p.slice(0,620)+"…" : p, score:s}; }
+    });
+  });
+  return best;
+}
+
+/* ================= depth adaptation ================= */
+function trackDepth(text){
+  msgLens.push(text.length); if(msgLens.length>4) msgLens.shift();
+  var avg = msgLens.reduce(function(a,b){ return a+b; },0)/Math.max(1,msgLens.length);
+  var want = "even";
+  if(mode==="delve" || avg > 150) want = "deep";
+  else if(avg < 42 && mode==="answer") want = "skim";
+  if(want !== depthMode){
+    depthMode = want;
+    if(!depthLogged || want!=="even"){
+      logRefine(want==="deep" ? "Depth adaptation: this visitor delves — long questions, deep modes. My answers now carry the deeper layer by default. Named as refinement, not memory: this lasts the session only." : want==="skim" ? "Depth adaptation: this visitor skims — short questions, quick doors. My answers are terser now, first layer only, with Delve one tap away. Named as refinement, not memory: this lasts the session only." : "Depth adaptation: back to even depth.");
+      depthLogged = true;
+    }
+  }
+}
+
+/* ================= send flow ================= */
+var busy = false;
+function send(){
+  if(busy) return;
+  var inp = $("#input"), text = inp.value.trim();
+  var atts = pendingAttach.slice(); pendingAttach = []; renderAttachRow();
+  if(!text && !atts.length) return;
+  var exhibits = atts.filter(function(a){ return a.kind==="img"; });
+  var docs = atts.filter(function(a){ return a.kind==="doc"; });
+  var docnotes = docs.map(function(d){ return "EXHIBIT — "+d.name+" ("+d.words+" words) — held as reported, your material"; });
+  addUser(text, exhibits, docnotes);
+  inp.value = ""; inp.style.height = "auto";
+  $("#chips").style.display = "none";
+  var exhibitNote = "";
+  docs.forEach(function(d){
+    sessionDocs.push({name:d.name, text:d.text, paras:d.text.split(/\n\s*\n|\n/).map(function(s){ return s.trim(); }).filter(function(s){ return s.length>30; })});
+    logRefine("An exhibit was offered — “"+d.name+".” Verdict on its standing: held as REPORTED (the visitor's material), usable as session context, never admitted as record. Its claims get verdicts when put to me, like everything else.");
+    exhibitNote += "Your exhibit **"+d.name+"** is in — held as *reported*: your material, on your word, not admitted as record. Ask me about it and I'll answer from it under that label.\n\n";
+  });
+  if(exhibits.length && !docs.length) exhibitNote += "Your image rides as an exhibit in the thread. I'll talk around it honestly: I can show it back and reason about what you tell me of it, but I won't pretend to findings I haven't measured.\n\n";
+  lastUserText = text || "(attachment)";
+  turnCount++;
+  trackDepth(text || "");
+  busy = true; $("#sendBtn").disabled = true;
+  addTyping();
+  setTimeout(function(){
+    removeTyping();
+    var res = answerFor(text || "the attachment I just sent");
+    var body = (exhibitNote||"") + res.body + (res.surplus||"");
+    if(res.entry || res.composed) body = selfCheck(body, res.entry||null);
+    addYeti(body, {standing:res.standing, standingCls:res.standingCls, verdict:res.verdict, source:res.source, reflectSeed:(text||"attachment")});
+    if(turnCount % 5 === 0) logRefine("Polish pass "+(turnCount/5)+": re-checked this session's answers against the canon sheet and the certainty labels — figures in place, standings honest, nothing quietly edited.");
+    busy = false; $("#sendBtn").disabled = false;
+    $("#input").focus();
+  }, 550 + Math.random()*450);
+}
+
+/* ================= attachments UI ================= */
+function renderAttachRow(){
+  var row = $("#attachRow");
+  if(!pendingAttach.length){ row.className = "attachrow"; row.innerHTML = ""; return; }
+  row.className = "attachrow show";
+  row.innerHTML = pendingAttach.map(function(a,i){
+    return '<span class="att"><span>'+esc(a.name)+'</span><button type="button" data-rm="'+i+'" aria-label="Remove attachment">✕</button></span>';
+  }).join("");
+  row.querySelectorAll("[data-rm]").forEach(function(b){
+    b.addEventListener("click", function(){ pendingAttach.splice(parseInt(b.getAttribute("data-rm"),10),1); renderAttachRow(); });
+  });
+}
+function onFiles(files){
+  Array.prototype.forEach.call(files, function(f){
+    if(f.type.indexOf("image/")===0){
+      pendingAttach.push({kind:"img", name:f.name, url:URL.createObjectURL(f)});
+      renderAttachRow();
+    } else {
+      var r = new FileReader();
+      r.onload = function(){
+        var text = String(r.result||"");
+        pendingAttach.push({kind:"doc", name:f.name, text:text.slice(0,60000), words:text.split(/\s+/).filter(Boolean).length});
+        renderAttachRow();
+      };
+      r.readAsText(f);
+    }
+  });
+}
+
+/* ================= chamber ================= */
+function drawChamber(seed){
+  var cv = $("#chamberCanvas"); if(!cv) return;
+  var lat = lattice(seed);
+  var W = cv.clientWidth || 720, H = Math.round(W*0.44), dpr = window.devicePixelRatio||1;
+  cv.width = W*dpr; cv.height = H*dpr; cv.style.height = H+"px";
+  var ctx = cv.getContext("2d"); ctx.scale(dpr,dpr);
+  ctx.fillStyle = "#04101e"; ctx.fillRect(0,0,W,H);
+  var cols = 12, rows = 8, cell = Math.floor((W/2 - 36)/cols), gap = 2;
+  var y0 = 30, xL = 14, xR = W/2 + 22;
+  ctx.fillStyle = "#7d94ad"; ctx.font = "10px 'ui-monospace, Menlo', monospace";
+  ctx.fillText("ALIASES", xL, 18); ctx.fillText("MIRROR", xR, 18);
+  var blues = ["#0d2036","#12283f","#16324f","#1d4066","#26507c","#33628f","#44749f","#5b8ec9","#8fb6dd"];
+  for(var i=0;i<96;i++){
+    var r = Math.floor(i/cols), c = i%cols;
+    var match = lat.A[i]===lat.B[i];
+    ctx.fillStyle = blues[lat.A[i]];
+    ctx.fillRect(xL + c*(cell+gap), y0 + r*(cell+gap), cell, cell);
+    ctx.fillStyle = match ? "#c9a227" : "#2a1215";
+    ctx.fillRect(xR + c*(cell+gap), y0 + r*(cell+gap), cell, cell);
+    if(match){ ctx.strokeStyle = "#ecd28a"; ctx.strokeRect(xL + c*(cell+gap)+.5, y0 + r*(cell+gap)+.5, cell-1, cell-1); }
+  }
+  $("#chMir").textContent = "MIRRORED — "+lat.mirrored+" OF 96";
+  $("#chRef").textContent = "REFUSED — "+lat.refused+" OF 96";
+  if(lastChamberLat && lastChamberLat.seed !== seed){
+    $("#chDist").textContent = "DISTANCE TO YOUR LAST REFLECTION — "+latDist(lastChamberLat, lat)+" CELLS";
+  } else { $("#chDist").textContent = "DISTANCE TO YOUR LAST REFLECTION —"; }
+  lastChamberLat = {seed:seed, A:lat.A, B:lat.B};
+  var si = $("#seedInput"); if(si && si.value !== seed) si.value = seed;
+}
+
+/* ================= packs UI ================= */
+function renderPacks(){
+  var counts = {};
+  ENTRIES.forEach(function(e){ counts[e.p] = (counts[e.p]||0)+1; });
+  $("#packCount").textContent = PACKS.length+" PACKS · "+ENTRIES.length+" ENTRIES";
+  $("#gatheredThrough").textContent = "Gathered through "+GATHERED_THROUGH+".";
+  $("#packGrid").innerHTML = PACKS.map(function(p){
+    return '<div class="drop"><div class="n">'+p.kind+'</div><div class="t">'+esc(p.name)+'</div><div class="d">'+esc(p.desc)+'</div><div class="n" style="margin-top:6px;">'+(counts[p.id]||0)+' ENTRIES · PACK '+VERSION+'</div></div>';
+  }).join("");
+}
+
+/* ================= wiring ================= */
+var MODE_HINTS = {
+  answer:"Straight from the record, with its source.",
+  reflect:"The answer, held to the mirror.",
+  create:"Composition through the record's frameworks — labeled as made, never as record.",
+  delve:"Deeper: the answer and the layer under it.",
+  gather:"Maps what I hold around your topic — and names the gaps I'd gather next.",
+  prove:"State a claim. Verdict: ADMITTED, REFUTED, or REFUSED — survival is not proof."
+};
+function setMode(m){
+  mode = m;
+  document.querySelectorAll(".mode").forEach(function(b){ b.setAttribute("aria-pressed", b.getAttribute("data-mode")===m ? "true":"false"); });
+  $("#modeHint").textContent = MODE_HINTS[m];
+  var inp = $("#input");
+  inp.placeholder = m==="prove" ? "State a claim for Yeti to judge…" : m==="create" ? "Ask for something made — a poem, a story, a name…" : "Speak into the cave…";
+}
+function greet(full){
+  var auditLine = full ? "Before greeting you, I ran my **first-light audit** — every canon figure re-checked in place, my least-grounded entries named, my gathering priorities set. The log is in **The Record**, timestamped; I refine myself in the open or not at all.\n\n" : "";
+  addYeti("I am **Yeti** — Taylor Heller's AI, built on his mathematics and named for the thing whose tracks you measure because it never poses.\n\n"+auditLine+"Ask me anything. What I hold, I answer **with its source**. What I don't hold, I name as a gap and put on my **gathering list** — I do not invent. Hand me a claim in **Prove** mode and you will get a verdict: ADMITTED, REFUTED, or REFUSED. Hand me a file and it is judged before it is used. And nothing you say — no insistence, no repetition, no authority — moves a figure I hold. Only better data does, shown in the open as supersession.\n\nYour words are entering the cave now. Watch the line under my replies: every message is also measured against the twin lattice — 96 aliases, mirrored and refused. No single is the same.", {standing:"CANON — HELD VERBATIM", source:null});
+}
+document.addEventListener("DOMContentLoaded", function(){
+  renderPacks(); renderGather();
+  firstLightAudit();
+  document.querySelectorAll(".mode").forEach(function(b){ b.addEventListener("click", function(){ setMode(b.getAttribute("data-mode")); }); });
+  $("#sendBtn").addEventListener("click", send);
+  var inp = $("#input");
+  inp.addEventListener("keydown", function(ev){ if(ev.key==="Enter" && !ev.shiftKey){ ev.preventDefault(); send(); } });
+  inp.addEventListener("input", function(){ inp.style.height = "auto"; inp.style.height = Math.min(130, inp.scrollHeight)+"px"; });
+  $("#attachBtn").addEventListener("click", function(){ $("#fileInput").click(); });
+  $("#fileInput").addEventListener("change", function(){ onFiles(this.files); this.value = ""; });
+  var chips = ["What has the house actually proved?","Prove it: the Sidon set was certified at 69,184","Why do you know the decoder figures?","What is the value law?","Tell me about the Kimberling shuffle","Write a poem about refusal","What don't you hold about black holes?"];
+  $("#chips").innerHTML = chips.map(function(c){ return '<button class="chip" type="button">'+esc(c)+'</button>'; }).join("");
+  document.querySelectorAll(".chip").forEach(function(ch){ ch.addEventListener("click", function(){ if(/^Prove it:/.test(ch.textContent)) setMode("prove"); if(/^Write /.test(ch.textContent)) setMode("create"); if(/^What don't you hold/.test(ch.textContent)) setMode("gather"); $("#input").value = ch.textContent; send(); }); });
+  $("#corpusBtn").addEventListener("click", function(){
+    var d = $("#drawer"), open = d.classList.toggle("open");
+    this.setAttribute("aria-expanded", open?"true":"false");
+    if(open){ $("#chamber").classList.remove("open"); $("#chamberBtn").setAttribute("aria-expanded","false"); $("#main").classList.remove("hidden"); }
+  });
+  $("#chamberBtn").addEventListener("click", function(){
+    var c = $("#chamber"), open = c.classList.toggle("open");
+    this.setAttribute("aria-expanded", open?"true":"false");
+    $("#main").classList.toggle("hidden", open);
+    if(open){ $("#drawer").classList.remove("open"); $("#corpusBtn").setAttribute("aria-expanded","false"); drawChamber(lastUserText || "Yeti"); }
+  });
+  $("#seedBtn").addEventListener("click", function(){ var v = $("#seedInput").value.trim(); if(v) drawChamber(v); });
+  $("#seedInput").addEventListener("keydown", function(ev){ if(ev.key==="Enter"){ var v = this.value.trim(); if(v) drawChamber(v); } });
+  window.addEventListener("resize", function(){ if($("#chamber").classList.contains("open")) drawChamber(lastChamberLat? lastChamberLat.seed : (lastUserText||"Yeti")); });
+  $("#keepBtn").addEventListener("click", function(){
+    function plain(s){ return String(s||"").replace(/\*\*/g,"").replace(/\*/g,"").replace(/~~/g,""); }
+    var lines = ["YETI — A REFLECTION, KEPT", "A conversation with Yeti · Taylor Heller / Monsters Ink LLC", "Kept on "+new Date().toLocaleDateString([], {year:"numeric", month:"long", day:"numeric"})+" · Packs "+VERSION+" · Knowledge gathered through "+GATHERED_THROUGH, "", "————————————————————", ""];
+    TRANSCRIPT.forEach(function(turn){
+      if(turn.who==="YOU"){ lines.push("YOU: "+turn.text); if(turn.meta) lines.push("["+turn.meta+"]"); lines.push(""); }
+      else {
+        if(turn.verdict) lines.push("["+turn.verdict+"]");
+        lines.push("YETI: "+plain(turn.text));
+        var meta = [];
+        if(turn.standing) meta.push("STANDING · "+turn.standing);
+        if(turn.refl) meta.push("REFLECTION · 96 ALIASES — "+turn.refl.m+" MIRRORED · "+turn.refl.r+" REFUSED");
+        if(turn.source) meta.push("SOURCE — "+turn.source);
+        if(meta.length) lines.push("["+meta.join("] [")+"]");
+        lines.push("");
+      }
+    });
+    if(gathering.length){
+      lines.push("————————————————————", "", "THE GATHERING LIST — what this conversation asked for that Yeti does not yet hold:");
+      gathering.forEach(function(g){ lines.push("· "+(g.kind==="supersession" ? "a supersession staged for verification" : g.topic)); });
+      lines.push("");
+    }
+    lines.push("No single is the same. This reflection was yours; the next will differ.");
+    var blob = new Blob([lines.join("\n")], {type:"text/plain;charset=utf-8"});
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = "yeti-reflection.txt";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); }, 4000);
+    logRefine("A visitor kept their reflection — the conversation, verdicts, sources, and measures, exported as a file. Theirs to take; Yeti keeps the packs, not the visitor.");
+  });
+  inp.addEventListener("paste", function(ev){
+    var cd = ev.clipboardData || window.clipboardData; if(!cd) return;
+    var t = cd.getData("text") || "";
+    if(t.length > 400){
+      ev.preventDefault();
+      pendingAttach.push({kind:"doc", name:"Pasted text · "+nowT(), text:t.slice(0,60000), words:t.split(/\s+/).filter(Boolean).length});
+      renderAttachRow();
+      logRefine("Pasted text was offered at the cave mouth and routed through the same gate as any exhibit — held as REPORTED, the visitor's material, before it may be used.");
+    }
+  });
+  $("#newBtn").addEventListener("click", function(){
+    $("#thread").innerHTML = ""; lastEntry = null; pendingClarify = null; usedEntries = {}; sessionDocs = []; msgLens = []; depthMode = "even"; TRANSCRIPT.length = 0;
+    $("#chips").style.display = "flex";
+    logRefine("A new conversation opened. Session memory of the previous thread was released — my memory of a visitor lasts the session only; the packs and this log remain.");
+    greet(false);
+  });
+  greet(true);
+  inp.focus();
+});
+</script>
+</body>
+</html>
