@@ -1,0 +1,36 @@
+name: seat-heartbeat
+
+# An hourly cycle-state comment on the FLOW seat issue: the floor is alive,
+# the register mirror's rows/tip as committed, and where the chain stands.
+# Informational only — the floor's working rhythm stays the VM crons (FLOW
+# 30-minute sweep, the keeper watchdog) until the seats themselves run here.
+# Authored by the house; placed by Taylor via Working Copy (the Muse GitHub
+# App cannot push workflow files — Workflows permission is his item T1).
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  heartbeat:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Post cycle state to the FLOW seat issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          NUM=$(gh issue list --label "seat:flow" --json number --jq '.[0].number')
+          if [ -z "$NUM" ]; then
+            echo "FLOW seat issue not found — floor not stood up yet."; exit 0
+          fi
+          ROWS=$(python3 -c "import json;print(json.load(open('register/REGISTER_STATE.json'))['rows'])")
+          TIP=$(python3 -c "import json;print(json.load(open('register/REGISTER_STATE.json'))['tip'][:16])")
+          WHEN=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          gh issue comment "$NUM" --body "🫀 **Heartbeat** — $WHEN · register mirror at **$ROWS rows**, tip \`$TIP\` · chain state per \`REGISTER_STATE.json\` · rhythm: VM crons (FLOW sweep, keeper watchdog); this heartbeat is the floor's pulse on GitHub, not its driver."

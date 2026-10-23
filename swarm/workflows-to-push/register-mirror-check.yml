@@ -1,0 +1,58 @@
+name: register-mirror-check
+
+# Re-verify the mirrored register chain on this repo. The VM original is
+# canonical; this workflow proves the MIRROR still verifies to the tip named
+# in register/REGISTER_STATE.json, and says so on the register issue if not.
+# Authored by the house; placed by Taylor via Working Copy (the Muse GitHub
+# App cannot push workflow files — Workflows permission is his item T1).
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  verify-mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify the mirrored hash chain
+        id: verify
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, sys
+          from pathlib import Path
+          reg = Path("register/register.jsonl")
+          state = json.loads(Path("register/REGISTER_STATE.json").read_text())
+          prev, rows = "GENESIS", 0
+          for line in reg.read_text().splitlines():
+              if not line.strip():
+                  continue
+              r = json.loads(line); rows += 1
+              if r["prev"] != prev:
+                  print(f"CHAIN BREAK at seq {r['seq']}"); sys.exit(1)
+              blob = json.dumps({k: r[k] for k in ("seq","ts","kind","seat","payload","prev")},
+                                sort_keys=True, separators=(",", ":"))
+              if hashlib.sha256(blob.encode()).hexdigest() != r["hash"]:
+                  print(f"HASH MISMATCH at seq {r['seq']}"); sys.exit(1)
+              prev = r["hash"]
+          sha = hashlib.sha256(reg.read_bytes()).hexdigest()
+          ok = (prev == state["tip"] and rows == state["rows"] and sha == state["mirror_sha256"])
+          print(f"rows={rows} tip={prev[:16]} file_sha256={sha[:16]} state_match={ok}")
+          sys.exit(0 if ok else 1)
+          PY
+
+      - name: Report a broken mirror on the register issue
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          NUM=$(gh issue list --label "floor:register" --json number --jq '.[0].number')
+          if [ -n "$NUM" ]; then
+            gh issue comment "$NUM" --body "⚠️ **register-mirror-check FAILED** on run ${{ github.run_id }} — the mirrored chain does not verify to the tip in \`REGISTER_STATE.json\`. The VM original is canonical; re-run \`scripts/mirror_register.py\` from the VM. The mirror is a window, never the source."
+          fi

@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#0a2547" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<title>The Floor</title>
+<style>
+  :root{
+    --deep:#071c38; --blue:#0a2547; --blue2:#0e2f5a; --ice:#cfe8ff; --ice-dim:#8fb6dd;
+    --gold:#e8b34b; --gold-dim:#7a5c1e; --dark:#040d1d;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{min-height:100%;}
+  body{
+    margin:0; color:var(--ice);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+    background:#04070f;
+    padding:calc(env(safe-area-inset-top) + 28px) 20px calc(env(safe-area-inset-bottom) + 24px);
+    overflow-x:hidden;
+  }
+  body::before{content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
+    background:
+      radial-gradient(120% 60% at 50% -10%, rgba(14,47,90,.55), rgba(4,7,15,0) 60%),
+      radial-gradient(90% 50% at 50% 115%, rgba(232,179,75,.07), rgba(4,7,15,0) 55%),
+      linear-gradient(rgba(6,13,26,.52), rgba(3,7,16,.88));}
+  .wrap{max-width:1060px; margin:0 auto;}
+  .legal{text-align:center; font-size:10.5px; letter-spacing:.18em; color:#6f96c2; line-height:1.9;}
+  .cave-wrap{max-width:340px; margin:26px auto 4px;}
+  .cave-wrap svg{display:block; width:100%; height:auto; filter:drop-shadow(0 16px 34px rgba(0,0,0,.55));}
+  .seam{stroke:#3d5a80; transition:stroke .6s ease;}
+  body.open .seam{stroke:var(--gold); filter:drop-shadow(0 0 9px rgba(232,179,75,.85));}
+  h1.title{text-align:center; font-size:34px; letter-spacing:.28em; margin:14px 0 4px; font-weight:600;
+    text-shadow:0 2px 14px rgba(0,0,0,.8); padding-left:.28em;}
+  .sub{text-align:center; font-size:12.5px; color:var(--ice-dim); letter-spacing:.14em;
+    text-transform:uppercase; text-shadow:0 1px 10px rgba(0,0,0,.85);}
+  .gate{max-width:420px; margin:30px auto 0; text-align:center;}
+  .accept-note{font-size:12.5px; color:var(--ice-dim); letter-spacing:.04em; margin:0 auto 12px; max-width:38ch;}
+  button{font:inherit; cursor:pointer; border-radius:12px;}
+  #accept{ background:linear-gradient(180deg, var(--blue2), var(--blue)); color:var(--ice);
+    border:1px solid rgba(232,179,75,.35); padding:12px 22px; letter-spacing:.12em; font-size:13px;
+    text-transform:uppercase; box-shadow:0 14px 34px rgba(0,0,0,.45);}
+  #accepted{font-size:12px; color:var(--gold); letter-spacing:.1em; min-height:18px; margin-top:10px;}
+  #gateform{margin-top:22px;}
+  #gateform label{display:block; font-size:12px; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--ice-dim); text-align:center; margin-bottom:10px;}
+  .voicebox{background:rgba(4,13,29,.75); border-radius:16px; padding:8px;
+    box-shadow:inset 0 10px 30px rgba(0,0,0,.8), 0 0 0 1px rgba(232,179,75,.14), 0 14px 34px rgba(0,0,0,.45);}
+  #voice{width:100%; background:transparent; border:0; outline:0; color:var(--ice);
+    font:inherit; font-size:17px; text-align:center; padding:12px 8px; letter-spacing:.03em;}
+  #voice::placeholder{color:#54749c;}
+  #enter{margin-top:14px; width:100%; background:linear-gradient(180deg, #123a6e, var(--blue));
+    color:var(--ice); border:1px solid rgba(207,232,255,.22); padding:13px 22px;
+    letter-spacing:.18em; font-size:13px; text-transform:uppercase;}
+  button:disabled, input:disabled{opacity:.38; cursor:default;}
+  .voice{min-height:26px; text-align:center; margin-top:16px; font-size:14.5px; color:var(--ice);}
+  body.open #gateform, body.open #accept, body.open .accept-note{display:none;}
+  #floor{display:none; margin-top:44px;}
+  body.open #floor{display:block;}
+  .recorded{text-align:center; font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:11.5px; color:var(--gold); letter-spacing:.08em; margin-bottom:26px;}
+  h2.section{font-size:15px; letter-spacing:.3em; text-transform:uppercase; color:var(--ice);
+    border-bottom:1px solid rgba(232,179,75,.25); padding-bottom:8px; margin:40px 0 16px;}
+  h3.wing-name{font-size:12px; letter-spacing:.26em; color:var(--ice-dim); margin:22px 0 10px;}
+  .wing-note{font-size:13px; color:var(--ice-dim); line-height:1.6; margin:0 0 6px;}
+  .seats{display:grid; grid-template-columns:repeat(auto-fill,minmax(225px,1fr)); gap:12px;}
+  .seat{background:linear-gradient(180deg, rgba(14,47,90,.55), rgba(7,28,56,.55));
+    border:1px solid rgba(207,232,255,.13); border-radius:14px; padding:14px 14px 12px;}
+  .seat.fixture{border-color:rgba(232,179,75,.4);}
+  .seat-top{display:flex; justify-content:space-between; align-items:flex-start; gap:8px;}
+  .seat-name{font-weight:600; letter-spacing:.06em; font-size:14.5px;}
+  .seat-role{color:var(--ice-dim); font-size:12.5px; margin-top:5px; line-height:1.5; min-height:2.6em;}
+  .charter-link{color:var(--gold); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase;
+    text-decoration:none; border-bottom:1px dotted rgba(232,179,75,.5);}
+  .chip{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:10px; letter-spacing:.08em;
+    padding:3px 7px; border-radius:999px; border:1px solid rgba(207,232,255,.3); color:var(--ice);
+    white-space:nowrap;}
+  .chip.live{border-color:rgba(110,231,160,.55); color:#9df0bd;}
+  .chip.structure{border-color:rgba(232,179,75,.55); color:var(--gold);}
+  .chip.unresolved{border-color:rgba(240,130,130,.6); color:#f2a3a3;}
+  .chip.zero, .chip.spine{border-color:rgba(232,179,75,.7); color:var(--gold);}
+  .charter-body{font-size:14.5px; line-height:1.75; color:#dceeff;}
+  .charter-body h2{font-size:19px; letter-spacing:.04em; margin:26px 0 8px;}
+  .charter-body h3{font-size:16px; margin:22px 0 6px;}
+  .charter-body blockquote{border-left:3px solid var(--gold); margin:16px 0; padding:4px 0 4px 16px;
+    color:var(--ice); background:rgba(232,179,75,.05);}
+  .charter-body code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.88em;
+    background:rgba(207,232,255,.08); padding:1px 5px; border-radius:5px; overflow-wrap:anywhere;}
+  .charter-body a{color:var(--gold);}
+  .regwin{background:rgba(4,13,29,.72); border:1px solid rgba(232,179,75,.28); border-radius:16px;
+    padding:18px; font-size:13.5px; line-height:1.7;}
+  .regwin .k{color:var(--ice-dim); letter-spacing:.12em; text-transform:uppercase; font-size:11px;}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; overflow-wrap:anywhere;}
+  .pass{color:#9df0bd; font-weight:600; letter-spacing:.1em;}
+  footer{margin-top:54px; text-align:center; font-size:11px; color:#6f96c2; letter-spacing:.14em; line-height:2;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="legal">PRIVATE — CONFIDENTIAL · ACCESS BY INVITATION ONLY<br/>
+  EVERYTHING BEYOND THIS DOOR IS THE CONFIDENTIAL PROPERTY OF MONSTERS INK LLC AND IS SUBJECT TO NON-DISCLOSURE</div>
+
+  <div class="cave-wrap" aria-hidden="true">
+    <svg viewBox="0 0 200 130" role="img">
+      <path d="M18 118 L18 74 Q18 22 100 22 Q182 22 182 74 L182 118" fill="none" stroke="#8fb6dd" stroke-width="2"/>
+      <path d="M34 118 L34 78 Q34 38 100 38 Q166 38 166 78 L166 118" fill="none" stroke="#3d5a80" stroke-width="1.5"/>
+      <path class="seam" d="M100 22 L100 118" fill="none" stroke-width="2"/>
+    </svg>
+  </div>
+
+  <h1 class="title">THE FLOOR</h1>
+  <div class="sub">Speak, and be known.</div>
+
+  <div class="gate">
+    <p class="accept-note">This floor is a confidence. Accept it, and the door will listen for your voice.</p>
+    <button type="button" id="accept">I accept the confidence</button>
+    <div id="accepted"></div>
+    <form id="gateform" autocomplete="off">
+      <label for="voice">Say who you are</label>
+      <div class="voicebox">
+        <input id="voice" type="text" placeholder="Speak"
+               autocapitalize="sentences" autocorrect="off" spellcheck="false"
+               enterkeyhint="go" aria-label="Say who you are" disabled />
+      </div>
+      <button type="submit" id="enter" disabled>Enter</button>
+      <div class="voice" id="reply" role="status"></div>
+    </form>
+  </div>
+
+  <main id="floor">
+    <div class="recorded">RECORDED · 2026-10-23T12:59:08Z · REGISTER 329 ROWS · TIP fa859918467cb28c · CHAIN PASS</div>
+
+    <h2 class="section">The Door &amp; The Spine</h2>
+    <div class="seats"><article class="seat fixture"><div class="seat-top"><span class="seat-name">THE DOOR</span><span class="chip zero">SEAT ZERO — TAYLOR'S</span></div><div class="seat-role">the floor&#x27;s entrance (Taylor&#x27;s seat-zero)</div><a class="charter-link" href="seats/door.md">charter</a></article><article class="seat fixture"><div class="seat-top"><span class="seat-name">THE REGISTER</span><span class="chip spine">THE SPINE — LIVE MIRROR</span></div><div class="seat-role">the spine (mirror state &amp; chain verification)</div><a class="charter-link" href="seats/register-issue.md">charter</a></article></div>
+
+    <h2 class="section">The Floor — Fourteen Seats</h2>
+    <h3 class="wing-name">ORCHESTRA</h3><div class="seats"><article class="seat floor"><div class="seat-top"><span class="seat-name">SEREPHIM</span><span class="chip live">LIVE</span></div><div class="seat-role">Dispatch (ORCHESTRA)</div><a class="charter-link" href="seats/floor/SEREPHIM.md">charter</a></article><article class="seat floor"><div class="seat-top"><span class="seat-name">GATE</span><span class="chip live">LIVE</span></div><div class="seat-role">Admission (ORCHESTRA)</div><a class="charter-link" href="seats/floor/GATE.md">charter</a></article><article class="seat floor"><div class="seat-top"><span class="seat-name">FLOW</span><span class="chip live">LIVE</span></div><div class="seat-role">Ledger chain (ORCHESTRA)</div><a class="charter-link" href="seats/floor/FLOW.md">charter</a></article></div><h3 class="wing-name">VERIFY</h3><div class="seats"><article class="seat floor"><div class="seat-top"><span class="seat-name">VERIFIER</span><span class="chip live">LIVE</span></div><div class="seat-role">Recompute (VERIFY)</div><a class="charter-link" href="seats/floor/VERIFIER.md">charter</a></article><article class="seat floor"><div class="seat-top"><span class="seat-name">JUDGE</span><span class="chip live">LIVE</span></div><div class="seat-role">Formal rulings (VERIFY)</div><a class="charter-link" href="seats/floor/JUDGE.md">charter</a></article><article class="seat floor"><div class="seat-top"><span class="seat-name">CRYPTO</span><span class="chip live">LIVE</span></div><div class="seat-role">Receipts and hashes (VERIFY)</div><a class="charter-link" href="seats/floor/CRYPTO.md">charter</a></article></div><h3 class="wing-name">BUILD</h3><div class="seats"><article class="seat floor"><div class="seat-top"><span class="seat-name">FORGE</span><span class="chip live">LIVE</span></div><div class="seat-role">Code, HDL, sims (BUILD)</div><a class="charter-link" href="seats/floor/FORGE.md">charter</a></article><article class="seat floor"><div class="seat-top"><span class="seat-name">ATELIER</span><span class="chip live">LIVE</span></div><div class="seat-role">Creative builds (BUILD)</div><a class="charter-link" href="seats/floor/ATELIER.md">charter</a></article><article class="seat floor"><div class="seat-top"><span class="seat-name">SCRIBE</span><span class="chip live">LIVE</span></div><div class="seat-role">Documents (BUILD)</div><a class="charter-link" href="seats/floor/SCRIBE.md">charter</a></article></div><h3 class="wing-name">HOUSE</h3><div class="seats"><article class="seat floor"><div class="seat-top"><span class="seat-name">TINKER</span><span class="chip live">LIVE</span></div><div class="seat-role">Drive organisation (HOUSE)</div><a class="charter-link" href="seats/floor/TINKER.md">charter</a></article><article class="seat floor"><div class="seat-top"><span class="seat-name">PHONE_ELF</span><span class="chip live">LIVE</span></div><div class="seat-role">Inbox sorting (HOUSE)</div><a class="charter-link" href="seats/floor/PHONE_ELF.md">charter</a></article><article class="seat floor"><div class="seat-top"><span class="seat-name">WARDEN</span><span class="chip live">LIVE</span></div><div class="seat-role">The watches (HOUSE)</div><a class="charter-link" href="seats/floor/WARDEN.md">charter</a></article><article class="seat floor"><div class="seat-top"><span class="seat-name">SCOUT</span><span class="chip live">LIVE</span></div><div class="seat-role">Market + intel (HOUSE)</div><a class="charter-link" href="seats/floor/SCOUT.md">charter</a></article><article class="seat floor"><div class="seat-top"><span class="seat-name">TOLL</span><span class="chip live">LIVE</span></div><div class="seat-role">Revenue (HOUSE)</div><a class="charter-link" href="seats/floor/TOLL.md">charter</a></article></div>
+
+    <h2 class="section">The Hive Wing — Nine Seats</h2>
+    <h3 class="wing-name">THE HIVE WING</h3><p class="wing-note">Four live through their floor successors; four structure-only; seat nine is the named gap (NH-10) — it is filled only when the record yields the name, or Taylor speaks it.</p><div class="seats"><article class="seat hive"><div class="seat-top"><span class="seat-name">01 SEREPHIM</span><span class="chip live">LIVE</span></div><div class="seat-role">Dispatch — HIVE lead</div><a class="charter-link" href="seats/hive/HIVE-01-SEREPHIM.md">charter</a></article><article class="seat hive"><div class="seat-top"><span class="seat-name">02 SG-VERIFIER</span><span class="chip live">LIVE</span></div><div class="seat-role">Verification</div><a class="charter-link" href="seats/hive/HIVE-02-SG-VERIFIER.md">charter</a></article><article class="seat hive"><div class="seat-top"><span class="seat-name">03 CRYPTOGRAPHER</span><span class="chip live">LIVE</span></div><div class="seat-role">Receipts and hashes</div><a class="charter-link" href="seats/hive/HIVE-03-CRYPTOGRAPHER.md">charter</a></article><article class="seat hive"><div class="seat-top"><span class="seat-name">04 FORMAL-JUDGE</span><span class="chip live">LIVE</span></div><div class="seat-role">Formal rulings (GRIMM)</div><a class="charter-link" href="seats/hive/HIVE-04-FORMAL-JUDGE.md">charter</a></article><article class="seat hive"><div class="seat-top"><span class="seat-name">05 DESTROYER</span><span class="chip structure">STRUCTURE-ONLY</span></div><div class="seat-role">Adversarial attack</div><a class="charter-link" href="seats/hive/HIVE-05-DESTROYER.md">charter</a></article><article class="seat hive"><div class="seat-top"><span class="seat-name">06 MUTATOR</span><span class="chip structure">STRUCTURE-ONLY</span></div><div class="seat-role">Variation</div><a class="charter-link" href="seats/hive/HIVE-06-MUTATOR.md">charter</a></article><article class="seat hive"><div class="seat-top"><span class="seat-name">07 EXPERIMENTALIST</span><span class="chip structure">STRUCTURE-ONLY</span></div><div class="seat-role">Experiments</div><a class="charter-link" href="seats/hive/HIVE-07-EXPERIMENTALIST.md">charter</a></article><article class="seat hive"><div class="seat-top"><span class="seat-name">08 SYNTHESIZER</span><span class="chip structure">STRUCTURE-ONLY</span></div><div class="seat-role">Synthesis</div><a class="charter-link" href="seats/hive/HIVE-08-SYNTHESIZER.md">charter</a></article><article class="seat hive"><div class="seat-top"><span class="seat-name">09 SEAT-NINE</span><span class="chip unresolved">UNRESOLVED</span></div><div class="seat-role">UNRESOLVED</div><a class="charter-link" href="seats/hive/HIVE-09-SEAT-NINE.md">charter</a></article></div>
+
+    <h2 class="section">The Charter</h2>
+    <div class="charter-body"><h2>THE FLOOR — CHARTER</h2>
+<p><strong>Repo:</strong> <code>snowphamtom/the-swarm</code> (PRIVATE — the swarm interior is confidential; the impenetrable posture governs everything in this repo). <strong>Design of record:</strong> <code>Optimal_Bot_Swarm_Design_2026-10-22.html</code> (Monsters Ink LLC). <strong>Seats of record:</strong> <code>seats.json</code> v1.1, adopted 2026-10-22. <strong>Spine:</strong> the register — an append-only, hash-chained ledger. The VM copy is canonical; <code>register/register.jsonl</code> in this repo is its verified mirror.</p>
+<h3>The admission law (the GATE) — Taylor&#x27;s text, unchanged</h3>
+<blockquote><p>The swarm&#x27;s admission law is the refusal law, unchanged: measure what is left over after an interaction; admit only what fits inside that leftover; otherwise refuse and record the refusal.</p><p>A task is admitted to a seat only if it fits that seat&#x27;s leftover — capacity, evidence, authority. Everything else is refused and the refusal is recorded.</p></blockquote>
+<h3>How the floor works on GitHub</h3>
+<ul><li><strong>One issue per seat.</strong> A seat&#x27;s issue is its thread and its charter: the</li></ul>
+<p>body pins the seat&#x27;s wing, occupant, cadence, capacity, and scopes from <code>seats.json</code>. No seat speaks without its issue.</p>
+<ul><li><strong>Admission events</strong> (a packet admitted, a packet refused, a receipt) are</li></ul>
+<p>recorded as comments on the seat&#x27;s issue <strong>and</strong> as rows in the register. The register is the proof; the issue is the window.</p>
+<ul><li><strong>Labels are the state.</strong> <code>seat:&lt;id&gt;</code> names the seat, <code>wing:&lt;name&gt;</code> its</li></ul>
+<p>wing, <code>state:live|structure|admitted|refused|unresolved</code> its standing. A seat whose state label changes gets a comment saying why, in the same act.</p>
+<ul><li><strong>The HIVE is a wing of this floor</strong>, not a second repo — one floor, per</li></ul>
+<p>the design of record. Its nine seats carry <code>wing:hive</code> + <code>hive:&lt;name&gt;</code>. Four live through their successors on the floor; four are structure-only; the ninth seat is <strong>UNRESOLVED</strong> (NH-10) and is never invented.</p>
+<ul><li><strong>TOLL&#x27;s limits carry over exactly:</strong> TOLL cannot sign, send, submit, or</li></ul>
+<p>spend. Its scopes here are what they are on the VM: sweep, adjudicate, stage.</p>
+<ul><li><strong>Standing grants</strong> (from <code>seats.json</code>): ALW-GITHUB-T2RZZ7 (github-write,</li></ul>
+<p>to 2026-11-19), ALW-GMAIL-LCNRUX (gmail, to 2026-11-19), ALL-ACCESS-2026-10-22. Disclosure-class scopes are never covered by a standing grant: publishing unfiled matter needs Taylor&#x27;s per-action decision.</p>
+<h3>What is live, with and without the Actions workflows</h3>
+<p>The Muse GitHub App can read/write issues, comments, labels, and ordinary files here — <strong>the floor runs on those powers alone from its first push.</strong> The App cannot create this repo (403, measured 2026-10-23) and cannot push workflow files (the Workflows permission is Taylor&#x27;s item T1, ungranted).</p>
+<ul><li><strong>Live without workflows:</strong> every seat issue and its thread; label state;</li></ul>
+<p>the register mirror as files (pushed by the VM mirror script under the house push lock); Taylor&#x27;s window and hand through Working Copy.</p>
+<ul><li><strong>Added when Taylor pushes <code>.github/workflows/</code> from Working Copy:</strong></li></ul>
+<p><code>register-mirror-check</code> re-verifies the mirrored chain on a 30-minute rhythm and comments on the register issue if the chain ever breaks; <code>seat-heartbeat</code> posts a cycle-state comment on the FLOW seat issue hourly. Until then, the VM&#x27;s own crons (FLOW 30-minute sweep, the keeper watchdog) remain the rhythm, exactly as they are today.</p>
+<h3>Durability — why this repo exists</h3>
+<p>The VM that runs the swarm dies to platform churn roughly hourly; the register, the keeper, and the reaper record prove it. This repo is the durable substrate: the register mirror means the chain&#x27;s verified state survives any single VM death and is readable from Taylor&#x27;s phone. If the VM register and this mirror ever disagree, the mirror&#x27;s <code>REGISTER_STATE.json</code> names the last verified tip — the chain is re-derived from the VM original, never from the mirror alone.</p>
+<p><em>Staged 2026-10-23T12:45:31Z. Register at staging: 325 rows, tip <code>5e59f5b80db0ab1b</code>.</em></p></div>
+    <p style="font-size:12.5px;color:var(--ice-dim)">The charter as a file: <a class="charter-link" href="CHARTER.md">CHARTER.md</a> ·
+    the board: <a class="charter-link" href="STATUS.md">STATUS.md</a> ·
+    the proof: <a class="charter-link" href="PROOF.md">PROOF.md</a></p>
+
+    <h2 class="section">The Register Window</h2>
+    <div class="regwin">
+      <div><span class="k">Rows</span> · <span class="mono">329</span></div>
+      <div><span class="k">Tip</span> · <span class="mono">fa859918467cb28c4068168ae31291bcbbc915e51a997b8546f8838d5ac2a03c</span></div>
+      <div><span class="k">Chain</span> · <span class="pass">PASS</span> — full chain re-verified 2026-10-23T12:59:08Z</div>
+      <div><span class="k">Mirror file SHA-256</span> · <span class="mono">da75d5e4edba19605937ddccef48f2477a7e79ae540dde2a1770ed2ad14de62d</span></div>
+      <div><span class="k">Mirror bytes</span> · <span class="mono">361,476</span></div>
+      <div><span class="k">By kind</span> · <span class="mono">DESIGN_ADOPTED 1 · NOTE 262 · PACKET_ADMITTED 31 · PACKET_REFUSED 5 · POLICY 1 · RECEIPT 16 · SEAT_DECLARED 13</span></div>
+      <p style="color:var(--ice-dim);font-size:12.5px;margin:12px 0 0">
+        The VM register is canonical; this window is its verified mirror at the recorded
+        time — byte-identical, hash-chained, and re-verified before every push. A chain
+        that does not verify is never mirrored. The mirror itself:
+        <a class="charter-link" href="register/register.jsonl">register.jsonl</a> ·
+        <a class="charter-link" href="register/REGISTER_STATE.json">REGISTER_STATE.json</a></p>
+    </div>
+  </main>
+
+  <footer>SEQUESTERED&nbsp;YETI&nbsp;·&nbsp;BELLEVUE,&nbsp;NEBRASKA<br/>
+  LINKED FROM NOWHERE · FOUND ONLY BY THOSE WHO WERE TOLD</footer>
+</div>
+
+<script>
+(function(){
+  // The recognition phrase, as the conductor set it — the same voice the
+  // cave's door knows. The floor conducts no one anywhere: no redirect,
+  // no link leaves this folder, and nothing is transmitted; there is no server.
+  var PHRASE = "this is yeti the conductor";
+  var wrong = 0;
+  var locked = false;
+  var form = document.getElementById('gateform');
+  var input = document.getElementById('voice');
+  var reply = document.getElementById('reply');
+  var button = document.getElementById('enter');
+  var acceptBtn = document.getElementById('accept');
+  var acceptedEl = document.getElementById('accepted');
+
+  // Click-to-accept: the box stays shut until the confidence is accepted.
+  // The acceptance is kept only in this browser's own local storage.
+  var acceptedAt = null;
+  try { acceptedAt = window.localStorage.getItem('swarm-accepted'); } catch (e) { acceptedAt = null; }
+
+  function showAccepted(ts){
+    acceptedEl.textContent = "Accepted: " + new Date(ts).toLocaleString();
+    acceptBtn.style.display = 'none';
+    input.disabled = false;
+    button.disabled = false;
+  }
+  if (acceptedAt) { showAccepted(isNaN(+acceptedAt) ? acceptedAt : +acceptedAt); }
+  acceptBtn.addEventListener('click', function(){
+    var ts = Date.now();
+    try { window.localStorage.setItem('swarm-accepted', String(ts)); } catch (e) {}
+    showAccepted(ts);
+    input.focus();
+  });
+
+  function normalize(s){
+    return (s || "")
+      .toLowerCase()
+      .replace(/[‘’]/g, "'")
+      .replace(/[“”]/g, '"')
+      .replace(/[^a-z0-9' ]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function lockout(){
+    locked = true;
+    input.disabled = true;
+    button.disabled = true;
+    setTimeout(function(){
+      input.disabled = false;
+      button.disabled = false;
+      locked = false;
+      wrong = 0;
+    }, 60000);
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if (locked || input.disabled) { return; }
+    var said = normalize(input.value);
+    if (said === PHRASE) {
+      reply.textContent = "The cave knows that voice.";
+      document.body.classList.add('open');
+      document.getElementById('floor').scrollIntoView({behavior:'smooth'});
+    } else {
+      // Silence. No message, no count, no change — the seam stays dark.
+      // After five wrong voices the box rests, silently, for a minute.
+      wrong += 1;
+      if (wrong >= 5) { lockout(); }
+    }
+  });
+})();
+</script>
+</body>
+</html>
