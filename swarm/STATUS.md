@@ -1,6 +1,6 @@
 # STATUS — THE FLOOR ON THE SITE
 
-*Landed 2026-10-23T13:08:39Z under Taylor's directive of 2026-10-23 07:54 CT
+*Landed 2026-10-23T13:20:44Z under Taylor's directive of 2026-10-23 07:54 CT
 ("Generate private swarm using my site and GitHub"). This board is
 regenerated at each landing.*
 
@@ -19,17 +19,16 @@ is the signpost and the mirror; the floor itself lives and works behind the
 door.
 
 The private `the-swarm` repo of the earlier plan does not exist and the App
-cannot create it (403, measured 2026-10-23 — item T3). That plan is
-superseded by this landing, struck-but-visible in the kit's staging record
-(`~/workspace/swarm_github/` on the VM).
+cannot create it (refused — measured 2026-10-23). That plan is superseded by
+this landing; its staging record is kept on the house machine.
 
 ## Register at the landing
 
-- **Rows:** 329
-- **Tip:** `fa859918467cb28c4068168ae31291bcbbc915e51a997b8546f8838d5ac2a03c`
-- **Chain:** PASS — full chain re-verified at the build (2026-10-23T13:08:39Z)
-- **Mirror file SHA-256:** `da75d5e4edba19605937ddccef48f2477a7e79ae540dde2a1770ed2ad14de62d`
-- **By kind:** DESIGN_ADOPTED 1 · NOTE 262 · PACKET_ADMITTED 31 · PACKET_REFUSED 5 · POLICY 1 · RECEIPT 16 · SEAT_DECLARED 13
+- **Rows:** 334
+- **Tip:** `0b18b01c3ae28ea5cc6bf15b3c3f4056886806e63bd4149d0f4e60f5c766ed43`
+- **Chain:** VERIFIED — the full chain re-checked at the build (2026-10-23T13:20:44Z)
+- **Register file SHA-256:** `879d5a931f5248229221d1409b646b0580c126d878ed6bcb5fd94bdb3cf820ed`
+- **Admissions · refusals · receipts:** 31 · 5 · 16
 
 ## Seats (from seats.json v1.1, via the kit's manifest)
 
@@ -63,10 +62,10 @@ superseded by this landing, struck-but-visible in the kit's staging record
 
 ORCHESTRA: SEREPHIM · GATE · FLOW — VERIFY: VERIFIER · JUDGE · CRYPTO —
 BUILD: FORGE · ATELIER · SCRIBE — HOUSE: TINKER · PHONE_ELF · WARDEN ·
-SCOUT · TOLL. All 14 LIVE on the VM today.
+SCOUT · TOLL. All 14 LIVE at the house today.
 HIVE wing: SEREPHIM, SG-VERIFIER, CRYPTOGRAPHER, FORMAL-JUDGE live through
 their floor successors; DESTROYER, MUTATOR, EXPERIMENTALIST, SYNTHESIZER
-structure-only; **seat nine UNRESOLVED (NH-10) — never invented.**
+structure-only; **seat nine UNRESOLVED — never invented.**
 
 ## Carried to the site repo (all under swarm/)
 
@@ -85,7 +84,7 @@ structure-only; **seat nine UNRESOLVED (NH-10) — never invented.**
   superseded by this landing.
 - `push/` — the repo-push manifest for the superseded plan.
 - `.github/workflows/` — the App cannot push workflow files anywhere
-  (Workflows permission, item T1). Reference copies ride under
+  (it lacks the Workflows permission). Reference copies ride under
   `workflows-to-push/`; no workflow is placed by this landing.
 
 ## Taylor acts remaining

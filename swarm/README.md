@@ -23,12 +23,12 @@ door. The work itself happens in the workshop.
   THE REGISTER, the 14 floor seats, and the HIVE wing of nine (seat nine
   UNRESOLVED, never invented).
 - **Register mirror:** `register/register.jsonl` +
-  `register/REGISTER_STATE.json` — verified byte-identical to the VM
-  canonical register at every push.
+  `register/REGISTER_STATE.json` — verified byte-identical to the house
+  register at every publication.
 - **Workflows:** `workflows-to-push/` — reference copies only. The App
-  cannot push workflow files anywhere (Workflows permission, Taylor item
-  T1); no workflow is placed by this landing.
+  cannot push workflow files anywhere (it lacks the Workflows permission);
+  no workflow is placed by this landing.
 
 PRIVATE. Linked from nowhere public. The swarm interior is confidential.
 
-*Landing: 2026-10-23T13:08:39Z · register 329 rows · tip `fa859918467cb28c` · chain PASS.*
+*Landing: 2026-10-23T13:20:44Z · register 334 rows · tip `0b18b01c3ae28ea5` · chain verified.*
