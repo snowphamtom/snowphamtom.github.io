@@ -13,12 +13,14 @@ architecture: syndrome calculator + admission classifier
 <p><b>Verified:</b> exhaustive RTL simulation against an independent golden
 model — 143,005 vectors per decoder (every signed pattern of weight ≤ 3,
 plus tails): <b>PASS, 0 errors, both decoders</b>. Yosys generic synthesis:
-5,055 and 5,236 cells. <b>No Fmax and no throughput figure is claimed</b> —
-none has been measured against a target library.</p>
+5,055 and 5,236 cells. <b>Measured Fmax</b> (Lattice ECP5 LFE5U-85F, post-place-and-route,
+2026-10-22): F₆₄ <b>21.98 MHz</b>, GF(2⁷) <b>23.24 MHz</b> — see
+<a href="fmax_record.md">fmax_record.md</a> for the flow and its caveat.</p>
 <ul>
 <li><a href="README.md">README.md</a> — architecture, verification, scope</li>
 <li><a href="rtl/decoder_f64.v">rtl/decoder_f64.v</a> · <a href="rtl/decoder_gf128.v">rtl/decoder_gf128.v</a> · <a href="rtl/sidon_classifier.v">rtl/sidon_classifier.v</a> · <a href="rtl/syndrome_calc.v">rtl/syndrome_calc.v</a></li>
 <li><a href="tb/tb_decoder.v">tb/tb_decoder.v</a> · <a href="gen_vectors.py">gen_vectors.py</a> — testbench and golden model</li>
 <li><a href="sim_f64.log">sim_f64.log</a> · <a href="sim_gf128.log">sim_gf128.log</a> — PASS receipts</li>
+<li><a href="fmax_record.md">fmax_record.md</a> · <a href="fmax/v7_wrap_f64_pnr.log">fmax/v7_wrap_f64_pnr.log</a> · <a href="fmax/v7_wrap_gf128_pnr.log">fmax/v7_wrap_gf128_pnr.log</a> — the Fmax measurement</li>
 <li><a href="SHA256SUMS.txt">SHA256SUMS.txt</a></li>
 </ul></body></html>

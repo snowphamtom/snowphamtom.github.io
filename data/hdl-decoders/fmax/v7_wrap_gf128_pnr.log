@@ -1,0 +1,488 @@
+
+
+Info: Logic utilisation before packing:
+Info:     Total LUT4s:      1985/83640     2%
+Info:         logic LUTs:   1985/83640     2%
+Info:         carry LUTs:      0/83640     0%
+Info:           RAM LUTs:      0/10455     0%
+Info:          RAMW LUTs:      0/20910     0%
+
+Info:      Total DFFs:       105/83640     0%
+
+Info: Packing IOs..
+Info: Packing constants..
+Info: Packing carries...
+Info: Packing LUTs...
+Info: Packing LUT5-7s...
+Info: Packing FFs...
+Info:     9 FFs paired with LUTs.
+Info: Generating derived timing constraints...
+Info: Promoting globals...
+Info:     promoting clock net clk$TRELLIS_IO_IN to global network
+Info: Checksum: 0x1474e1d5
+
+Info: Device utilisation:
+Info: 	          TRELLIS_IO:     106/    365    29%
+Info: 	                DCCA:       1/     56     1%
+Info: 	              DP16KD:       0/    208     0%
+Info: 	          MULT18X18D:       0/    156     0%
+Info: 	              ALU54B:       0/     78     0%
+Info: 	             EHXPLLL:       0/      4     0%
+Info: 	             EXTREFB:       0/      2     0%
+Info: 	                DCUA:       0/      2     0%
+Info: 	           PCSCLKDIV:       0/      2     0%
+Info: 	             IOLOGIC:       0/    224     0%
+Info: 	            SIOLOGIC:       0/    141     0%
+Info: 	                 GSR:       0/      1     0%
+Info: 	               JTAGG:       0/      1     0%
+Info: 	                OSCG:       0/      1     0%
+Info: 	               SEDGA:       0/      1     0%
+Info: 	                 DTR:       0/      1     0%
+Info: 	             USRMCLK:       0/      1     0%
+Info: 	             CLKDIVF:       0/      4     0%
+Info: 	           ECLKSYNCB:       0/     10     0%
+Info: 	             DLLDELD:       0/      8     0%
+Info: 	              DDRDLL:       0/      4     0%
+Info: 	             DQSBUFM:       0/     14     0%
+Info: 	     TRELLIS_ECLKBUF:       0/      8     0%
+Info: 	        ECLKBRIDGECS:       0/      2     0%
+Info: 	                DCSC:       0/      2     0%
+Info: 	          TRELLIS_FF:     105/  83640     0%
+Info: 	        TRELLIS_COMB:    1987/  83640     2%
+Info: 	        TRELLIS_RAMW:       0/  10455     0%
+
+Info: Placed 0 cells based on constraints.
+Info: Creating initial analytic placement for 2082 cells, random placement wirelen = 236256.
+Info:     at initial placer iter 0, wirelen = 9286
+Info:     at initial placer iter 1, wirelen = 8967
+Info:     at initial placer iter 2, wirelen = 8955
+Info:     at initial placer iter 3, wirelen = 8940
+Info: Running main analytical placer, max placement attempts per cell = 604450.
+Info:     at iteration #1, type ALL: wirelen solved = 8959, spread = 22603, legal = 22614; time = 0.05s
+Info:     at iteration #2, type ALL: wirelen solved = 9080, spread = 20622, legal = 20626; time = 0.03s
+Info:     at iteration #3, type ALL: wirelen solved = 9210, spread = 19987, legal = 20026; time = 0.03s
+Info:     at iteration #4, type ALL: wirelen solved = 9480, spread = 19884, legal = 19909; time = 0.03s
+Info:     at iteration #5, type ALL: wirelen solved = 9637, spread = 19514, legal = 19514; time = 0.03s
+Info:     at iteration #6, type ALL: wirelen solved = 9829, spread = 19558, legal = 19585; time = 0.03s
+Info:     at iteration #7, type ALL: wirelen solved = 10027, spread = 18983, legal = 19066; time = 0.03s
+Info:     at iteration #8, type ALL: wirelen solved = 10477, spread = 18472, legal = 18472; time = 0.03s
+Info:     at iteration #9, type ALL: wirelen solved = 10886, spread = 17899, legal = 17963; time = 0.03s
+Info:     at iteration #10, type ALL: wirelen solved = 11253, spread = 18140, legal = 18140; time = 0.03s
+Info:     at iteration #11, type ALL: wirelen solved = 11557, spread = 18196, legal = 18350; time = 0.03s
+Info:     at iteration #12, type ALL: wirelen solved = 11952, spread = 18217, legal = 18282; time = 0.03s
+Info:     at iteration #13, type ALL: wirelen solved = 12315, spread = 18025, legal = 18102; time = 0.03s
+Info:     at iteration #14, type ALL: wirelen solved = 12850, spread = 18131, legal = 18154; time = 0.03s
+Info: HeAP Placer Time: 0.71s
+Info:   of which solving equations: 0.42s
+Info:   of which spreading cells: 0.08s
+Info:   of which strict legalisation: 0.01s
+
+Info: Running simulated annealing placer for refinement.
+Info:   at iteration #1: temp = 0.000000, timing cost = 2135, wirelen = 17963
+Info:   at iteration #5: temp = 0.000000, timing cost = 1869, wirelen = 14663
+Info:   at iteration #10: temp = 0.000000, timing cost = 2003, wirelen = 14066
+Info:   at iteration #15: temp = 0.000000, timing cost = 1780, wirelen = 13857
+Info:   at iteration #20: temp = 0.000000, timing cost = 1808, wirelen = 13746
+Info:   at iteration #21: temp = 0.000000, timing cost = 1814, wirelen = 13738 
+Info: SA placement time 1.88s
+
+Info: Max frequency for clock '$glbnet$clk$TRELLIS_IO_IN': 25.44 MHz (FAIL at 200.00 MHz)
+
+Info: Max delay <async>                           -> posedge $glbnet$clk$TRELLIS_IO_IN: 12.00 ns
+Info: Max delay posedge $glbnet$clk$TRELLIS_IO_IN -> <async>                          : 9.40 ns
+
+Info: Slack histogram:
+Info:  legend: times are in ps
+Info:          * represents 1 endpoint(s)
+Info:          + represents [1,1) endpoint(s)
+Info: [-34301, -33423) |**** 
+Info: [-33423, -32545) |* 
+Info: [-32545, -31667) | 
+Info: [-31667, -30789) | 
+Info: [-30789, -29911) | 
+Info: [-29911, -29033) | 
+Info: [-29033, -28155) | 
+Info: [-28155, -27277) | 
+Info: [-27277, -26399) | 
+Info: [-26399, -25521) | 
+Info: [-25521, -24643) | 
+Info: [-24643, -23765) | 
+Info: [-23765, -22887) |** 
+Info: [-22887, -22009) |** 
+Info: [-22009, -21131) |** 
+Info: [-21131, -20253) | 
+Info: [-20253, -19375) | 
+Info: [-19375, -18497) | 
+Info: [-18497, -17619) | 
+Info: [-17619, -16741) |****** 
+Info: Checksum: 0xb288729c
+Info: Routing globals...
+Info:     routing clock net $glbnet$clk$TRELLIS_IO_IN using global 0
+
+Info: Routing..
+Info: Setting up routing queue.
+Info: Routing 6091 arcs.
+Info:            |   (re-)routed arcs  |   delta    | remaining|       time spent     |
+Info:    IterCnt |  w/ripup   wo/ripup |  w/r  wo/r |      arcs| batch(sec) total(sec)|
+Info:       1000 |      351        648 |  351   648 |      5535|       0.25       0.25|
+Info:       2000 |      881       1118 |  530   470 |      5181|       0.25       0.50|
+Info:       3000 |     1402       1597 |  521   479 |      4886|       0.25       0.75|
+Info:       4000 |     1953       2046 |  551   449 |      4626|       0.27       1.02|
+Info:       5000 |     2517       2482 |  564   436 |      4305|       0.28       1.30|
+Info:       6000 |     3087       2912 |  570   430 |      4009|       0.31       1.61|
+Info:       7000 |     3711       3288 |  624   376 |      3795|       0.32       1.93|
+Info:       8000 |     4312       3687 |  601   399 |      3504|       0.30       2.23|
+Info:       9000 |     4964       4035 |  652   348 |      3303|       0.30       2.53|
+Info:      10000 |     5554       4445 |  590   410 |      3018|       0.30       2.83|
+Info:      11000 |     6174       4825 |  620   380 |      2739|       0.28       3.11|
+Info:      12000 |     6854       5145 |  680   320 |      2530|       0.25       3.36|
+Info:      13000 |     7474       5525 |  620   380 |      2239|       0.25       3.62|
+Info:      14000 |     8060       5939 |  586   414 |      1914|       0.26       3.88|
+Info:      15000 |     8778       6221 |  718   282 |      1692|       0.25       4.13|
+Info:      16000 |     9494       6505 |  716   284 |      1522|       0.26       4.39|
+Info:      17000 |    10205       6794 |  711   289 |      1296|       0.22       4.61|
+Info:      18000 |    10911       7088 |  706   294 |      1042|       0.24       4.85|
+Info:      19000 |    11615       7384 |  704   296 |       803|       0.25       5.10|
+Info:      20000 |    12308       7691 |  693   307 |       543|       0.25       5.34|
+Info:      21000 |    12931       8068 |  623   377 |       240|       0.25       5.60|
+Info:      21390 |    13069       8321 |  138   253 |         0|       0.17       5.77|
+Info: Routing complete.
+Info: Router1 time 5.77s
+Info: Checksum: 0xf05f01a1
+
+Info: Critical path report for clock '$glbnet$clk$TRELLIS_IO_IN' (posedge -> posedge):
+Info:       type curr  total name
+Info:   clk-to-q  0.52  0.52 Source lanes_r_TRELLIS_FF_Q_77.Q
+Info:    routing  0.63  1.15 Net lanes_r[26] (42,23) -> (42,23)
+Info:                          Sink u_dec.syn_LUT4_Z_18_D_LUT4_Z.D
+Info:                          Defined in:
+Info:                               ../rtl/syndrome_calc.v:12.28-12.33
+Info:      logic  0.24  1.39 Source u_dec.syn_LUT4_Z_18_D_LUT4_Z.F
+Info:    routing  0.62  2.01 Net u_dec.syn_LUT4_Z_18_C[1] (42,23) -> (42,23)
+Info:                          Sink u_dec.u_calc.pos_m_LUT4_Z_10.D
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  2.25 Source u_dec.u_calc.pos_m_LUT4_Z_10.F
+Info:    routing  0.51  2.76 Net u_dec.u_calc.pos_m[13] (42,23) -> (42,21)
+Info:                          Sink u_dec.syn_LUT4_Z_7_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_D_Z_LUT4_Z_C_LUT4_B_Z_LUT4_Z_D_LUT4_Z_D_LUT4_Z_D_LUT4_D_Z_LUT4_Z_C_LUT4_C_Z_LUT4_Z_2_D_LUT4_D_Z_LUT4_C_B_LUT4_D_C_LUT4_C_Z_LUT4_Z_B_LUT4_Z.D
+Info:                          Defined in:
+Info:                               ../rtl/syndrome_calc.v:17.16-17.21
+Info:      logic  0.24  2.99 Source u_dec.syn_LUT4_Z_7_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_D_Z_LUT4_Z_C_LUT4_B_Z_LUT4_Z_D_LUT4_Z_D_LUT4_Z_D_LUT4_D_Z_LUT4_Z_C_LUT4_C_Z_LUT4_Z_2_D_LUT4_D_Z_LUT4_C_B_LUT4_D_C_LUT4_C_Z_LUT4_Z_B_LUT4_Z.F
+Info:    routing  0.88  3.88 Net u_dec.syn_LUT4_Z_7_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_D_Z_LUT4_Z_C_LUT4_B_Z_LUT4_Z_D_LUT4_Z_D_LUT4_Z_D_LUT4_D_Z_LUT4_Z_C_LUT4_C_Z_LUT4_Z_2_D_LUT4_D_Z_LUT4_C_B_LUT4_D_C_LUT4_C_Z_LUT4_Z_B[0] (42,21) -> (41,21)
+Info:                          Sink u_dec.syn_LUT4_Z_7_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_D_Z_LUT4_Z_C_LUT4_B_Z_LUT4_Z_D_LUT4_Z_D_LUT4_Z_D_LUT4_D_Z_LUT4_Z_C_LUT4_C_Z_LUT4_Z_2_D_LUT4_D_Z_LUT4_C_B_LUT4_D_C_LUT4_C_Z_LUT4_Z_B_LUT4_D.D
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  4.12 Source u_dec.syn_LUT4_Z_7_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_D_Z_LUT4_Z_C_LUT4_B_Z_LUT4_Z_D_LUT4_Z_D_LUT4_Z_D_LUT4_D_Z_LUT4_Z_C_LUT4_C_Z_LUT4_Z_2_D_LUT4_D_Z_LUT4_C_B_LUT4_D_C_LUT4_C_Z_LUT4_Z_B_LUT4_D.F
+Info:    routing  0.92  5.04 Net u_dec.syn_LUT4_Z_7_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_D_Z_LUT4_Z_C_LUT4_B_Z_LUT4_Z_D_LUT4_Z_D_LUT4_Z_D_LUT4_D_Z_LUT4_Z_C_LUT4_C_Z_LUT4_Z_2_D_LUT4_D_Z_LUT4_C_B_LUT4_D_C_LUT4_C_Z_LUT4_Z_B_LUT4_D_Z[1] (41,21) -> (38,21)
+Info:                          Sink u_dec.syn_LUT4_Z_14_D_LUT4_B_Z_LUT4_Z_2_C_LUT4_Z_D_LUT4_D_Z_LUT4_Z_D_LUT4_C_Z_LUT4_Z_1_D_LUT4_Z_1.B
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  5.27 Source u_dec.syn_LUT4_Z_14_D_LUT4_B_Z_LUT4_Z_2_C_LUT4_Z_D_LUT4_D_Z_LUT4_Z_D_LUT4_C_Z_LUT4_Z_1_D_LUT4_Z_1.F
+Info:    routing  0.60  5.87 Net u_dec.syn_LUT4_Z_14_D_LUT4_B_Z_LUT4_Z_2_C_LUT4_Z_D_LUT4_D_Z_LUT4_Z_D_LUT4_C_Z_LUT4_Z_1_D[1] (38,21) -> (38,21)
+Info:                          Sink u_dec.syn_LUT4_Z_14_D_LUT4_B_Z_LUT4_Z_2_C_LUT4_Z_D_LUT4_D_Z_LUT4_Z_D_LUT4_C_Z_LUT4_Z_1_D_LUT4_D.D
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  6.11 Source u_dec.syn_LUT4_Z_14_D_LUT4_B_Z_LUT4_Z_2_C_LUT4_Z_D_LUT4_D_Z_LUT4_Z_D_LUT4_C_Z_LUT4_Z_1_D_LUT4_D.F
+Info:    routing  0.97  7.08 Net u_dec.syn_LUT4_Z_14_D_LUT4_B_Z_LUT4_Z_2_C_LUT4_Z_D_LUT4_D_Z_LUT4_Z_D_LUT4_C_Z_LUT4_Z_1_D_LUT4_D_Z[0] (38,21) -> (34,25)
+Info:                          Sink u_dec.syn_LUT4_Z_14_D_LUT4_B_Z_LUT4_Z_2_C_LUT4_Z_D_LUT4_D_Z_LUT4_Z_D_LUT4_C_Z_LUT4_Z_1_D_LUT4_D_Z_LUT4_C.C
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  7.31 Source u_dec.syn_LUT4_Z_14_D_LUT4_B_Z_LUT4_Z_2_C_LUT4_Z_D_LUT4_D_Z_LUT4_Z_D_LUT4_C_Z_LUT4_Z_1_D_LUT4_D_Z_LUT4_C.F
+Info:    routing  0.60  7.91 Net u_dec.syn_LUT4_Z_14_D_LUT4_B_C_LUT4_Z_C_LUT4_Z_D_LUT4_Z_A[1] (34,25) -> (34,25)
+Info:                          Sink u_dec.syn_LUT4_Z_14_D_LUT4_B_D_LUT4_Z_C_LUT4_Z_D_LUT4_Z.C
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  8.15 Source u_dec.syn_LUT4_Z_14_D_LUT4_B_D_LUT4_Z_C_LUT4_Z_D_LUT4_Z.F
+Info:    routing  0.47  8.62 Net u_dec.syn_LUT4_Z_14_D_LUT4_B_D_LUT4_Z_C_LUT4_Z_D[0] (34,25) -> (33,25)
+Info:                          Sink u_dec.syn_LUT4_Z_14_D_LUT4_B_D_LUT4_Z_C_LUT4_Z.D
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/techmap.v:200.24-200.25
+Info:      logic  0.24  8.85 Source u_dec.syn_LUT4_Z_14_D_LUT4_B_D_LUT4_Z_C_LUT4_Z.F
+Info:    routing  0.50  9.35 Net u_dec.syn_LUT4_Z_14_D_LUT4_B_D_LUT4_Z_C[0] (33,25) -> (33,25)
+Info:                          Sink u_dec.syn_LUT4_Z_14_D_LUT4_B_C_LUT4_Z_C_LUT4_Z_D_LUT4_Z_A_LUT4_Z.D
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/techmap.v:203.19-203.21
+Info:      logic  0.24  9.59 Source u_dec.syn_LUT4_Z_14_D_LUT4_B_C_LUT4_Z_C_LUT4_Z_D_LUT4_Z_A_LUT4_Z.F
+Info:    routing  0.41  10.00 Net u_dec.syn_LUT4_Z_14_D_LUT4_B_C_LUT4_Z_C_LUT4_Z_D_LUT4_Z_A[0] (33,25) -> (34,25)
+Info:                          Sink u_dec.syn_LUT4_Z_14_D_LUT4_B_C_LUT4_Z_C_LUT4_Z_D_LUT4_Z.A
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  10.24 Source u_dec.syn_LUT4_Z_14_D_LUT4_B_C_LUT4_Z_C_LUT4_Z_D_LUT4_Z.F
+Info:    routing  0.22  10.45 Net u_dec.syn_LUT4_Z_14_D_LUT4_B_C_LUT4_Z_C_LUT4_Z_D[0] (34,25) -> (34,25)
+Info:                          Sink u_dec.syn_LUT4_Z_14_D_LUT4_B_C_LUT4_Z_C_LUT4_Z.D
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/techmap.v:200.21-200.22
+Info:      logic  0.24  10.69 Source u_dec.syn_LUT4_Z_14_D_LUT4_B_C_LUT4_Z_C_LUT4_Z.F
+Info:    routing  0.46  11.15 Net u_dec.syn_LUT4_Z_14_D_LUT4_B_C_LUT4_Z_C[1] (34,25) -> (33,25)
+Info:                          Sink u_dec.syn_LUT4_Z_14_D_LUT4_B_C_LUT4_Z.C
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/techmap.v:203.19-203.21
+Info:      logic  0.24  11.38 Source u_dec.syn_LUT4_Z_14_D_LUT4_B_C_LUT4_Z.F
+Info:    routing  0.22  11.60 Net u_dec.syn_LUT4_Z_14_D_LUT4_B_C[1] (33,25) -> (33,25)
+Info:                          Sink u_dec.syn_LUT4_Z_14_C_LUT4_Z.C
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/techmap.v:200.24-200.25
+Info:      logic  0.24  11.84 Source u_dec.syn_LUT4_Z_14_C_LUT4_Z.F
+Info:    routing  0.04  11.88 Net u_dec.syn_LUT4_Z_14_C[1] (33,25) -> (33,25)
+Info:                          Sink u_dec.syn_LUT4_Z_14_D_LUT4_B.A
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/techmap.v:287.21-287.22
+Info:      logic  0.24  12.11 Source u_dec.syn_LUT4_Z_14_D_LUT4_B.F
+Info:    routing  1.31  13.43 Net u_dec.syn_LUT4_Z_14_D_LUT4_B_Z[3] (33,25) -> (36,20)
+Info:                          Sink u_dec.syn_LUT4_Z_14_D_LUT4_B_Z_LUT4_D.D
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  13.66 Source u_dec.syn_LUT4_Z_14_D_LUT4_B_Z_LUT4_D.F
+Info:    routing  0.42  14.08 Net u_dec.syn_LUT4_Z_14_D_LUT4_B_Z_LUT4_D_Z[1] (36,20) -> (36,20)
+Info:                          Sink u_dec.syn_LUT4_Z_14_D_LUT4_B_C_LUT4_Z_C_LUT4_B_Z_LUT4_Z.B
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  14.32 Source u_dec.syn_LUT4_Z_14_D_LUT4_B_C_LUT4_Z_C_LUT4_B_Z_LUT4_Z.F
+Info:    routing  0.72  15.04 Net u_dec.syn_LUT4_Z_14_D_LUT4_B_C_LUT4_Z_C_LUT4_B_Z[0] (36,20) -> (34,21)
+Info:                          Sink u_dec.syn_LUT4_Z_14_D_LUT4_B_C_LUT4_Z_C_LUT4_B_Z_LUT4_D.B
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  15.28 Source u_dec.syn_LUT4_Z_14_D_LUT4_B_C_LUT4_Z_C_LUT4_B_Z_LUT4_D.F
+Info:    routing  0.52  15.80 Net u_dec.syn_LUT4_Z_14_D_LUT4_B_C_LUT4_Z_C_LUT4_B_Z_LUT4_D_Z (34,21) -> (35,20)
+Info:                          Sink u_dec.syn_LUT4_Z_6.D
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  16.03 Source u_dec.syn_LUT4_Z_6.F
+Info:    routing  0.47  16.51 Net u_dec.syn[14] (35,20) -> (35,20)
+Info:                          Sink u_dec.syn_LUT4_Z_33_C_LUT4_B_A_LUT4_C_Z_LUT4_Z.C
+Info:                          Defined in:
+Info:                               ../rtl/sidon_classifier.v:15.28-15.31
+Info:      logic  0.24  16.75 Source u_dec.syn_LUT4_Z_33_C_LUT4_B_A_LUT4_C_Z_LUT4_Z.F
+Info:    routing  0.42  17.17 Net u_dec.syn_LUT4_Z_11_D_LUT4_A_Z_LUT4_C_1_Z_LUT4_Z_C[0] (35,20) -> (34,20)
+Info:                          Sink u_dec.syn_LUT4_Z_18_C_LUT4_C_Z_LUT4_D_C_LUT4_B_Z_LUT4_D_Z_LUT4_Z_1.C
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  17.40 Source u_dec.syn_LUT4_Z_18_C_LUT4_C_Z_LUT4_D_C_LUT4_B_Z_LUT4_D_Z_LUT4_Z_1.F
+Info:    routing  0.93  18.33 Net u_dec.syn_LUT4_Z_14_D_LUT4_Z_B_LUT4_B_Z_LUT4_D_Z_LUT4_B_Z_LUT4_Z_B_LUT4_D_Z[2] (34,20) -> (33,20)
+Info:                          Sink u_dec.u_cls.mp_LUT4_Z_1_D_LUT4_D_Z_LUT4_Z_1_D_LUT4_D_Z_LUT4_Z_D_LUT4_D_Z_LUT4_Z_D_LUT4_Z.D
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  18.57 Source u_dec.u_cls.mp_LUT4_Z_1_D_LUT4_D_Z_LUT4_Z_1_D_LUT4_D_Z_LUT4_Z_D_LUT4_D_Z_LUT4_Z_D_LUT4_Z.F
+Info:    routing  0.91  19.48 Net u_dec.u_cls.mp_LUT4_Z_1_D_LUT4_D_Z_LUT4_Z_1_D_LUT4_D_Z_LUT4_Z_D_LUT4_D_Z_LUT4_Z_D[1] (33,20) -> (34,18)
+Info:                          Sink u_dec.u_cls.mp_LUT4_Z_1_D_LUT4_D_Z_LUT4_Z_1_D_LUT4_D_Z_LUT4_Z_D_LUT4_D_Z_LUT4_Z.D
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  19.72 Source u_dec.u_cls.mp_LUT4_Z_1_D_LUT4_D_Z_LUT4_Z_1_D_LUT4_D_Z_LUT4_Z_D_LUT4_D_Z_LUT4_Z.F
+Info:    routing  0.64  20.36 Net sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_C[0] (34,18) -> (34,18)
+Info:                          Sink sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_C_LUT4_Z.C
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  20.60 Source sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_C_LUT4_Z.F
+Info:    routing  0.48  21.07 Net sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_C[2] (34,18) -> (34,17)
+Info:                          Sink sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z.C
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  21.31 Source sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z.F
+Info:    routing  0.66  21.97 Net sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B[1] (34,17) -> (35,17)
+Info:                          Sink sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z_A_LUT4_Z.B
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  22.20 Source sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z_A_LUT4_Z.F
+Info:    routing  0.73  22.94 Net sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z_A[0] (35,17) -> (34,15)
+Info:                          Sink sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z.A
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  23.17 Source sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z.F
+Info:    routing  0.42  23.59 Net sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B[1] (34,15) -> (34,15)
+Info:                          Sink sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z.B
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  23.83 Source sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z.F
+Info:    routing  0.46  24.29 Net sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B[1] (34,15) -> (34,16)
+Info:                          Sink sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z.B
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  24.53 Source sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z.F
+Info:    routing  0.42  24.95 Net sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B[1] (34,16) -> (34,16)
+Info:                          Sink sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z_A_LUT4_Z.B
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  25.18 Source sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z_A_LUT4_Z.F
+Info:    routing  0.68  25.86 Net sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z_A[0] (34,16) -> (33,16)
+Info:                          Sink sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z.A
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  26.10 Source sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B_LUT4_Z.F
+Info:    routing  0.21  26.31 Net sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z_B[1] (33,16) -> (33,16)
+Info:                          Sink sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z.B
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  26.55 Source sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B_LUT4_Z.F
+Info:    routing  0.47  27.02 Net sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_B[1] (33,16) -> (32,16)
+Info:                          Sink sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z.B
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  27.25 Source sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z.F
+Info:    routing  0.68  27.93 Net sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B[1] (32,16) -> (31,16)
+Info:                          Sink sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z.B
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  28.17 Source sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z.F
+Info:    routing  0.21  28.38 Net sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A[0] (31,16) -> (31,16)
+Info:                          Sink sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z.A
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  28.62 Source sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z.F
+Info:    routing  0.82  29.44 Net sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B[1] (31,16) -> (31,20)
+Info:                          Sink sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z.B
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  29.68 Source sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z.F
+Info:    routing  0.72  30.40 Net sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A[0] (31,20) -> (29,21)
+Info:                          Sink sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z.A
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  30.64 Source sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z.F
+Info:    routing  0.41  31.05 Net sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B[1] (29,21) -> (29,21)
+Info:                          Sink sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z.B
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  31.29 Source sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z.F
+Info:    routing  0.42  31.70 Net sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A[0] (29,21) -> (29,21)
+Info:                          Sink sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z.A
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  31.94 Source sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z.F
+Info:    routing  0.73  32.67 Net sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B[1] (29,21) -> (27,20)
+Info:                          Sink sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z.B
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  32.90 Source sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z.F
+Info:    routing  0.50  33.40 Net sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z_A[0] (27,20) -> (27,20)
+Info:                          Sink sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z.A
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  33.64 Source sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B_LUT4_Z.F
+Info:    routing  0.47  34.11 Net sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_B[1] (27,20) -> (27,20)
+Info:                          Sink sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z.B
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  34.35 Source sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z.F
+Info:    routing  0.42  34.77 Net sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1_A[0] (27,20) -> (27,20)
+Info:                          Sink sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1.A
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  35.00 Source sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C_LUT4_Z_1.F
+Info:    routing  0.21  35.22 Net sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_1_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_C[1] (27,20) -> (27,20)
+Info:                          Sink sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z_LUT4_Z_1_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z.B
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  35.45 Source sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z_LUT4_Z_1_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z.F
+Info:    routing  0.71  36.17 Net sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z_LUT4_Z_1_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A[0] (27,20) -> (27,19)
+Info:                          Sink sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z_LUT4_Z_1_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z.A
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  36.40 Source sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z_LUT4_Z_1_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z.F
+Info:    routing  0.21  36.62 Net sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z_LUT4_Z_1_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B[1] (27,19) -> (27,19)
+Info:                          Sink sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z_LUT4_Z_1_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z.B
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  36.85 Source sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z_LUT4_Z_1_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z.F
+Info:    routing  0.04  36.89 Net sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z_LUT4_Z_1_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A[0] (27,19) -> (27,19)
+Info:                          Sink sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z_LUT4_Z_1_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z.A
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  37.13 Source sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z_LUT4_Z_1_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z.F
+Info:    routing  0.73  37.85 Net sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z_LUT4_Z_1_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B[1] (27,19) -> (26,18)
+Info:                          Sink sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z_LUT4_Z_1_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z.B
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  38.09 Source sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z_LUT4_Z_1_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z.F
+Info:    routing  0.42  38.51 Net sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z_LUT4_Z_1_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A[0] (26,18) -> (26,18)
+Info:                          Sink sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z_LUT4_Z_1_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z.A
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  38.74 Source sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z_LUT4_Z_1_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z.F
+Info:    routing  0.77  39.51 Net sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z_LUT4_Z_1_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B[1] (26,18) -> (27,16)
+Info:                          Sink sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z_LUT4_Z_1_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z.B
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  39.75 Source sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z_LUT4_Z_1_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z.F
+Info:    routing  0.21  39.96 Net sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z_LUT4_Z_1_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A[0] (27,16) -> (27,16)
+Info:                          Sink sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z_LUT4_Z_1_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z.A
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  40.20 Source sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z_LUT4_Z_1_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z.F
+Info:    routing  0.21  40.41 Net sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z_LUT4_Z_1_B_LUT4_Z_A_LUT4_Z_B[1] (27,16) -> (27,16)
+Info:                          Sink sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z_LUT4_Z_1_B_LUT4_Z_A_LUT4_Z.B
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  40.65 Source sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z_LUT4_Z_1_B_LUT4_Z_A_LUT4_Z.F
+Info:    routing  0.42  41.07 Net sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z_LUT4_Z_1_B_LUT4_Z_A[0] (27,16) -> (27,16)
+Info:                          Sink sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z_LUT4_Z_1_B_LUT4_Z.A
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  41.30 Source sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z_LUT4_Z_1_B_LUT4_Z.F
+Info:    routing  0.42  41.72 Net sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z_LUT4_Z_1_B[1] (27,16) -> (27,16)
+Info:                          Sink sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z_LUT4_Z_1.B
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  41.95 Source sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z_LUT4_Z_1.F
+Info:    routing  0.71  42.67 Net sign_r_TRELLIS_FF_Q_DI_LUT4_Z_C_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_B_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_A_LUT4_Z_B_LUT4_D_Z_LUT4_D_Z[2] (27,16) -> (27,15)
+Info:                          Sink index_r_TRELLIS_FF_Q_4_DI_LUT4_Z.C
+Info:                          Defined in:
+Info:                               D:\oss-cad-suite\bin\../share/yosys/lattice/cells_map_trellis.v:108.23-108.24
+Info:      logic  0.24  42.90 Source index_r_TRELLIS_FF_Q_4_DI_LUT4_Z.F
+Info:    routing  0.13  43.03 Net index_r_TRELLIS_FF_Q_4_DI (27,15) -> (27,15)
+Info:                          Sink index_r_TRELLIS_FF_Q_4.DI
+Info:                          Defined in:
+Info:                               ../rtl/sidon_classifier.v:58.5-75.8
+Info:      setup  0.00  43.03 Source index_r_TRELLIS_FF_Q_4.DI
+Info: 13.51 ns logic, 29.53 ns routing
+
+Info: Critical path report for cross-domain path '<async>' -> 'posedge $glbnet$clk$TRELLIS_IO_IN':
+Info:       type curr  total name
+Info:     source  0.00  0.00 Source lanes_in[33]$tr_io.O
+Info:    routing  7.84  7.84 Net lanes_in[33]$TRELLIS_IO_IN (96,95) -> (42,15)
+Info:                          Sink lanes_r_TRELLIS_FF_Q_25.M
+Info:                          Defined in:
+Info:                               wrap_gf128.v:9.24-9.32
+Info:      setup  0.00  7.84 Source lanes_r_TRELLIS_FF_Q_25.M
+Info: 0.00 ns logic, 7.84 ns routing
+
+Info: Critical path report for cross-domain path 'posedge $glbnet$clk$TRELLIS_IO_IN' -> '<async>':
+Info:       type curr  total name
+Info:   clk-to-q  0.52  0.52 Source sign_r_TRELLIS_FF_Q.Q
+Info:    routing  5.76  6.28 Net sign_out$TRELLIS_IO_OUT (26,17) -> (13,95)
+Info:                          Sink sign_out$tr_io.I
+Info:                          Defined in:
+Info:                               wrap_gf128.v:17.16-17.22
+Info: 0.52 ns logic, 5.76 ns routing
+
+Warning: Max frequency for clock '$glbnet$clk$TRELLIS_IO_IN': 23.24 MHz (FAIL at 200.00 MHz)
+
+Info: Max delay <async>                           -> posedge $glbnet$clk$TRELLIS_IO_IN: 7.84 ns
+Info: Max delay posedge $glbnet$clk$TRELLIS_IO_IN -> <async>                          : 6.28 ns
+
+Info: Slack histogram:
+Info:  legend: times are in ps
+Info:          * represents 1 endpoint(s)
+Info:          + represents [1,1) endpoint(s)
+Info: [-38031, -36973) |*** 
+Info: [-36973, -35915) | 
+Info: [-35915, -34857) |* 
+Info: [-34857, -33799) |* 
+Info: [-33799, -32741) | 
+Info: [-32741, -31683) | 
+Info: [-31683, -30625) | 
+Info: [-30625, -29567) | 
+Info: [-29567, -28509) | 
+Info: [-28509, -27451) | 
+Info: [-27451, -26393) | 
+Info: [-26393, -25335) |* 
+Info: [-25335, -24277) |* 
+Info: [-24277, -23219) | 
+Info: [-23219, -22161) |* 
+Info: [-22161, -21103) |* 
+Info: [-21103, -20045) |** 
+Info: [-20045, -18987) | 
+Info: [-18987, -17929) | 
+Info: [-17929, -16871) |****** 
+1 warning, 0 errors
+
+Info: Program finished normally.

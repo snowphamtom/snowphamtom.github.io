@@ -56,3 +56,15 @@ are untested at RTL level.
 Both matrices are NEW MATTER relative to the filed provisional 64/170,360
 (which covers the 7-row [55,8] matrix only). This package is an engineering
 artifact, not a filing document; any disclosure decision is Taylor's.
+
+## Measured Fmax (2026-10-22, Taylor's PC)
+
+The named-target requirement above was met. Post-place-and-route on a
+Lattice ECP5 LFE5U-85F (nextpnr-ecp5, Yosys 0.70, seed 1, each decoder in
+a registered-I/O wrapper, RTL unmodified): **decoder_f64 = 21.98 MHz;
+decoder_gf128 = 23.24 MHz**. The netlists used a shortened ABC mapping
+script (the full script's SAT front end did not finish on this design),
+so these are measured floors for that flow, not the design's ceiling.
+Full record: `fmax_record.md`; logs: `fmax/`. The same evening, both
+decoders' exhaustive simulations also passed on the PC
+(Icarus 14): 143,005 vectors each, 0 errors, TB RESULT: PASS.
