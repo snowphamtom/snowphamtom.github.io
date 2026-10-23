@@ -1,0 +1,10 @@
+--- meet.yml	2026-10-14 14:37:57.306734786 +0000
++++ meet_FIXED.yml	2026-10-14 14:38:18.006161477 +0000
+@@ -21,6 +21,6 @@
+         run: |
+           git config user.name meet-seed
+           git config user.email meet-seed@users.noreply.github.com
+-          git add artifacts/meet_last.txt artifacts/meet_ledger.jsonl artifacts/corpus.txt
++          git add artifacts/meet_last.txt artifacts/meet_ledger.jsonl artifacts/corpus.txt 2>/dev/null || true
+           git diff --cached --quiet || git commit -m "meet: daily seed ledger"
+           git push || true

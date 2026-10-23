@@ -1,0 +1,64 @@
+name: verify-decoders
+
+on:
+  push:
+    branches: [v4-sidon-hdl]
+    paths:
+      - "v4-sidon-hdl/**"
+      - ".github/workflows/verify.yml"
+  workflow_dispatch:
+
+jobs:
+  exhaustive-sim:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    defaults:
+      run:
+        working-directory: v4-sidon-hdl
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install toolchain
+        working-directory: .
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y iverilog yosys
+
+      - name: Regenerate golden vectors (consistency check)
+        run: python3 gen_vectors.py
+
+      - name: Compile both testbenches
+        run: |
+          iverilog -g2005 -I rtl -o tb_f64.vvp \
+            rtl/syndrome_calc.v rtl/sidon_classifier.v rtl/decoder_f64.v \
+            tb/tb_decoder.v -DF64
+          iverilog -g2005 -I rtl -o tb_gf128.vvp \
+            rtl/syndrome_calc.v rtl/sidon_classifier.v rtl/decoder_gf128.v \
+            tb/tb_decoder.v -DGF128
+
+      - name: Exhaustive simulation — F64 decoder (143,005 vectors)
+        run: |
+          vvp tb_f64.vvp | tee sim_f64_ci.log
+          grep -q "TB RESULT: PASS" sim_f64_ci.log
+
+      - name: Exhaustive simulation — GF(2^7) closed decoder (143,005 vectors)
+        run: |
+          vvp tb_gf128.vvp | tee sim_gf128_ci.log
+          grep -q "TB RESULT: PASS" sim_gf128_ci.log
+
+      - name: Synthesis cell counts (generic library, no Fmax claim)
+        run: |
+          yosys -p "read_verilog -I rtl rtl/syndrome_calc.v rtl/sidon_classifier.v rtl/decoder_f64.v; hierarchy -top decoder_f64; proc; opt; techmap; opt; stat" | tee synth_f64.log
+          yosys -p "read_verilog -I rtl rtl/syndrome_calc.v rtl/sidon_classifier.v rtl/decoder_gf128.v; hierarchy -top decoder_gf128; proc; opt; techmap; opt; stat" | tee synth_gf128.log
+
+      - name: Upload logs
+        if: always()
+        working-directory: .
+        uses: actions/upload-artifact@v4
+        with:
+          name: verification-logs
+          path: |
+            v4-sidon-hdl/sim_f64_ci.log
+            v4-sidon-hdl/sim_gf128_ci.log
+            v4-sidon-hdl/synth_f64.log
+            v4-sidon-hdl/synth_gf128.log

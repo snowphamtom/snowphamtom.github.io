@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>THE FORGE — held work</title>
+<style>
+  body { background:#0a1420; color:#d7e0ea; font-family: ui-monospace, Menlo, Consolas, monospace; margin:0; padding:2.2rem 1.2rem 3rem; }
+  main { max-width: 880px; margin: 0 auto; }
+  h1 { color:#c9a227; font-size:1.35rem; letter-spacing:.14em; margin:0 0 .4rem; }
+  h2 { color:#c9a227; font-size:1.02rem; letter-spacing:.08em; margin:2.2rem 0 .5rem; border-bottom:1px solid #233448; padding-bottom:.35rem; }
+  p { line-height:1.55; font-size:.92rem; }
+  .law { color:#9fb2c8; font-size:.88rem; }
+  table { border-collapse: collapse; width:100%; font-size:.88rem; }
+  td, th { padding:.28rem .5rem; border-bottom:1px solid #1b2a3d; text-align:left; vertical-align:top; }
+  th { color:#9fb2c8; font-weight:normal; letter-spacing:.06em; }
+  td.n { text-align:right; white-space:nowrap; color:#9fb2c8; }
+  a { color:#7fb2e5; text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  .meta { color:#9fb2c8; font-size:.85rem; }
+</style>
+</head>
+<body>
+<main>
+<h1>THE FORGE</h1>
+<p class="law">Held work, kept on Taylor's own ground. Placed here 2026-10-23 at his order:
+&ldquo;Use my site instead. Copy everything to there that you need.&rdquo;
+The site is the sovereign copy; the GitHub repositories are mirrors.
+This page is not linked from the face.</p>
+
+<h2>PKT-001 — V4 Sidon HDL package (complete: 16 files, 3,167,640 bytes)</h2>
+<p>Purpose: the exhaustive-verification HDL package for the two Sidon decoders
+(F64 and GF(2<sup>7</sup>) closed set) — RTL, testbench, golden vectors
+(143,005 vectors per decoder, TB RESULT: PASS), simulation logs, vector
+generator, and the CI workflow. Fifteen of these files also stand on the
+<code>mathlib-probe</code> mirror (branch <code>v4-sidon-hdl</code>, commit
+658400fd); the workflow file stands only here — the GitHub App's gate
+would not take it, and on this ground there is no such gate. The README is
+the drop-of-record copy, with the Measured Fmax (2026-10-22) section.</p>
+<table>
+<tr><th>file</th><th style="text-align:right">bytes</th></tr>
+<tr><td><a href="pkt-001/v4-sidon-hdl/README.md">pkt-001/v4-sidon-hdl/README.md</a></td><td class="n">3,370</td></tr>
+<tr><td><a href="pkt-001/v4-sidon-hdl/gen_vectors.py">pkt-001/v4-sidon-hdl/gen_vectors.py</a></td><td class="n">5,744</td></tr>
+<tr><td><a href="pkt-001/v4-sidon-hdl/rtl/decoder_f64.v">pkt-001/v4-sidon-hdl/rtl/decoder_f64.v</a></td><td class="n">628</td></tr>
+<tr><td><a href="pkt-001/v4-sidon-hdl/rtl/decoder_gf128.v">pkt-001/v4-sidon-hdl/rtl/decoder_gf128.v</a></td><td class="n">634</td></tr>
+<tr><td><a href="pkt-001/v4-sidon-hdl/rtl/f64_cols.vh">pkt-001/v4-sidon-hdl/rtl/f64_cols.vh</a></td><td class="n">260</td></tr>
+<tr><td><a href="pkt-001/v4-sidon-hdl/rtl/gf128_cols.vh">pkt-001/v4-sidon-hdl/rtl/gf128_cols.vh</a></td><td class="n">272</td></tr>
+<tr><td><a href="pkt-001/v4-sidon-hdl/rtl/sidon_classifier.v">pkt-001/v4-sidon-hdl/rtl/sidon_classifier.v</a></td><td class="n">2,860</td></tr>
+<tr><td><a href="pkt-001/v4-sidon-hdl/rtl/syndrome_calc.v">pkt-001/v4-sidon-hdl/rtl/syndrome_calc.v</a></td><td class="n">1,527</td></tr>
+<tr><td><a href="pkt-001/v4-sidon-hdl/tb/tb_decoder.v">pkt-001/v4-sidon-hdl/tb/tb_decoder.v</a></td><td class="n">4,017</td></tr>
+<tr><td><a href="pkt-001/v4-sidon-hdl/vectors/f64_vectors.hex">pkt-001/v4-sidon-hdl/vectors/f64_vectors.hex</a></td><td class="n">1,572,747</td></tr>
+<tr><td><a href="pkt-001/v4-sidon-hdl/vectors/f64_vectors_tails.hex">pkt-001/v4-sidon-hdl/vectors/f64_vectors_tails.hex</a></td><td class="n">252</td></tr>
+<tr><td><a href="pkt-001/v4-sidon-hdl/vectors/gf128_vectors.hex">pkt-001/v4-sidon-hdl/vectors/gf128_vectors.hex</a></td><td class="n">1,572,747</td></tr>
+<tr><td><a href="pkt-001/v4-sidon-hdl/vectors/gf128_vectors_tails.hex">pkt-001/v4-sidon-hdl/vectors/gf128_vectors_tails.hex</a></td><td class="n">252</td></tr>
+<tr><td><a href="pkt-001/v4-sidon-hdl/sim_f64.log">pkt-001/v4-sidon-hdl/sim_f64.log</a></td><td class="n">85</td></tr>
+<tr><td><a href="pkt-001/v4-sidon-hdl/sim_gf128.log">pkt-001/v4-sidon-hdl/sim_gf128.log</a></td><td class="n">85</td></tr>
+<tr><td><a href="pkt-001/workflows/verify.yml">pkt-001/workflows/verify.yml</a> <span class="meta">(the CI workflow — held only here)</span></td><td class="n">2,160</td></tr>
+</table>
+
+<h2>PKT-011 — DRAWING_ROOM meet-seed fix (complete: 5 files, 11,835 bytes)</h2>
+<p>Purpose: the fix for the Drawing Room's daily meet-seed run — for twenty
+runs the train step succeeded and the ledger commit failed, because the
+script wrote nothing for git to add. The patched <code>meet_lm.py</code>
+writes the two artifacts; the patched <code>meet.yml</code> makes the
+<code>git add</code> tolerant. The script also stands on the
+<code>DRAWING_ROOM</code> mirror (main, commit 82dc38d7, byte-identical);
+the workflow file stands only here, under the same gate as PKT-001's.
+Apply: copy <code>meet_lm.py</code> over <code>scripts/meet_lm.py</code> and
+<code>meet.yml</code> over <code>.github/workflows/meet.yml</code>, or apply
+the patches with <code>patch -p1</code>.</p>
+<table>
+<tr><th>file</th><th style="text-align:right">bytes</th></tr>
+<tr><td><a href="pkt-011/README.md">pkt-011/README.md</a></td><td class="n">2,416</td></tr>
+<tr><td><a href="pkt-011/meet_lm.py">pkt-011/meet_lm.py</a></td><td class="n">6,695</td></tr>
+<tr><td><a href="pkt-011/meet.yml">pkt-011/meet.yml</a> <span class="meta">(the patched workflow — held only here)</span></td><td class="n">859</td></tr>
+<tr><td><a href="pkt-011/meet_lm.patch">pkt-011/meet_lm.patch</a></td><td class="n">1,305</td></tr>
+<tr><td><a href="pkt-011/meet_yml.patch">pkt-011/meet_yml.patch</a></td><td class="n">560</td></tr>
+</table>
+
+<p class="meta" style="margin-top:2.4rem">Total held: 21 files, 3,179,475 bytes.
+Every byte count above was measured against the live file at this address.</p>
+</main>
+</body>
+</html>
