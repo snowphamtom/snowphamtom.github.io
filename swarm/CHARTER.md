@@ -1,4 +1,4 @@
-> **Landing note (2026-10-23, Taylor's directive 07:54 CT):** the floor lives on Taylor's site — sequesteredyeti.art/swarm/, inside snowphamtom/snowphamtom.github.io — superseding the private the-swarm repo plan named below (that repo was never created; the App is refused repo creation, 403 measured 2026-10-23). The charter below stands unchanged; read “this repo” as “this floor.” The GATE law is verbatim, as always.
+> **Landing note (2026-10-23, Taylor's directive 07:54 CT):** the floor lives on Taylor's site — sequesteredyeti.art/swarm/, inside snowphamtom/snowphamtom.github.io — superseding the private the-swarm repo plan named below (that repo was never created; the App is refused repo creation, 403 measured 2026-10-23). The charter below stands unchanged; read “this repo” as “this floor.” The GATE law is verbatim, as always. The workshop is the site, behind its door; GitHub’s copy of these files is the signpost and the mirror of record — it points to the workshop, it is not the workshop.
 
 # THE FLOOR — CHARTER
 

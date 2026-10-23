@@ -1,6 +1,6 @@
 # STATUS — THE FLOOR ON THE SITE
 
-*Landed 2026-10-23T12:59:08Z under Taylor's directive of 2026-10-23 07:54 CT
+*Landed 2026-10-23T13:08:39Z under Taylor's directive of 2026-10-23 07:54 CT
 ("Generate private swarm using my site and GitHub"). This board is
 regenerated at each landing.*
 
@@ -12,6 +12,12 @@ linked from nowhere public; the wall keeps exactly its two hrefs. Working
 Copy reaches the floor through the site repo Taylor already holds — no new
 repo, no creation step.
 
+**The workshop is the site — https://sequesteredyeti.art/swarm/, behind its
+door. GitHub is the signpost and the mirror of record; it points to the
+workshop, it is not the workshop.** What stands in this repo under `swarm/`
+is the signpost and the mirror; the floor itself lives and works behind the
+door.
+
 The private `the-swarm` repo of the earlier plan does not exist and the App
 cannot create it (403, measured 2026-10-23 — item T3). That plan is
 superseded by this landing, struck-but-visible in the kit's staging record
@@ -21,7 +27,7 @@ superseded by this landing, struck-but-visible in the kit's staging record
 
 - **Rows:** 329
 - **Tip:** `fa859918467cb28c4068168ae31291bcbbc915e51a997b8546f8838d5ac2a03c`
-- **Chain:** PASS — full chain re-verified at the build (2026-10-23T12:59:08Z)
+- **Chain:** PASS — full chain re-verified at the build (2026-10-23T13:08:39Z)
 - **Mirror file SHA-256:** `da75d5e4edba19605937ddccef48f2477a7e79ae540dde2a1770ed2ad14de62d`
 - **By kind:** DESIGN_ADOPTED 1 · NOTE 262 · PACKET_ADMITTED 31 · PACKET_REFUSED 5 · POLICY 1 · RECEIPT 16 · SEAT_DECLARED 13
 

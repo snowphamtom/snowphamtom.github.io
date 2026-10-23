@@ -16,5 +16,5 @@ on the copied bytes in the staging tree (a second, independent walk).
 | VM original via `register.py verify-chain` (at build) | ok — 329 rows, tip `fa859918467cb28c` |
 
 The register is live and grows by appends on the VM. This mirror is the
-verified state at the landing (2026-10-23T12:59:08Z); it is refreshed and re-verified
+verified state at the landing (2026-10-23T13:08:39Z); it is refreshed and re-verified
 before every push, and a chain that does not verify is never mirrored.

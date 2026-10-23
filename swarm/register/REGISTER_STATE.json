@@ -3,7 +3,7 @@
  "tip": "fa859918467cb28c4068168ae31291bcbbc915e51a997b8546f8838d5ac2a03c",
  "mirror_sha256": "da75d5e4edba19605937ddccef48f2477a7e79ae540dde2a1770ed2ad14de62d",
  "bytes": 361476,
- "verified_at": "2026-10-23T12:59:08Z",
+ "verified_at": "2026-10-23T13:08:39Z",
  "source": "VM canonical ~/workspace/swarm/register/register.jsonl",
  "chain": "PASS \u2014 mirror verified byte-identical to the VM original",
  "floor": "sequesteredyeti.art/swarm/ (repo snowphamtom/snowphamtom.github.io, path swarm/register/)"

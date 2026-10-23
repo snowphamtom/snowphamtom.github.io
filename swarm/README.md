@@ -6,6 +6,12 @@ with the register as the spine. Taylor's directive 2026-10-23 07:54 CT placed
 the floor here (the private `the-swarm` repo was never created; the App is
 refused repo creation).
 
+**The workshop is the site — https://sequesteredyeti.art/swarm/, behind its
+door. GitHub is the signpost and the mirror of record; it points to the
+workshop, it is not the workshop.** These files are that signpost and mirror:
+they name the floor, carry its register state and charters, and point to the
+door. The work itself happens in the workshop.
+
 - **The door page:** `index.html` — speak, and be known. The floor board,
   the charter, and the register window stand behind the door.
 - **Charter:** [CHARTER.md](CHARTER.md) — the GATE's admission law, verbatim.
@@ -25,4 +31,4 @@ refused repo creation).
 
 PRIVATE. Linked from nowhere public. The swarm interior is confidential.
 
-*Landing: 2026-10-23T12:59:08Z · register 329 rows · tip `fa859918467cb28c` · chain PASS.*
+*Landing: 2026-10-23T13:08:39Z · register 329 rows · tip `fa859918467cb28c` · chain PASS.*
