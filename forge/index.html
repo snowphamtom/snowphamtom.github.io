@@ -41,7 +41,7 @@ This page is not linked from the face.</p>
 </div>
 
 <div class="panel">
-<h2>PKT-001 — V4 Sidon HDL package (complete: 16 files, 3,167,640 bytes)</h2>
+<h2>V4 Sidon HDL package (complete: 16 files, 3,167,640 bytes)</h2>
 <p>Purpose: the exhaustive-verification HDL package for the two Sidon decoders
 (F64 and GF(2<sup>7</sup>) closed set) — RTL, testbench, golden vectors
 (143,005 vectors per decoder, TB RESULT: PASS), simulation logs, vector
@@ -72,14 +72,14 @@ the drop-of-record copy, with the Measured Fmax (2026-10-22) section.</p>
 </div>
 
 <div class="panel">
-<h2>PKT-011 — DRAWING_ROOM meet-seed fix (complete: 5 files, 11,835 bytes)</h2>
+<h2>DRAWING_ROOM meet-seed fix (complete: 5 files, 11,835 bytes)</h2>
 <p>Purpose: the fix for the Drawing Room's daily meet-seed run — for twenty
 runs the train step succeeded and the ledger commit failed, because the
 script wrote nothing for git to add. The patched <code>meet_lm.py</code>
 writes the two artifacts; the patched <code>meet.yml</code> makes the
 <code>git add</code> tolerant. The script also stands on the
 <code>DRAWING_ROOM</code> mirror (main, commit 82dc38d7, byte-identical);
-the workflow file stands only here, under the same gate as PKT-001's.
+the workflow file stands only here, under the same gate as the HDL package's.
 Apply: copy <code>meet_lm.py</code> over <code>scripts/meet_lm.py</code> and
 <code>meet.yml</code> over <code>.github/workflows/meet.yml</code>, or apply
 the patches with <code>patch -p1</code>.</p>
@@ -96,6 +96,22 @@ the patches with <code>patch -p1</code>.</p>
 <p class="meta">Total held: 21 files, 3,179,475 bytes.
 Every byte count above was measured against the live file at this address.
 Skin: the living-site background, embedded in this page itself &mdash; the art travels with the page, from this ground only.</p>
+
+<section>
+<h2>THE WALK — INSIDE THE GATE</h2>
+<p>These chambers are one site, made to be seen in this order: <a style="color:#a9c2dc" href="/vault/">The Vault — the dossier</a> ·
+<a style="color:#a9c2dc" href="/data/">Open Data — the public proof</a> ·
+<a style="color:#a9c2dc" href="/swarm/">The Floor — the workshop</a> ·
+<a style="color:#a9c2dc" href="/matrixx/">Matrixx — the counted matrix</a> ·
+<a style="color:#a9c2dc" href="/srat20/">SRAT-20 — the transport engine</a> ·
+<a style="color:#a9c2dc" href="/rff1/">RFF-1 — the refusal format</a> ·
+<span style="color:#c9a227">The Forge — held work · you are here</span> ·
+<a style="color:#a9c2dc" href="/djinn/">The Djinn — the site's AI</a> ·
+<a style="color:#a9c2dc" href="/organism/">The Organism — the living site</a> ·
+<a style="color:#a9c2dc" href="/record/">The Record — the register, mirrored</a> ·
+<a style="color:#a9c2dc" href="/index/">The Total Index — everything held, findable</a> ·
+<a style="color:#a9c2dc" href="/corpus/">The Corpus — the curated record</a>.<br/>Your pass is the map; every chamber stands on its own door.</p>
+</section>
 </main>
 </body>
 </html>
