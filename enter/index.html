@@ -76,6 +76,11 @@
     font-family:inherit; font-weight:600;
   }
   button:active{transform:translateY(1px);}
+  button[disabled]{opacity:.45; cursor:default;}
+  input[disabled]{color:#5f83ab;}
+  .accept{margin:2px 0 12px; background:transparent; border:1px solid var(--gold-dim); color:var(--gold);
+          letter-spacing:.04em; text-transform:none; font-size:13.5px; font-weight:500; border-radius:14px;}
+  .accepted{min-height:15px; text-align:center; font-size:11.5px; color:#5f83ab; letter-spacing:.06em; margin-bottom:10px;}
   .voice{min-height:26px; text-align:center; margin-top:16px; font-size:14.5px; color:var(--ice);}
   footer{margin-top:auto; padding-top:26px; text-align:center; font-size:11px; color:#46688f; letter-spacing:.14em; z-index:1;}
 </style>
@@ -123,12 +128,14 @@
 <form id="gate" autocomplete="off">
   <label for="voice">Say who you are</label>
   <p class="nda">This cave is private. What lies beyond this door is confidential and subject to non-disclosure. Speaking here is entering under that confidence.</p>
+  <button type="button" class="accept" id="accept">I accept the confidence — open the door.</button>
+  <div class="accepted" id="accepted"></div>
   <div class="mouth" id="mouth">
     <input type="text" id="voice" placeholder="Speak into the cave"
            autocapitalize="sentences" autocorrect="off" spellcheck="false"
-           enterkeyhint="go" aria-label="Say who you are" />
+           enterkeyhint="go" aria-label="Say who you are" disabled />
   </div>
-  <button type="submit">Enter</button>
+  <button type="submit" id="enter" disabled>Enter</button>
   <div class="voice" id="reply" role="status"></div>
 </form>
 
@@ -146,7 +153,29 @@
   var form = document.getElementById('gate');
   var input = document.getElementById('voice');
   var reply = document.getElementById('reply');
-  var button = form.querySelector('button');
+  var button = document.getElementById('enter');
+  var acceptBtn = document.getElementById('accept');
+  var acceptedEl = document.getElementById('accepted');
+
+  // Click-to-accept: the box stays shut until the confidence is accepted.
+  // The acceptance is kept only in this browser's own local storage —
+  // nothing is transmitted anywhere; there is no server.
+  var acceptedAt = null;
+  try { acceptedAt = window.localStorage.getItem('cave-accepted'); } catch (e) { acceptedAt = null; }
+
+  function showAccepted(ts){
+    acceptedEl.textContent = "Accepted: " + new Date(ts).toLocaleString();
+    acceptBtn.style.display = 'none';
+    input.disabled = false;
+    button.disabled = false;
+  }
+  if (acceptedAt) { showAccepted(isNaN(+acceptedAt) ? acceptedAt : +acceptedAt); }
+  acceptBtn.addEventListener('click', function(){
+    var ts = Date.now();
+    try { window.localStorage.setItem('cave-accepted', String(ts)); } catch (e) {}
+    showAccepted(ts);
+    input.focus();
+  });
 
   function normalize(s){
     return (s || "")
@@ -172,7 +201,7 @@
 
   form.addEventListener('submit', function(e){
     e.preventDefault();
-    if (locked) { return; }
+    if (locked || input.disabled) { return; }
     var said = normalize(input.value);
     if (said === PHRASE) {
       reply.textContent = "The cave knows that voice.";
