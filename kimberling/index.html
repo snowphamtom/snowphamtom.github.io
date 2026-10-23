@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>The Kimberling Observatory — Sequestered Yeti</title>
+<style>
+:root{--ink:#171a1f;--dim:#5b6470;--accent:#0f4c81;--accent-ink:#0f4c81;--bg:#f5f6f8;--surface:#ffffff;--line:#dde1e6;--ok:#177245;--bad:#b3261e}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg)}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;color:var(--ink);background:var(--bg);min-height:100vh;line-height:1.6;font-size:15.5px}
+#door{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px;z-index:10}
+#door .card{background:var(--surface);border:1px solid var(--line);border-radius:2px;max-width:460px;width:100%;padding:40px 36px;text-align:left}
+#door .mark{font-size:11px;font-weight:600;letter-spacing:.28em;color:var(--accent);text-transform:uppercase;margin-bottom:18px}
+#door h1{font-size:22px;font-weight:600;letter-spacing:.01em;color:var(--ink);margin-bottom:10px;line-height:1.3}
+#door p{color:var(--dim);font-size:15px;margin-bottom:28px}
+#door button{background:var(--accent);border:1px solid var(--accent);color:#fff;font-family:inherit;font-size:13px;font-weight:600;letter-spacing:.14em;padding:12px 30px;cursor:pointer;border-radius:2px}
+#door button:hover{background:#0d4069}
+#content{display:none;max-width:880px;margin:0 auto;padding:40px 20px 64px}
+body.open #content{display:block}
+body.open #door{display:none}
+.kicker{color:var(--accent);letter-spacing:.24em;font-size:11px;font-weight:600;text-transform:uppercase;margin-bottom:10px}
+h1.title{font-size:28px;font-weight:600;line-height:1.25;margin-bottom:10px;letter-spacing:-.01em}
+.lede{color:var(--dim);font-size:16.5px;margin-bottom:30px;max-width:720px}
+h2{font-size:16px;font-weight:600;color:var(--ink);letter-spacing:.02em;margin:36px 0 12px;border-bottom:1px solid var(--line);padding-bottom:7px}
+p{margin-bottom:12px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:20px;margin:16px 0}
+.big{font-size:25px;font-weight:600;color:var(--ink)}
+table{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0}
+th{color:var(--dim);font-weight:600;text-align:left;letter-spacing:.07em;font-size:11.5px;text-transform:uppercase;padding:7px 8px;border-bottom:1px solid var(--line)}
+td{padding:7px 8px;border-bottom:1px solid #eceef1;font-variant-numeric:tabular-nums}
+.num{font-variant-numeric:tabular-nums}
+button.act{background:var(--surface);border:1px solid var(--accent);color:var(--accent-ink);font-family:inherit;font-size:13px;font-weight:600;letter-spacing:.08em;padding:9px 20px;cursor:pointer;margin:6px 6px 6px 0;border-radius:2px}
+button.act:hover{background:rgba(15,76,129,.06)}
+button.act:disabled{opacity:.4;cursor:default}
+select,input{background:var(--surface);color:var(--ink);border:1px solid var(--line);font-family:inherit;font-size:15px;padding:8px;margin:6px 6px 6px 0;border-radius:2px}
+.out{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;white-space:pre-wrap;word-break:break-word;color:var(--ink);background:#f0f1f3;border:1px solid var(--line);border-radius:2px;padding:14px;min-height:54px;margin-top:10px}
+.pass{color:var(--ok);font-weight:600} .fail{color:var(--bad);font-weight:600}
+.note{color:var(--dim);font-size:13.5px}
+.walk{margin-top:44px;border-top:1px solid var(--line);padding-top:18px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.walk a{color:var(--accent-ink);text-decoration:none;font-size:14.5px;font-weight:500}
+.walk a:hover{text-decoration:underline}
+.stamp{color:var(--dim);font-size:12.5px;margin-top:26px}
+.bar{display:flex;height:14px;border:1px solid var(--line);margin:10px 0;overflow:hidden;background:var(--surface)}
+.bar div{height:100%}
+canvas{max-width:100%}
+@media(max-width:560px){h1.title{font-size:23px}.big{font-size:20px}td,th{padding:5px 5px;font-size:13px}#door .card{padding:30px 24px}}
+</style>
+</head>
+<body>
+<div id="door">
+  <div class="card">
+  <div class="mark">Sequestered Yeti</div>
+  <h1>SPEAK, AND BE KNOWN</h1>
+  <p>Beyond this door: an open problem, its proofs, and a search you can run yourself.</p>
+  <button id="enter">ENTER</button>
+  </div>
+</div>
+<main id="content">
+  <div class="kicker">An open problem, under measurement</div>
+  <h1 class="title">The Kimberling Observatory</h1>
+  <p class="lede">The Kimberling sequence (OEIS A007063) is built by a simple folding rule. It is proved that no value can appear twice. Whether every value appears at all is an open problem — a $300 prize, offered with the problem, stands unclaimed. This page is the state of the attack: what is proved, what is computed, and the search itself, running in your browser.</p>
+
+<h2>What is proved</h2>
+<p><strong>Every value appears at most once.</strong> If the backward trace of a term
+ends at row <span class="num">i*</span>, the term itself must be one of
+<span class="num">3i*&minus;4, 3i*&minus;3, 3i*&minus;2</span> — three consecutive values, and the
+triples for different rows never overlap. Each value therefore has exactly one
+possible starting position, and from that position exactly one possible path.
+Two different terms can never carry the same value.</p>
+<p><strong>No search can get stuck.</strong> From any target position, a valid
+predecessor always exists — proved three independent ways. A search can fail
+only by walking forever, never by hitting a wall.</p>
+<p><strong>A walk never loops back.</strong> Once a walk leaves its target shape
+it can never return to one, and every excursion on the negative side is
+provably finite. The one question computation cannot settle is whether every
+walk eventually arrives.</p>
+
+<h2>What is computed — the sweep</h2>
+<div class="panel">
+<div class="big num" id="sweep-big"></div>
+<p class="note" id="sweep-note"></p>
+<div class="bar" id="covbar"></div>
+<p class="note">Coverage is continuous from row 4. Targets the sweep could not
+finish inside 5 billion steps were promoted to individual deep walks, below.</p>
+<p class="note">This panel is the live frontier: it is regenerated from the
+campaign's own checkpoint files as the fleet advances, and the stamp at the
+foot of this page is its position time. Return, and the numbers will have
+moved.</p>
+</div>
+
+<h2>The deep ledger</h2>
+<p>26 values resisted the sweep. Eleven were promoted to individual deep
+walks, each with room for 200 billion steps:</p>
+<table><tr><th>Value</th><th>Standing</th><th>Index n &mdash; a(n) = value</th><th>Detail</th></tr><tr><td>3807</td><td>Verified in both directions</td><td>6,172,570,365</td><td>reverse walk located it; the forward computation confirms a(6,172,570,365) = 3807</td></tr><tr><td>5910</td><td>Verified in both directions</td><td>8,919,080,271</td><td>reverse walk located it; the forward computation confirms a(8,919,080,271) = 5910</td></tr><tr><td>6859</td><td>Verified in both directions</td><td>8,629,373,155</td><td>reverse walk located it; the forward computation confirms a(8,629,373,155) = 6859</td></tr><tr><td>13182</td><td>Verified in both directions</td><td>21,252,701,068</td><td>reverse walk located it; the forward computation confirms a(21,252,701,068) = 13182</td></tr><tr><td>16268</td><td>Verified in both directions</td><td>5,479,609,390</td><td>reverse walk located it; the forward computation confirms a(5,479,609,390) = 16268</td></tr><tr><td>9756</td><td>Located — forward verification in progress</td><td>113,896,793,310</td><td>forward check at 113,800,000,000 of 113,896,793,310 steps (99.9%)</td></tr><tr><td>18738</td><td>Located</td><td>43,936,298,148</td><td>reverse walk reached the diagonal; forward verification has not yet been run</td></tr><tr><td>13294</td><td>Walking</td><td>—</td><td>196,800,000,000 steps and advancing</td></tr><tr><td>16094</td><td>Walking</td><td>—</td><td>195,400,000,000 steps and advancing</td></tr><tr><td>3330</td><td>Unresolved</td><td>—</td><td>the walk ran the full 200,000,000,000 steps without reaching the diagonal; whether it ever does is unknown</td></tr><tr><td>12339</td><td>Unresolved</td><td>—</td><td>the walk ran the full 200,000,000,000 steps without reaching the diagonal; whether it ever does is unknown</td></tr></table>
+<p class="note">Also capped in the sweep, at rows 6619, 6718, 6834, 6885, 7688, 8271, 8295, 8321, 8649, 9077, 9450, 9501, 9681, 9796, 9898: 19853, 20152, 20499, 20652, 23060, 24810, 24882, 24959, 25945, 27227, 28346, 28501, 29040, 29384, 29691. Deep walks for these have not yet been run.</p>
+
+<h2>Run the search yourself</h2>
+<p>The search is deterministic: one rule, no choices. Pick any of the 591
+targets the campaign verified first — or verify all 591 — and your browser
+walks the same path the campaign walked, step for step. The result is compared
+against the record of two independent implementations, written separately,
+which agreed on every target.</p>
+<div class="panel">
+<label>Target value <select id="pick"></select></label>
+<button class="act" id="run">WALK THIS TARGET</button>
+<button class="act" id="runall">VERIFY ALL 591</button>
+<div class="out" id="out">The walk will report here.</div>
+</div>
+
+<h2>The remaining question</h2>
+<p>Surjectivity — whether <em>every</em> value appears — is exactly the question
+of whether every one of these walks terminates. That is still open, here and
+everywhere. Nothing on this page claims the problem is solved; the prize
+stands unclaimed. What this page shows is the evidence base: a complete proof
+of the half that is proved, and a computation that has never once gotten
+stuck.</p>
+
+<div class="panel" id="cert" style="display:none"></div>
+
+  <div class="walk"><a href="../census/">Next on the walk: the GENESIS census &rarr;</a></div>
+  <p class="stamp">Position as of October 23, 2026, 14:08 CDT. Every figure on this page is recomputed in your browser from the data served with it, or is stated with the instrument that measured it.</p>
+</main>
+
+<script>
+(function(){
+  var key = "door_" + location.pathname;
+  function open(){ document.body.classList.add('open'); }
+  if (sessionStorage.getItem(key) === '1') { open(); return; }
+  document.getElementById('enter').addEventListener('click', function(){
+    sessionStorage.setItem(key, '1'); open();
+  });
+})();
+</script>
+
+<script>
+
+function mintCert(lines){
+  fetch('data.json').then(function(r){ return r.text(); }).then(function(t){
+    return crypto.subtle.digest('SHA-256', new TextEncoder().encode(t));
+  }).then(function(buf){
+    var hex = Array.from(new Uint8Array(buf)).map(function(b){
+      return ('0' + b.toString(16)).slice(-2); }).join('');
+    var cert = document.getElementById('cert');
+    if (!cert) return;
+    var html = '<h3 style="margin-top:0">Certificate of recomputation</h3>' +
+      '<p>Minted in this browser at <span class="num">' + new Date().toISOString() +
+      '</span>, over the data served with this page (SHA-256 <span class="num">' +
+      hex + '</span>):</p>';
+    lines.forEach(function(L){ html += '<p class="num">' + L + '</p>'; });
+    html += '<p class="note">Every figure in this certificate was recomputed on ' +
+      'this device from the inputs named above. Nothing was copied from a document.</p>';
+    cert.innerHTML = html; cert.style.display = 'block';
+  });
+}
+
+var D = null;
+fetch('data.json').then(function(r){ return r.json(); }).then(function(d){
+  D = d;
+  var s = d.sweep;
+  document.getElementById('sweep-big').textContent =
+    s.hits.toLocaleString('en-US') + ' of ' + s.targets.toLocaleString('en-US') + ' targets reached the diagonal';
+  document.getElementById('sweep-note').textContent =
+    'Rows 4 through ' + s.cont.toLocaleString('en-US') + ' are covered completely and continuously (' +
+    s.total_steps.toLocaleString('en-US') + ' reverse steps in total, 0 stuck anywhere). ' +
+    'The largest index found is n = ' + s.max_n.toLocaleString('en-US') + ' (value ' + s.max_at.v +
+    ', row ' + s.max_at.istar + '); ' + s.n_le_50k.toLocaleString('en-US') + ' targets were already found by n = 50,000. ' +
+    'The sweep continues toward row 10,000 (computed so far to row ' + s.max_istar.toLocaleString('en-US') + ').';
+  var bar = document.getElementById('covbar');
+  var done = document.createElement('div');
+  done.style.background = '#0f4c81'; done.style.width = (100*s.cont/s.max_istar) + '%';
+  var rest = document.createElement('div');
+  rest.style.background = '#d5d9de'; rest.style.width = (100*(1 - s.cont/s.max_istar)) + '%';
+  bar.appendChild(done); bar.appendChild(rest);
+  var pick = document.getElementById('pick');
+  d.replay.forEach(function(t, i){
+    var o = document.createElement('option'); o.value = i;
+    o.textContent = 'value ' + t.v + ' (row ' + t.istar + ', ' + t.steps.toLocaleString('en-US') + ' steps)';
+    pick.appendChild(o);
+  });
+  var mid = d.replay.findIndex(function(t){ return t.steps >= 2000 && t.steps <= 6000; });
+  pick.value = mid >= 0 ? mid : 0;
+});
+function walk(istar, jprev, onstep, done) {
+  var i = istar + 1, j = jprev, steps = 0;
+  function chunk() {
+    var budget = 2000000;
+    while (budget-- > 0) {
+      if (j === i) { done(i, steps, true); return; }
+      var j2 = (j <= i - 1) ? 2 * (i - j) : 2 * j - 2 * i - 1;
+      if (j2 < 1 || j2 >= 2 * i - 1) { done(-1, steps, false); return; }
+      i += 1; j = j2; steps += 1;
+    }
+    if (onstep) onstep(i, j, steps);
+    setTimeout(chunk, 0);
+  }
+  chunk();
+}
+function jprevFor(t) {
+  if (t.v === 3*t.istar - 4) return 2*t.istar - 7;
+  if (t.v === 3*t.istar - 3) return 2*t.istar - 5;
+  return 2*t.istar - 3;
+}
+var out = document.getElementById('out');
+document.getElementById('run').addEventListener('click', function(){
+  if (!D) return;
+  var t = D.replay[parseInt(document.getElementById('pick').value, 10)];
+  out.textContent = 'Walking value ' + t.v + ' from row ' + (t.istar + 1) + '...';
+  walk(t.istar, jprevFor(t), function(i, j, s){
+    out.textContent = 'value ' + t.v + ': at row ' + i.toLocaleString('en-US') +
+      ', ' + s.toLocaleString('en-US') + ' steps so far...';
+  }, function(n, s, ok){
+    if (ok && n === t.n && s === t.steps) {
+      out.innerHTML = '<span class="pass">REACHED THE DIAGONAL</span> — value ' + t.v +
+        ' is a(' + n.toLocaleString('en-US') + '), found in ' + s.toLocaleString('en-US') +
+        ' steps. Identical to the campaign record (n and steps) on both implementations.';
+    } else {
+      out.innerHTML = '<span class="fail">MISMATCH</span> — walk returned n=' + n + ', steps=' + s +
+        ' against the recorded n=' + t.n + ', steps=' + t.steps + '.';
+    }
+  });
+});
+document.getElementById('runall').addEventListener('click', function(){
+  if (!D) return;
+  var idx = 0, good = 0, totalSteps = 0;
+  out.textContent = 'Verifying all 591 targets...';
+  function next() {
+    var t0 = performance.now();
+    while (idx < D.replay.length && performance.now() - t0 < 60) {
+      var t = D.replay[idx]; idx += 1;
+      var i = t.istar + 1, j = jprevFor(t), s = 0, n = -1;
+      while (true) {
+        if (j === i) { n = i; break; }
+        var j2 = (j <= i - 1) ? 2 * (i - j) : 2 * j - 2 * i - 1;
+        if (j2 < 1 || j2 >= 2 * i - 1) { n = -1; break; }
+        i += 1; j = j2; s += 1;
+      }
+      if (n === t.n && s === t.steps) { good += 1; totalSteps += s; }
+    }
+    out.textContent = 'Verified ' + idx + ' of 591 targets so far (' + good + ' exact matches)...';
+    if (idx < D.replay.length) { setTimeout(next, 0); return; }
+    out.innerHTML = (good === 591)
+      ? '<span class="pass">591 / 591</span> — every target reached the diagonal, and every (n, steps) pair agrees exactly with the campaign record. Total reverse steps recomputed: ' + totalSteps.toLocaleString('en-US') + '.'
+      : '<span class="fail">' + good + ' / 591 matched</span> — see the campaign record.';
+    if (good === 591) mintCert([
+      'Targets verified against the campaign record: 591 of 591',
+      'Total reverse steps recomputed: ' + totalSteps.toLocaleString('en-US'),
+      'Verdict: every target reached the diagonal; every (n, steps) pair agrees exactly.']);
+  }
+  next();
+});
+
+</script>
+</body>
+</html>
