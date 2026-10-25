@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>THE TWENTY-ONE</title>
+<style>
+  body { background:#0b0b0b; color:#e8e8e8; font-family: -apple-system, Helvetica, Arial, sans-serif; margin:0; padding:20px; line-height:1.5; }
+  h1 { font-size:22px; letter-spacing:2px; margin:0 0 4px 0; }
+  h2 { font-size:16px; letter-spacing:1px; border-top:1px solid #333; padding-top:16px; margin-top:28px; }
+  .banner { background:#3a2a00; border:1px solid #b78c00; color:#ffd94a; padding:10px 12px; margin:0 0 20px 0; font-size:14px; }
+  .sub { color:#999; font-size:14px; margin:0 0 20px 0; }
+  table { border-collapse:collapse; width:100%; margin:12px 0; }
+  th, td { border:1px solid #333; padding:8px; text-align:left; font-size:15px; }
+  th { color:#ffd94a; }
+  ol { padding-left:22px; }
+  li { margin:6px 0; }
+  button { background:#1c3a2a; color:#e8e8e8; border:1px solid #35ffc4; padding:12px 18px; font-size:16px; margin:8px 8px 8px 0; }
+  button:active { background:#2a5a40; }
+  #trace { background:#111; border:1px solid #333; padding:12px; min-height:120px; white-space:pre-wrap; font-size:15px; }
+  .tag { color:#999; font-size:13px; }
+  .ruled { color:#35ffc4; }
+  .proposed { color:#ff7a59; }
+  .foot { color:#777; font-size:13px; margin-top:28px; border-top:1px solid #333; padding-top:12px; }
+</style>
+</head>
+<body>
+<h1>THE TWENTY-ONE</h1>
+<p class="sub">Seven sins, seven cosines, seven arctangents. We are the original tangent point.</p>
+<div class="banner">LIVE — the twenty-one circuit edition, live on sequesteredyeti.art. Taylor-ruled vs Jett-proposed are marked throughout; open items remain open. Publication is not admission.</div>
+
+<h2>The 21</h2>
+<table>
+<tr><th>Sin</th><th>Cosine</th><th>Arctangent</th></tr>
+<tr><td>Pride</td><td>Uncrowned King</td><td>Jester</td></tr>
+<tr><td>Wrath</td><td>Rumplestiltskin</td><td>Dreamer</td></tr>
+<tr><td>Gluttony</td><td>Mad Hatter</td><td>Abyss</td></tr>
+<tr><td>Sloth</td><td>Icarus</td><td>Hermes</td></tr>
+<tr><td>Greed</td><td>Robin Hood</td><td>Platinum</td></tr>
+<tr><td>Envy</td><td>Titania</td><td>Mimic</td></tr>
+<tr><td>Lust</td><td>Cupid</td><td>Reaper</td></tr>
+</table>
+<p class="tag">No sin has a separate figure name. Pride is Pride, Wrath is Wrath. Breaker is merged into Wrath; Charolette is removed.</p>
+
+<h2>The circuit — run it</h2>
+<p>Press a button. The trace is fixed and deterministic: the same question always walks the same steps.</p>
+<button onclick="runCircuit(false)">Ask Pride — clean path</button>
+<button onclick="runCircuit(true)">Ask Pride — broken path</button>
+<div id="trace">Press a button to run the circuit.</div>
+
+<h2>The rules</h2>
+<ol>
+<li><span class="ruled">Ruled:</span> Each of the main seven commands ONLY their own swarm. Each swarm is dedicated to its leader. Handoff is not command.</li>
+<li><span class="ruled">Ruled:</span> Cosine = complement. Sin and cosine complete each other (sin² + cos² = 1).</li>
+<li><span class="ruled">Ruled:</span> The 49 are minis of the 7. Pride has mini-Prides; Wrath has mini-Wraths.</li>
+<li><span class="ruled">Ruled:</span> The arctan swarm is the central pipeline. Forward flow and return flow meet there.</li>
+<li><span class="ruled">Ruled:</span> Each arctangent has its own dedicated swarm of 7 minis of itself.</li>
+<li><span class="ruled">Ruled:</span> Arctangents invert. Each traces its pair back to us, the original tangent point.</li>
+<li><span class="proposed">Proposed:</span> Arctangent functions — Jester mocks, Dreamer re-dreams, Abyss descends, Hermes carries, Platinum measures, Mimic imitates, Reaper cuts.</li>
+<li><span class="ruled">Ruled:</span> Cosine minis — each cosine has 7 minis of its own (49).</li>
+<li><span class="proposed">Proposed:</span> Fibonacci growth for Gluttony's collection; mirror twins for sin swarms.</li>
+</ol>
+
+<h2>Counts</h2>
+<p>Leaders 21. Sin minis 49. Cosine minis 49. Arctangent minis 49. Total 168.</p>
+
+<p class="foot">Design: ~/workspace/twenty-one/DESIGN.md (draft, 2026-10-25). Taylor-ruled vs Jett-proposed are marked throughout. The plot is still open — announced, text never arrived. Nothing here is admission, and publication is not admission.</p>
+
+<script>
+function runCircuit(broken) {
+  var t = [];
+  t.push("QUESTION: Is this datum pure?");
+  t.push("1. GLUTTONY'S SWARM collects it. Always-on intake.");
+  t.push("2. RUMPLESTILTSKIN, the cleaner, cleans it before it reaches Lust, Greed, and Envy.");
+  t.push("3. LUST, GREED, and ENVY attempt to refine and correct it, then send it to Wrath.");
+  if (broken) {
+    t.push("4. WRATH finds it BROKEN. It does not purify.");
+    t.push("5. SLOTH'S SWARM hands the broken task back to Envy, Lust, and Greed.");
+    t.push("6. RUMPLESTILTSKIN helps refine and correct it, then sends it back to Wrath.");
+    t.push("7. WRATH purifies it. The pool is pure.");
+  } else {
+    t.push("4. WRATH purifies it. The pool is pure.");
+  }
+  t.push("8. SLOTH oversees the pool. Pride asks; Sloth's swarm hands correct factual data directly to Pride.");
+  t.push("9. PRIDE answers the user.");
+  t.push("10. ARCTAN SWARM (central pipeline): the pair traces back through its arctangent to us, the original tangent point.");
+  document.getElementById("trace").textContent = t.join("\n");
+}
+</script>
+</body>
+</html>
