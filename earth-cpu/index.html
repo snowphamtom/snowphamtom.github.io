@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>THE EARTH CPU</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:#000;color:#e8e4d8;font-family:ui-monospace,Menlo,Consolas,monospace}
+#wrap{width:100vw;max-width:520px;margin:0 auto;background:#000}
+#stage{position:relative;width:100%;background:#000;overflow:hidden}
+#cv{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
+.ov{position:absolute;transform:translate(-50%,-50%);white-space:nowrap;color:#e8e4d8;text-align:center;line-height:1}
+#hud{position:absolute;left:0;top:0;width:100%;height:4%;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:0 2%;border-bottom:1px solid #2a2a2a;line-height:1}
+#hud span{white-space:nowrap}
+#dash{position:absolute;left:0;top:70%;width:100%;height:30%;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:1px;background:#2a2a2a;padding:1px}
+.pan{background:#000;padding:2% 3%;overflow:hidden}
+.pan h3{color:#c9a227;letter-spacing:.08em;line-height:1}
+.pan .val{color:#fff}
+button{background:#111;color:#e8e4d8;border:1px solid #c9a227;padding:2px 8px;font:inherit;cursor:pointer}
+button.on{background:#c9a227;color:#000}
+#transport{display:flex;gap:6px;align-items:center;padding:6px 2%;flex-wrap:wrap}
+#transport input{flex:1;min-width:120px}
+.tag{cursor:pointer}
+.mlist{max-height:100%;overflow:auto;white-space:normal;word-break:break-all}
+</style></head>
+<body><div id="wrap"><div id="stage">
+<canvas id="cv"></canvas>
+<div id="hud"><span id="hudT">THE EARTH CPU</span><span id="hudS">FRAMING, NOT MEASURED SCIENCE</span></div>
+<div id="labels"></div>
+<div id="dash">
+<div class="pan"><h3>FLOW</h3><div id="flowState"></div></div>
+<div class="pan"><h3>INSPECTOR</h3><div id="insp" class="mlist">TAP A THREAD, A BUNDLE, THE LOOP, OR A NODE.</div></div>
+<div class="pan"><h3>SLATE</h3><div id="slate">FRAMING — NOT MEASURED EARTH SCIENCE. THREADS SCHEMATIC — COUNTS NOT CLAIMED.</div></div>
+<div class="pan"><h3>BUNDLES</h3><div id="groups"></div></div>
+</div></div>
+<div id="transport">
+<button id="bPlay">PLAY</button><button id="bSettled">FLOW 2000</button><button id="bStep">+250MS</button>
+<input id="scrub" type="range" min="0" max="4000" value="2000"><span id="tRead"></span>
+<button id="bReset">RESET VIEW</button>
+</div></div>
+<script>
+const MODEL = {"hero": {"x0": 0.12, "x1": 0.88, "y0": 0.06, "y1": 0.58}, "centre": [0.5, 0.32], "core": {"hw": 0.11, "hh": 0.065}, "gate": {"rx": 0.145, "ry": 0.095}, "loop": {"rx": 0.205, "ry": 0.135}, "hubR": {"rx": 0.305, "ry": 0.195}, "leafR": {"rx": 0.36, "ry": 0.23}, "subY": 0.565, "bow": 0.02, "cycle": 4000, "gold": "#c9a227", "bundles": [{"i": 0, "role": "NUTRIENT", "hue": "#35ffc4", "fans": 5}, {"i": 1, "role": "SIGNAL", "hue": "#ffd94a", "fans": 6}, {"i": 2, "role": "WATER", "hue": "#ff7a59", "fans": 7}, {"i": 3, "role": "MINERAL", "hue": "#57c8ff", "fans": 8}, {"i": 4, "role": "CARBON", "hue": "#b78cff", "fans": 9}, {"i": 5, "role": "EXCHANGE", "hue": "#ff6fa5", "fans": 10}, {"i": 6, "role": "GROWTH", "hue": "#b6ff4a", "fans": 11}], "hubs": [{"i": 0, "role": "NUTRIENT", "hue": "#35ffc4", "a": -1.570796, "x": 0.5, "y": 0.125}, {"i": 1, "role": "SIGNAL", "hue": "#ffd94a", "a": -0.673198, "x": 0.738459, "y": 0.198419}, {"i": 2, "role": "WATER", "hue": "#ff7a59", "a": 0.224399, "x": 0.797353, "y": 0.363392}, {"i": 3, "role": "MINERAL", "hue": "#57c8ff", "a": 1.121997, "x": 0.632335, "y": 0.495689}, {"i": 4, "role": "CARBON", "hue": "#b78cff", "a": 2.019595, "x": 0.367665, "y": 0.495689}, {"i": 5, "role": "EXCHANGE", "hue": "#ff6fa5", "a": 2.917193, "x": 0.202647, "y": 0.363392}, {"i": 6, "role": "GROWTH", "hue": "#b6ff4a", "a": 3.814791, "x": 0.261541, "y": 0.198419}], "leaves": [{"bundle": 0, "j": 0, "x": 0.449764, "y": 0.09225}, {"bundle": 0, "j": 1, "x": 0.474821, "y": 0.090563}, {"bundle": 0, "j": 2, "x": 0.5, "y": 0.09}, {"bundle": 0, "j": 3, "x": 0.525179, "y": 0.090563}, {"bundle": 0, "j": 4, "x": 0.550236, "y": 0.09225}, {"bundle": 1, "j": 0, "x": 0.738081, "y": 0.147479}, {"bundle": 1, "j": 1, "x": 0.756385, "y": 0.158541}, {"bundle": 1, "j": 2, "x": 0.773433, "y": 0.170393}, {"bundle": 1, "j": 3, "x": 0.789141, "y": 0.182978}, {"bundle": 1, "j": 4, "x": 0.803434, "y": 0.196234}, {"bundle": 1, "j": 5, "x": 0.81624, "y": 0.210096}, {"bundle": 2, "j": 0, "x": 0.859963, "y": 0.323312}, {"bundle": 2, "j": 1, "x": 0.858719, "y": 0.339389}, {"bundle": 2, "j": 2, "x": 0.855717, "y": 0.355371}, {"bundle": 2, "j": 3, "x": 0.850974, "y": 0.37118}, {"bundle": 2, "j": 4, "x": 0.844512, "y": 0.386738}, {"bundle": 2, "j": 5, "x": 0.836362, "y": 0.401969}, {"bundle": 2, "j": 6, "x": 0.826564, "y": 0.416799}, {"bundle": 3, "j": 0, "x": 0.730207, "y": 0.496829}, {"bundle": 3, "j": 1, "x": 0.710284, "y": 0.506683}, {"bundle": 3, "j": 2, "x": 0.689332, "y": 0.515623}, {"bundle": 3, "j": 3, "x": 0.667452, "y": 0.523604}, {"bundle": 3, "j": 4, "x": 0.644753, "y": 0.530588}, {"bundle": 3, "j": 5, "x": 0.621344, "y": 0.536541}, {"bundle": 3, "j": 6, "x": 0.597341, "y": 0.541433}, {"bundle": 3, "j": 7, "x": 0.572861, "y": 0.54524}, {"bundle": 4, "j": 0, "x": 0.439521, "y": 0.546731}, {"bundle": 4, "j": 1, "x": 0.414847, "y": 0.543473}, {"bundle": 4, "j": 2, "x": 0.390591, "y": 0.539121}, {"bundle": 4, "j": 3, "x": 0.36687, "y": 0.533695}, {"bundle": 4, "j": 4, "x": 0.343802, "y": 0.527223}, {"bundle": 4, "j": 5, "x": 0.321499, "y": 0.519736}, {"bundle": 4, "j": 6, "x": 0.300069, "y": 0.51127}, {"bundle": 4, "j": 7, "x": 0.27962, "y": 0.501867}, {"bundle": 4, "j": 8, "x": 0.260249, "y": 0.491574}, {"bundle": 5, "j": 0, "x": 0.191114, "y": 0.438133}, {"bundle": 5, "j": 1, "x": 0.178938, "y": 0.424041}, {"bundle": 5, "j": 2, "x": 0.168334, "y": 0.409439}, {"bundle": 5, "j": 3, "x": 0.159355, "y": 0.394399}, {"bundle": 5, "j": 4, "x": 0.152044, "y": 0.378995}, {"bundle": 5, "j": 5, "x": 0.146438, "y": 0.363302}, {"bundle": 5, "j": 6, "x": 0.142563, "y": 0.347397}, {"bundle": 5, "j": 7, "x": 0.140439, "y": 0.331357}, {"bundle": 5, "j": 8, "x": 0.140076, "y": 0.315262}, {"bundle": 5, "j": 9, "x": 0.141477, "y": 0.29919}, {"bundle": 6, "j": 0, "x": 0.158639, "y": 0.246952}, {"bundle": 6, "j": 1, "x": 0.167472, "y": 0.231877}, {"bundle": 6, "j": 2, "x": 0.177934, "y": 0.217233}, {"bundle": 6, "j": 3, "x": 0.189973, "y": 0.203093}, {"bundle": 6, "j": 4, "x": 0.203531, "y": 0.189526}, {"bundle": 6, "j": 5, "x": 0.218541, "y": 0.176597}, {"bundle": 6, "j": 6, "x": 0.234929, "y": 0.164371}, {"bundle": 6, "j": 7, "x": 0.252616, "y": 0.152908}, {"bundle": 6, "j": 8, "x": 0.271514, "y": 0.142262}, {"bundle": 6, "j": 9, "x": 0.291532, "y": 0.132487}, {"bundle": 6, "j": 10, "x": 0.31257, "y": 0.123631}], "threads": [{"k": 0, "bundle": 0, "kind": "trunk", "from": "HUB B0", "to": "PROCESSOR", "pts": [[0.5, 0.125], [0.48, 0.161667], [0.48, 0.198333], [0.5, 0.235]]}, {"k": 1, "bundle": 0, "kind": "fan", "from": "HUB B0", "to": "LEAF B0-0", "pts": [[0.5, 0.125], [0.494177, 0.097329], [0.477432, 0.086413], [0.449764, 0.09225]]}, {"k": 2, "bundle": 0, "kind": "fan", "from": "HUB B0", "to": "LEAF B0-1", "pts": [[0.5, 0.125], [0.507752, 0.101717], [0.499359, 0.090238], [0.474821, 0.090563]]}, {"k": 3, "bundle": 0, "kind": "fan", "from": "HUB B0", "to": "LEAF B0-2", "pts": [[0.5, 0.125], [0.52, 0.113333], [0.52, 0.101667], [0.5, 0.09]]}, {"k": 4, "bundle": 0, "kind": "fan", "from": "HUB B0", "to": "LEAF B0-3", "pts": [[0.5, 0.125], [0.524538, 0.125325], [0.532931, 0.113846], [0.525179, 0.090563]]}, {"k": 5, "bundle": 0, "kind": "fan", "from": "HUB B0", "to": "LEAF B0-4", "pts": [[0.5, 0.125], [0.527668, 0.130837], [0.544413, 0.119921], [0.550236, 0.09225]]}, {"k": 6, "bundle": 1, "kind": "trunk", "from": "HUB B1", "to": "PROCESSOR", "pts": [[0.738459, 0.198419], [0.682787, 0.203302], [0.635877, 0.226163], [0.597729, 0.267003]]}, {"k": 7, "bundle": 1, "kind": "fan", "from": "HUB B1", "to": "LEAF B1-0", "pts": [[0.738459, 0.198419], [0.758332, 0.181291], [0.758206, 0.164311], [0.738081, 0.147479]]}, {"k": 8, "bundle": 1, "kind": "fan", "from": "HUB B1", "to": "LEAF B1-1", "pts": [[0.738459, 0.198419], [0.762676, 0.193326], [0.768651, 0.180034], [0.756385, 0.158541]]}, {"k": 9, "bundle": 1, "kind": "fan", "from": "HUB B1", "to": "LEAF B1-2", "pts": [[0.738459, 0.198419], [0.762624, 0.204684], [0.774282, 0.195342], [0.773433, 0.170393]]}, {"k": 10, "bundle": 1, "kind": "fan", "from": "HUB B1", "to": "LEAF B1-3", "pts": [[0.738459, 0.198419], [0.761182, 0.212404], [0.778076, 0.207257], [0.789141, 0.182978]]}, {"k": 11, "bundle": 1, "kind": "fan", "from": "HUB B1", "to": "LEAF B1-4", "pts": [[0.738459, 0.198419], [0.76079, 0.217679], [0.782448, 0.216951], [0.803434, 0.196234]]}, {"k": 12, "bundle": 1, "kind": "fan", "from": "HUB B1", "to": "LEAF B1-5", "pts": [[0.738459, 0.198419], [0.761417, 0.22209], [0.787344, 0.225982], [0.81624, 0.210096]]}, {"k": 13, "bundle": 2, "kind": "trunk", "from": "HUB B2", "to": "PROCESSOR", "pts": [[0.797353, 0.363392], [0.74162, 0.335424], [0.683125, 0.327265], [0.621866, 0.338914]]}, {"k": 14, "bundle": 2, "kind": "fan", "from": "HUB B2", "to": "LEAF B2-0", "pts": [[0.797353, 0.363392], [0.829006, 0.366876], [0.849876, 0.353516], [0.859963, 0.323312]]}, {"k": 15, "bundle": 2, "kind": "fan", "from": "HUB B2", "to": "LEAF B2-1", "pts": [[0.797353, 0.363392], [0.825094, 0.374017], [0.845549, 0.366016], [0.858719, 0.339389]]}, {"k": 16, "bundle": 2, "kind": "fan", "from": "HUB B2", "to": "LEAF B2-2", "pts": [[0.797353, 0.363392], [0.819531, 0.380532], [0.838985, 0.377858], [0.855717, 0.355371]]}, {"k": 17, "bundle": 2, "kind": "fan", "from": "HUB B2", "to": "LEAF B2-3", "pts": [[0.797353, 0.363392], [0.812352, 0.38578], [0.830226, 0.388376], [0.850974, 0.37118]]}, {"k": 18, "bundle": 2, "kind": "fan", "from": "HUB B2", "to": "LEAF B2-4", "pts": [[0.797353, 0.363392], [0.804199, 0.389098], [0.819919, 0.39688], [0.844512, 0.386738]]}, {"k": 19, "bundle": 2, "kind": "fan", "from": "HUB B2", "to": "LEAF B2-5", "pts": [[0.797353, 0.363392], [0.796293, 0.390472], [0.809296, 0.403331], [0.836362, 0.401969]]}, {"k": 20, "bundle": 2, "kind": "fan", "from": "HUB B2", "to": "LEAF B2-6", "pts": [[0.797353, 0.363392], [0.789543, 0.390792], [0.79928, 0.408594], [0.826564, 0.416799]]}, {"k": 21, "bundle": 3, "kind": "trunk", "from": "HUB B3", "to": "PROCESSOR", "pts": [[0.632335, 0.495689], [0.62201, 0.450274], [0.595977, 0.417239], [0.554235, 0.396582]]}, {"k": 22, "bundle": 3, "kind": "fan", "from": "HUB B3", "to": "LEAF B3-0", "pts": [[0.632335, 0.495689], [0.664726, 0.516068], [0.69735, 0.516448], [0.730207, 0.496829]]}, {"k": 23, "bundle": 3, "kind": "fan", "from": "HUB B3", "to": "LEAF B3-1", "pts": [[0.632335, 0.495689], [0.655525, 0.519158], [0.681508, 0.522822], [0.710284, 0.506683]]}, {"k": 24, "bundle": 3, "kind": "fan", "from": "HUB B3", "to": "LEAF B3-2", "pts": [[0.632335, 0.495689], [0.644731, 0.521212], [0.66373, 0.527857], [0.689332, 0.515623]]}, {"k": 25, "bundle": 3, "kind": "fan", "from": "HUB B3", "to": "LEAF B3-3", "pts": [[0.632335, 0.495689], [0.631595, 0.52065], [0.643301, 0.529955], [0.667452, 0.523604]]}, {"k": 26, "bundle": 3, "kind": "fan", "from": "HUB B3", "to": "LEAF B3-4", "pts": [[0.632335, 0.495689], [0.617632, 0.514027], [0.621771, 0.52566], [0.644753, 0.530588]]}, {"k": 27, "bundle": 3, "kind": "fan", "from": "HUB B3", "to": "LEAF B3-5", "pts": [[0.632335, 0.495689], [0.609358, 0.50411], [0.605694, 0.517728], [0.621344, 0.536541]]}, {"k": 28, "bundle": 3, "kind": "fan", "from": "HUB B3", "to": "LEAF B3-6", "pts": [[0.632335, 0.495689], [0.604785, 0.498785], [0.593121, 0.514033], [0.597341, 0.541433]]}, {"k": 29, "bundle": 3, "kind": "fan", "from": "HUB B3", "to": "LEAF B3-7", "pts": [[0.632335, 0.495689], [0.599708, 0.49684], [0.579884, 0.513357], [0.572861, 0.54524]]}, {"k": 30, "bundle": 4, "kind": "trunk", "from": "HUB B4", "to": "PROCESSOR", "pts": [[0.367665, 0.495689], [0.409407, 0.475032], [0.43544, 0.441997], [0.445765, 0.396582]]}, {"k": 31, "bundle": 4, "kind": "fan", "from": "HUB B4", "to": "LEAF B4-0", "pts": [[0.367665, 0.495689], [0.380035, 0.529008], [0.403987, 0.546022], [0.439521, 0.546731]]}, {"k": 32, "bundle": 4, "kind": "fan", "from": "HUB B4", "to": "LEAF B4-1", "pts": [[0.367665, 0.495689], [0.369161, 0.525669], [0.384888, 0.541597], [0.414847, 0.543473]]}, {"k": 33, "bundle": 4, "kind": "fan", "from": "HUB B4", "to": "LEAF B4-2", "pts": [[0.367665, 0.495689], [0.35762, 0.519503], [0.365262, 0.53398], [0.390591, 0.539121]]}, {"k": 34, "bundle": 4, "kind": "fan", "from": "HUB B4", "to": "LEAF B4-3", "pts": [[0.367665, 0.495689], [0.347404, 0.507939], [0.347139, 0.520608], [0.36687, 0.533695]]}, {"k": 35, "bundle": 4, "kind": "fan", "from": "HUB B4", "to": "LEAF B4-4", "pts": [[0.367665, 0.495689], [0.343762, 0.494132], [0.335808, 0.504643], [0.343802, 0.527223]]}, {"k": 36, "bundle": 4, "kind": "fan", "from": "HUB B4", "to": "LEAF B4-5", "pts": [[0.367665, 0.495689], [0.343037, 0.485967], [0.327648, 0.493982], [0.321499, 0.519736]]}, {"k": 37, "bundle": 4, "kind": "fan", "from": "HUB B4", "to": "LEAF B4-6", "pts": [[0.367665, 0.495689], [0.340641, 0.481394], [0.318109, 0.486587], [0.300069, 0.51127]]}, {"k": 38, "bundle": 4, "kind": "fan", "from": "HUB B4", "to": "LEAF B4-7", "pts": [[0.367665, 0.495689], [0.336917, 0.477797], [0.307568, 0.479857], [0.27962, 0.501867]]}, {"k": 39, "bundle": 4, "kind": "fan", "from": "HUB B4", "to": "LEAF B4-8", "pts": [[0.367665, 0.495689], [0.332625, 0.474332], [0.29682, 0.47296], [0.260249, 0.491574]]}, {"k": 40, "bundle": 5, "kind": "trunk", "from": "HUB B5", "to": "PROCESSOR", "pts": [[0.202647, 0.363392], [0.263906, 0.375041], [0.322401, 0.366882], [0.378134, 0.338914]]}, {"k": 41, "bundle": 5, "kind": "fan", "from": "HUB B5", "to": "LEAF B5-0", "pts": [[0.202647, 0.363392], [0.179037, 0.385256], [0.175192, 0.410169], [0.191114, 0.438133]]}, {"k": 42, "bundle": 5, "kind": "fan", "from": "HUB B5", "to": "LEAF B5-1", "pts": [[0.202647, 0.363392], [0.176117, 0.376327], [0.168214, 0.396543], [0.178938, 0.424041]]}, {"k": 43, "bundle": 5, "kind": "fan", "from": "HUB B5", "to": "LEAF B5-2", "pts": [[0.202647, 0.363392], [0.175172, 0.366791], [0.163735, 0.38214], [0.168334, 0.409439]]}, {"k": 44, "bundle": 5, "kind": "fan", "from": "HUB B5", "to": "LEAF B5-3", "pts": [[0.202647, 0.363392], [0.176571, 0.357468], [0.16214, 0.367804], [0.159355, 0.394399]]}, {"k": 45, "bundle": 5, "kind": "fan", "from": "HUB B5", "to": "LEAF B5-4", "pts": [[0.202647, 0.363392], [0.179886, 0.349481], [0.163019, 0.354682], [0.152044, 0.378995]]}, {"k": 46, "bundle": 5, "kind": "fan", "from": "HUB B5", "to": "LEAF B5-5", "pts": [[0.202647, 0.363392], [0.183943, 0.343362], [0.165206, 0.343332], [0.146438, 0.363302]]}, {"k": 47, "bundle": 5, "kind": "fan", "from": "HUB B5", "to": "LEAF B5-6", "pts": [[0.202647, 0.363392], [0.187764, 0.338733], [0.167736, 0.333402], [0.142563, 0.347397]]}, {"k": 48, "bundle": 5, "kind": "fan", "from": "HUB B5", "to": "LEAF B5-7", "pts": [[0.202647, 0.363392], [0.191068, 0.334933], [0.170332, 0.324254], [0.140439, 0.331357]]}, {"k": 49, "bundle": 5, "kind": "fan", "from": "HUB B5", "to": "LEAF B5-8", "pts": [[0.202647, 0.363392], [0.193984, 0.331496], [0.173127, 0.315453], [0.140076, 0.315262]]}, {"k": 50, "bundle": 5, "kind": "fan", "from": "HUB B5", "to": "LEAF B5-9", "pts": [[0.202647, 0.363392], [0.196737, 0.328195], [0.176347, 0.306795], [0.141477, 0.29919]]}, {"k": 51, "bundle": 6, "kind": "trunk", "from": "HUB B6", "to": "PROCESSOR", "pts": [[0.261541, 0.198419], [0.299689, 0.239259], [0.346599, 0.26212], [0.402271, 0.267003]]}, {"k": 52, "bundle": 6, "kind": "fan", "from": "HUB B6", "to": "LEAF B6-0", "pts": [[0.261541, 0.198419], [0.218709, 0.196508], [0.184408, 0.212685], [0.158639, 0.246952]]}, {"k": 53, "bundle": 6, "kind": "fan", "from": "HUB B6", "to": "LEAF B6-1", "pts": [[0.261541, 0.198419], [0.223482, 0.190728], [0.192126, 0.201881], [0.167472, 0.231877]]}, {"k": 54, "bundle": 6, "kind": "fan", "from": "HUB B6", "to": "LEAF B6-2", "pts": [[0.261541, 0.198419], [0.229281, 0.185178], [0.201412, 0.19145], [0.177934, 0.217233]]}, {"k": 55, "bundle": 6, "kind": "fan", "from": "HUB B6", "to": "LEAF B6-3", "pts": [[0.261541, 0.198419], [0.236382, 0.18002], [0.212526, 0.181578], [0.189973, 0.203093]]}, {"k": 56, "bundle": 6, "kind": "fan", "from": "HUB B6", "to": "LEAF B6-4", "pts": [[0.261541, 0.198419], [0.245235, 0.175686], [0.225898, 0.172721], [0.203531, 0.189526]]}, {"k": 57, "bundle": 6, "kind": "fan", "from": "HUB B6", "to": "LEAF B6-5", "pts": [[0.261541, 0.198419], [0.256259, 0.17331], [0.241925, 0.166036], [0.218541, 0.176597]]}, {"k": 58, "bundle": 6, "kind": "fan", "from": "HUB B6", "to": "LEAF B6-6", "pts": [[0.261541, 0.198419], [0.268428, 0.174753], [0.259557, 0.163404], [0.234929, 0.164371]]}, {"k": 59, "bundle": 6, "kind": "fan", "from": "HUB B6", "to": "LEAF B6-7", "pts": [[0.261541, 0.198419], [0.278192, 0.1794], [0.275217, 0.16423], [0.252616, 0.152908]]}, {"k": 60, "bundle": 6, "kind": "fan", "from": "HUB B6", "to": "LEAF B6-8", "pts": [[0.261541, 0.198419], [0.284557, 0.183197], [0.287882, 0.164478], [0.271514, 0.142262]]}, {"k": 61, "bundle": 6, "kind": "fan", "from": "HUB B6", "to": "LEAF B6-9", "pts": [[0.261541, 0.198419], [0.289743, 0.184723], [0.29974, 0.162745], [0.291532, 0.132487]]}, {"k": 62, "bundle": 6, "kind": "fan", "from": "HUB B6", "to": "LEAF B6-10", "pts": [[0.261541, 0.198419], [0.295071, 0.184762], [0.312081, 0.159833], [0.31257, 0.123631]]}], "w7": ["#35ffc4", "#ffd94a", "#ff7a59", "#57c8ff", "#b78cff", "#ff6fa5", "#b6ff4a"]};
+const LIGHT = {x:0.62, y:0.30, i:1.00, fall:4.5, color:"#fff3d6"};
+const SHADE = {floor:0.42, steps:16};
+const REFL = {att:0.30};
+const CYCLE = 4000;
+let SW=390, SH=650;
+let T = 2000, playing=false, sel=null;
+const qs = new URLSearchParams(location.search);
+if(qs.has("t")){ T = Math.max(0, Math.min(CYCLE, parseFloat(qs.get("t")))); }
+if(qs.has("sel")){
+  const s = qs.get("sel");
+  if(s[0]==="b") sel = {type:"bundle", i:parseInt(s.slice(1))};
+  else if(s==="c") sel = {type:"coolant"};
+  else if(s==="p") sel = {type:"processor"};
+  else if(s==="g") sel = {type:"gate"};
+  else if(s==="s") sel = {type:"substrate"};
+  else if(s[0]==="t"){ const p = s.slice(1).split("_"); sel = {type:"thread", k:parseInt(p[0])}; }
+}
+const cv = document.getElementById("cv"), ctx = cv.getContext("2d");
+const stageEl = document.getElementById("stage");
+function hexRGB(h){ return [parseInt(h.slice(1,3),16), parseInt(h.slice(3,5),16), parseInt(h.slice(5,7),16)]; }
+function shadeAt(hex, I){
+  const c = hexRGB(hex), L = hexRGB(LIGHT.color), q = 1/SHADE.steps;
+  const Iq = Math.round(I/q)*q;
+  const f = SHADE.floor + (1-SHADE.floor)*Iq;
+  const out = c.map((v,i)=>Math.round(v*f + L[i]*(1-f)*Math.max(0, Iq-0.75)*0.35));
+  return "rgb("+out.join(",")+")";
+}
+function illum(px,py){ const d = Math.hypot(px-LIGHT.x*SW, py-LIGHT.y*SH)/SH; return LIGHT.i/(1+LIGHT.fall*d*d); }
+function shadeCol(hex, px, py){ return shadeAt(hex, illum(px,py)); }
+function X(f){ return f*SW; }
+function Y(f){ return f*SH; }
+function cubicPt(c, s){
+  const u=1-s;
+  return [u*u*u*c[0][0]+3*u*u*s*c[1][0]+3*u*s*s*c[2][0]+s*s*s*c[3][0],
+          u*u*u*c[0][1]+3*u*u*s*c[1][1]+3*u*s*s*c[2][1]+s*s*s*c[3][1]];
+}
+function threadPts(t){
+  const pts=[];
+  for(let i=0;i<=32;i++){ const p = cubicPt(t.pts, i/32); pts.push([X(p[0]), Y(p[1])]); }
+  return pts;
+}
+function ellipsePt(rx, ry, s){
+  const a = s*2*Math.PI;
+  return [X(MODEL.centre[0]+rx*Math.cos(a)), Y(MODEL.centre[1]+ry*Math.sin(a))];
+}
+function drawSphere(x,y,r,hex){
+  ctx.fillStyle = "#1a1a1a"; ctx.beginPath();
+  const dx0 = x-LIGHT.x*SW, dy0 = y-LIGHT.y*SH, m0 = Math.hypot(dx0,dy0)||1;
+  ctx.arc(x+dx0/m0*r*1.9, y+dy0/m0*r*1.9, r*0.5, 0, 7); ctx.fill();
+  const I = illum(x,y);
+  ctx.fillStyle = shadeAt(hex, 0.55*I); ctx.beginPath(); ctx.arc(x,y,r,0,7); ctx.fill();
+  const dx = LIGHT.x*SW-x, dy = LIGHT.y*SH-y, m = Math.hypot(dx,dy)||1;
+  ctx.fillStyle = shadeAt(hex, I); ctx.beginPath();
+  ctx.arc(x+dx/m*r*0.38, y+dy/m*r*0.38, r*0.62, 0, 7); ctx.fill();
+  ctx.fillStyle = shadeAt(hex, illum(x, y+r*2.2)*REFL.att+0.15); ctx.globalAlpha = REFL.att;
+  ctx.beginPath(); ctx.arc(x, y+r*2.2, r*0.8, 0, 7); ctx.fill(); ctx.globalAlpha = 1;
+}
+function draw(){
+  ctx.fillStyle="#000000"; ctx.fillRect(0,0,SW,SH);
+  const cx = X(MODEL.centre[0]), cy = Y(MODEL.centre[1]);
+  ctx.strokeStyle = "#8a8a8a"; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(X(MODEL.hero.x0), Y(MODEL.subY)); ctx.lineTo(X(MODEL.hero.x1), Y(MODEL.subY)); ctx.stroke();
+  for(const t of MODEL.threads){
+    const pts = threadPts(t), hue = MODEL.bundles[t.bundle].hue;
+    const isSel = (sel && sel.type==="thread" && sel.k===t.k) ||
+                  (sel && sel.type==="bundle" && sel.i===t.bundle);
+    ctx.strokeStyle = shadeCol(hue, pts[16][0], pts[16][1]);
+    ctx.globalAlpha = isSel ? 1.0 : 0.60;
+    ctx.lineWidth = isSel ? 2.2 : 1.1;
+    ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
+    for(let i=1;i<pts.length;i++) ctx.lineTo(pts[i][0], pts[i][1]);
+    ctx.stroke(); ctx.globalAlpha = 1;
+  }
+  ctx.strokeStyle = MODEL.gold; ctx.lineWidth = 1.5; ctx.setLineDash([6,4]);
+  ctx.beginPath(); ctx.ellipse(cx, cy, MODEL.gate.rx*SW, MODEL.gate.ry*SH, 0, 0, 7); ctx.stroke(); ctx.setLineDash([]);
+  ctx.strokeStyle = shadeCol("#57c8ff", X(MODEL.centre[0]+MODEL.loop.rx), cy);
+  ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.ellipse(cx, cy, MODEL.loop.rx*SW, MODEL.loop.ry*SH, 0, 0, 7); ctx.stroke();
+  for(let k=0;k<8;k++){
+    const p = ellipsePt(MODEL.loop.rx, MODEL.loop.ry, T/CYCLE + k/8);
+    drawSphere(p[0], p[1], 4.5, "#57c8ff");
+  }
+  ctx.strokeStyle = MODEL.gold; ctx.lineWidth = 2;
+  ctx.strokeRect(X(MODEL.centre[0]-MODEL.core.hw), Y(MODEL.centre[1]-MODEL.core.hh),
+                 MODEL.core.hw*2*SW, MODEL.core.hh*2*SH);
+  drawSphere(cx, cy, 8, MODEL.gold);
+  for(const h of MODEL.hubs){
+    const isSel = sel && sel.type==="bundle" && sel.i===h.i;
+    drawSphere(X(h.x), Y(h.y), isSel ? 9 : 7, h.hue);
+  }
+  for(const l of MODEL.leaves){
+    const hue = MODEL.bundles[l.bundle].hue;
+    ctx.fillStyle = shadeCol(hue, X(l.x), Y(l.y)); ctx.beginPath(); ctx.arc(X(l.x), Y(l.y), 2.5, 0, 7); ctx.fill();
+  }
+  drawDash();
+}
+function bundleText(i){
+  const b = MODEL.bundles[i];
+  return "BUNDLE B"+i+" · "+b.role+"<br>HUE "+b.hue+" · DRAWN "+(1+b.fans)+"<br>CARRIES "+b.role+"<br>GRADE FRAMING<br>COUNTS NOT CLAIMED";
+}
+function drawDash(){
+  document.getElementById("flowState").innerHTML =
+    "LOOP CLOCKWISE<br>T "+T.toFixed(0)+" / 4000 · BEADS 8<br>FLOW, NOT DATA<br>RIVERS + CURRENTS";
+  document.getElementById("tRead").textContent = "T "+T.toFixed(0)+" MS";
+  const el = document.getElementById("insp");
+  if(!sel){ el.textContent = "TAP A THREAD, A BUNDLE, THE LOOP, OR A NODE."; }
+  else if(sel.type==="bundle"){ el.innerHTML = bundleText(sel.i); }
+  else if(sel.type==="thread"){ const t = MODEL.threads[sel.k];
+    el.innerHTML = "THREAD "+t.k+" · BUNDLE B"+t.bundle+"<br>"+t.kind.toUpperCase()+" · "+MODEL.bundles[t.bundle].role+"<br>"+t.from+" → "+t.to+"<br>ONE THREAD, ONE PATH<br>GRADE FRAMING"; }
+  else if(sel.type==="coolant"){ el.innerHTML = "COOLANT LOOP · OCEANS<br>SALTWATER LOOP<br>COOLS BY CIRCULATION<br>FLOW CLOCKWISE<br>GRADE FRAMING"; }
+  else if(sel.type==="processor"){ el.innerHTML = "PROCESSOR<br>CORE + MANTLE<br>WORK, IN THE FRAMING<br>GRADE FRAMING"; }
+  else if(sel.type==="gate"){ el.innerHTML = "GATE · EXCHANGE<br>ADMITS ONLY WHAT FITS<br>ANALOGY: BRAIN GATE<br>GRADE FRAMING"; }
+  else if(sel.type==="substrate"){ el.innerHTML = "SUBSTRATE<br>CRUST + SOIL<br>GROUND, IN THE FRAMING<br>GRADE FRAMING"; }
+  const gd = document.getElementById("groups");
+  gd.innerHTML = MODEL.bundles.map(b=>{
+    return "<span class='tag' data-b='"+b.i+"'>B"+b.i+" "+b.role+"</span>";
+  }).join(" · ");
+  gd.querySelectorAll(".tag").forEach(tag=>tag.onclick=()=>{ sel={type:"bundle", i:parseInt(tag.dataset.b)}; draw(); });
+  document.getElementById("scrub").value = T;
+}
+function buildLabels(){
+  const L = document.getElementById("labels"); L.innerHTML = "";
+  const mk = (fx, fy, html, cls)=>{
+    const d = document.createElement("div"); d.className = "ov"+(cls?" "+cls:"");
+    d.style.left = (fx*100)+"%"; d.style.top = (fy*100)+"%"; d.innerHTML = html; L.appendChild(d); return d; };
+  mk(0.50, 0.075, "EARTH — SALTWATER-COOLED CPU");
+  const pr = mk(0.32, 0.32, "PROCESSOR", "tag"); pr.onclick = ()=>{ sel={type:"processor"}; draw(); };
+  const ga = mk(0.70, 0.24, "GATE", "tag"); ga.onclick = ()=>{ sel={type:"gate"}; draw(); };
+  const co = mk(0.50, 0.485, "COOLANT LOOP", "tag"); co.onclick = ()=>{ sel={type:"coolant"}; draw(); };
+  const su = mk(0.82, 0.545, "SUBSTRATE", "tag"); su.onclick = ()=>{ sel={type:"substrate"}; draw(); };
+}
+function sizeStage(){
+  SW = stageEl.clientWidth; SH = Math.round(SW*5/3);
+  stageEl.style.height = SH+"px"; cv.width = SW; cv.height = SH;
+  const f = (r)=>Math.max(13, Math.round(r*SH));
+  document.getElementById("hudT").style.fontSize = f(0.020)+"px";
+  document.getElementById("hudS").style.fontSize = f(0.020)+"px";
+  document.querySelectorAll(".ov").forEach(el=>el.style.fontSize = f(0.020)+"px");
+  document.querySelectorAll(".pan").forEach(el=>el.style.fontSize = f(0.020)+"px");
+  document.querySelectorAll(".pan h3").forEach(el=>el.style.fontSize = f(0.022)+"px");
+  document.getElementById("transport").style.fontSize = f(0.020)+"px";
+  document.querySelectorAll("#transport button").forEach(el=>el.style.fontSize = f(0.020)+"px");
+}
+function distToEllipse(x, y, rx, ry){
+  let best = 1e9;
+  for(let i=0;i<72;i++){ const p = ellipsePt(rx, ry, i/72); const d = Math.hypot(p[0]-x, p[1]-y); if(d<best) best=d; }
+  return best;
+}
+cv.addEventListener("click", (e)=>{
+  const r = cv.getBoundingClientRect(), x = e.clientX-r.left, y = e.clientY-r.top;
+  for(const h of MODEL.hubs){
+    if(Math.hypot(X(h.x)-x, Y(h.y)-y)<=16){ sel={type:"bundle", i:h.i}; draw(); return; } }
+  if(Math.abs(y-Y(MODEL.subY))<=6 && x>=X(MODEL.hero.x0) && x<=X(MODEL.hero.x1)){ sel={type:"substrate"}; draw(); return; }
+  if(distToEllipse(x, y, MODEL.gate.rx, MODEL.gate.ry)<=8){ sel={type:"gate"}; draw(); return; }
+  if(distToEllipse(x, y, MODEL.loop.rx, MODEL.loop.ry)<=8){ sel={type:"coolant"}; draw(); return; }
+  const cx = X(MODEL.centre[0]), cy = Y(MODEL.centre[1]);
+  if(Math.abs(x-cx)<=MODEL.core.hw*SW && Math.abs(y-cy)<=MODEL.core.hh*SH){ sel={type:"processor"}; draw(); return; }
+  let best = null, bd = 1e9;
+  for(const t of MODEL.threads){ const pts = threadPts(t);
+    for(const p of pts){ const d = Math.hypot(p[0]-x, p[1]-y); if(d<bd){ bd=d; best=t; } } }
+  if(best && bd<=10){ sel={type:"thread", k:best.k}; draw(); return; }
+});
+document.getElementById("bPlay").onclick = ()=>{
+  if(playing){ playing=false; document.getElementById("bPlay").textContent="PLAY"; return; }
+  playing=true; document.getElementById("bPlay").textContent="PAUSE";
+  const start = performance.now()-T;
+  const step = (now)=>{ if(!playing) return; T = (now-start)%CYCLE; draw(); requestAnimationFrame(step); };
+  requestAnimationFrame(step);
+};
+document.getElementById("bSettled").onclick = ()=>{ playing=false; document.getElementById("bPlay").textContent="PLAY"; T=2000; draw(); };
+document.getElementById("bStep").onclick = ()=>{ playing=false; document.getElementById("bPlay").textContent="PLAY"; T=Math.min(CYCLE, T+250); draw(); };
+document.getElementById("scrub").oninput = (e)=>{ playing=false; document.getElementById("bPlay").textContent="PLAY"; T=parseFloat(e.target.value); draw(); };
+document.getElementById("bReset").onclick = ()=>{ sel=null; T=2000; draw(); };
+window.__EARTH__ = { model: MODEL,
+  stage: ()=>({SW: SW, SH: SH}),
+  setT: (t)=>{ T=t; draw(); }, getT: ()=>T, getSel: ()=>sel,
+  hubXY: (i)=>{ const h = MODEL.hubs[i]; return [X(h.x), Y(h.y)]; },
+  loopPoint: (s)=>ellipsePt(MODEL.loop.rx, MODEL.loop.ry, s),
+  gatePoint: (s)=>ellipsePt(MODEL.gate.rx, MODEL.gate.ry, s),
+  coreXY: ()=>{ return [X(MODEL.centre[0]), Y(MODEL.centre[1])]; },
+  subPoint: ()=>{ return [X(0.50), Y(MODEL.subY)]; },
+  threadPoint: (k, s)=>{ const pts = threadPts(MODEL.threads[k]); return pts[Math.min(pts.length-1, s)]; } };
+sizeStage(); buildLabels(); draw();
+window.addEventListener("resize", ()=>{ sizeStage(); buildLabels(); draw(); });
+</script></body></html>

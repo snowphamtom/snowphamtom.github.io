@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>THE BRAIN MAP</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:#000;color:#e8e4d8;font-family:ui-monospace,Menlo,Consolas,monospace}
+#wrap{width:100vw;max-width:520px;margin:0 auto;background:#000}
+#stage{position:relative;width:100%;background:#000;overflow:hidden}
+#cv{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
+.ov{position:absolute;transform:translate(-50%,-50%);white-space:nowrap;color:#e8e4d8;text-align:center;line-height:1}
+#hud{position:absolute;left:0;top:0;width:100%;height:4%;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:0 2%;border-bottom:1px solid #2a2a2a;line-height:1}
+#dash{position:absolute;left:0;top:70%;width:100%;height:30%;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:1px;background:#2a2a2a;padding:1px}
+.pan{background:#000;padding:2% 3%;overflow:hidden}
+.pan h3{color:#c9a227;letter-spacing:.08em;line-height:1}
+#groups{line-height:1}
+#groups div{padding:1px 0}
+.pan .val{color:#fff}
+button{background:#111;color:#e8e4d8;border:1px solid #c9a227;padding:2px 8px;font:inherit;cursor:pointer}
+button.on{background:#c9a227;color:#000}
+#transport{display:flex;gap:6px;align-items:center;padding:6px 2%;flex-wrap:wrap}
+#transport input{flex:1;min-width:120px}
+.tag{cursor:pointer}
+.mlist{max-height:100%;overflow:auto;white-space:normal;word-break:break-all}
+</style></head>
+<body><div id="wrap"><div id="stage">
+<canvas id="cv"></canvas>
+<div id="hud"><span id="hudT">THE BRAIN MAP</span><span id="hudS">74 THREADS · 49 ORGANIZED · 25 ASIDE · ε_H 0.15</span></div>
+<div id="labels"></div>
+<div id="dash">
+<div class="pan"><h3>FLOW</h3><div id="flowState"></div></div>
+<div class="pan"><h3>INSPECTOR</h3><div id="insp" class="mlist">TAP A THREAD, A BUNDLE, OR A DESTINATION.</div></div>
+<div class="pan"><h3>REFUSAL LEDGER</h3><div id="ledger"></div></div>
+<div class="pan"><h3>GROUPS <button id="bZoomSel">ZOOM SEL</button></h3><div id="groups"></div></div>
+</div></div>
+<div id="transport">
+<button id="bPlay">PLAY</button><button id="bSettled">SETTLED</button><button id="bStep">+15MS</button>
+<input id="scrub" type="range" min="0" max="4000" value="3000"><span id="tRead"></span>
+<button id="bReset">RESET VIEW</button>
+</div></div>
+<script>
+const MODEL = {"eps": 0.15, "rmax": 0.253174, "hero": {"x0": 0.12, "x1": 0.88, "y0": 0.06, "y1": 0.58}, "gateY": 0.32, "originY": 0.18, "destY": 0.5, "originX": {"QUIET": 0.196, "KEEPERS": 0.34800000000000003, "MIXED": 0.5, "BEST-12OF12": 0.652, "TWIN-LADDER": 0.8039999999999999}, "counts": {"QUIET": 8, "KEEPERS": 9, "MIXED": 15, "BEST-12OF12": 24, "TWIN-LADDER": 18}, "bundleW": {"QUIET": 0.045128, "KEEPERS": 0.050769, "MIXED": 0.084615, "BEST-12OF12": 0.135385, "TWIN-LADDER": 0.101538}, "pitch": 0.0056410256410256415, "epsTickX": 0.570283, "destC": {"a": 0.31, "r": 0.69}, "grid": {"a": 7, "r": 5}, "dpitch": 0.023076923076923078, "groups": ["QUIET", "KEEPERS", "MIXED", "BEST-12OF12", "TWIN-LADDER"], "ghue": {"QUIET": "#35ffc4", "KEEPERS": "#ffd94a", "MIXED": "#ff7a59", "BEST-12OF12": "#57c8ff", "TWIN-LADDER": "#b78cff"}, "gold": "#c9a227", "threads": [{"id": "1", "group": "QUIET", "r": 0.142411, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "a02ca181946d22a9", "cause": "CRYSTALLIZE", "k": 0, "ox": 0.176256, "oy": 0.18, "gx": 0.547502, "gy": 0.32, "dx": 0.240769, "dy": 0.458462, "cr": 0, "within": 0}, {"id": "2", "group": "QUIET", "r": 0.192758, "d": "r", "sH": false, "sSolv": true, "rHbit": false, "audit": "3db470a0e807e84a", "cause": "DISSOLVE:residual", "k": 1, "ox": 0.181897, "oy": 0.18, "gx": 0.698638, "gy": 0.32, "dx": 0.643846, "dy": 0.472308, "cr": 0, "within": 1}, {"id": "3", "group": "QUIET", "r": 0.139534, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "4cae9236727db3b3", "cause": "CRYSTALLIZE", "k": 2, "ox": 0.187538, "oy": 0.18, "gx": 0.538865, "gy": 0.32, "dx": 0.263846, "dy": 0.458462, "cr": 1, "within": 2}, {"id": "4", "group": "QUIET", "r": 0.125149, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "7d264f0e455aa475", "cause": "CRYSTALLIZE", "k": 3, "ox": 0.193179, "oy": 0.18, "gx": 0.495683, "gy": 0.32, "dx": 0.286923, "dy": 0.458462, "cr": 2, "within": 3}, {"id": "5", "group": "QUIET", "r": 0.225843, "d": "r", "sH": false, "sSolv": true, "rHbit": false, "audit": "5ab79a5e57ed9314", "cause": "DISSOLVE:residual", "k": 4, "ox": 0.198821, "oy": 0.18, "gx": 0.797955, "gy": 0.32, "dx": 0.666923, "dy": 0.472308, "cr": 1, "within": 4}, {"id": "6", "group": "QUIET", "r": 0.145288, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "d600a3bf6c9618b9", "cause": "CRYSTALLIZE", "k": 5, "ox": 0.204462, "oy": 0.18, "gx": 0.556138, "gy": 0.32, "dx": 0.31, "dy": 0.458462, "cr": 3, "within": 5}, {"id": "7", "group": "QUIET", "r": 0.176934, "d": "r", "sH": false, "sSolv": true, "rHbit": false, "audit": "b3b3964169775d96", "cause": "DISSOLVE:residual", "k": 6, "ox": 0.210103, "oy": 0.18, "gx": 0.651136, "gy": 0.32, "dx": 0.69, "dy": 0.472308, "cr": 2, "within": 6}, {"id": "8", "group": "QUIET", "r": 0.227282, "d": "r", "sH": false, "sSolv": true, "rHbit": false, "audit": "be309ff35ab8053b", "cause": "DISSOLVE:residual", "k": 7, "ox": 0.215744, "oy": 0.18, "gx": 0.802275, "gy": 0.32, "dx": 0.713077, "dy": 0.472308, "cr": 3, "within": 7}, {"id": "1", "group": "KEEPERS", "r": 0.011691, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "2c57ce6fb52d93f7", "cause": "CRYSTALLIZE", "k": 8, "ox": 0.325436, "oy": 0.18, "gx": 0.155095, "gy": 0.32, "dx": 0.333077, "dy": 0.458462, "cr": 4, "within": 0}, {"id": "2", "group": "KEEPERS", "r": 0.00647, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "33cb5c79cba4d9c6", "cause": "CRYSTALLIZE", "k": 9, "ox": 0.331077, "oy": 0.18, "gx": 0.139422, "gy": 0.32, "dx": 0.356154, "dy": 0.458462, "cr": 5, "within": 1}, {"id": "3", "group": "KEEPERS", "r": 0.00482, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "c3709a2541cc0411", "cause": "CRYSTALLIZE", "k": 10, "ox": 0.336718, "oy": 0.18, "gx": 0.134469, "gy": 0.32, "dx": 0.379231, "dy": 0.458462, "cr": 6, "within": 2}, {"id": "4", "group": "KEEPERS", "r": 0.006299, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "12f983bf1aff8154", "cause": "CRYSTALLIZE", "k": 11, "ox": 0.342359, "oy": 0.18, "gx": 0.138909, "gy": 0.32, "dx": 0.240769, "dy": 0.472308, "cr": 7, "within": 3}, {"id": "5", "group": "KEEPERS", "r": 0.003449, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "564f7088f8acb17b", "cause": "CRYSTALLIZE", "k": 12, "ox": 0.348, "oy": 0.18, "gx": 0.130354, "gy": 0.32, "dx": 0.263846, "dy": 0.472308, "cr": 8, "within": 4}, {"id": "6", "group": "KEEPERS", "r": 0.012904, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "da7b97879027f056", "cause": "CRYSTALLIZE", "k": 13, "ox": 0.353641, "oy": 0.18, "gx": 0.158736, "gy": 0.32, "dx": 0.286923, "dy": 0.472308, "cr": 9, "within": 5}, {"id": "7", "group": "KEEPERS", "r": 0.01005, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "2befb482986292f9", "cause": "CRYSTALLIZE", "k": 14, "ox": 0.359282, "oy": 0.18, "gx": 0.150169, "gy": 0.32, "dx": 0.31, "dy": 0.472308, "cr": 10, "within": 6}, {"id": "8", "group": "KEEPERS", "r": 0.006856, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "210e747fbea5e7f7", "cause": "CRYSTALLIZE", "k": 15, "ox": 0.364923, "oy": 0.18, "gx": 0.140581, "gy": 0.32, "dx": 0.333077, "dy": 0.472308, "cr": 11, "within": 7}, {"id": "9", "group": "KEEPERS", "r": 0.0, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "db1b05dbf52e7bc2", "cause": "CRYSTALLIZE", "k": 16, "ox": 0.370564, "oy": 0.18, "gx": 0.12, "gy": 0.32, "dx": 0.356154, "dy": 0.472308, "cr": 12, "within": 8}, {"id": "1", "group": "MIXED", "r": 0.0, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "b3f5a1dafeb69600", "cause": "CRYSTALLIZE", "k": 17, "ox": 0.460513, "oy": 0.18, "gx": 0.12, "gy": 0.32, "dx": 0.379231, "dy": 0.472308, "cr": 13, "within": 0}, {"id": "2", "group": "MIXED", "r": 0.011691, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "9786d5b163f8227b", "cause": "CRYSTALLIZE", "k": 18, "ox": 0.466154, "oy": 0.18, "gx": 0.155095, "gy": 0.32, "dx": 0.240769, "dy": 0.486154, "cr": 14, "within": 1}, {"id": "3", "group": "MIXED", "r": 0.139534, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "283699e0cf0be916", "cause": "CRYSTALLIZE", "k": 19, "ox": 0.471795, "oy": 0.18, "gx": 0.538865, "gy": 0.32, "dx": 0.263846, "dy": 0.486154, "cr": 15, "within": 2}, {"id": "4", "group": "MIXED", "r": 0.00647, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "170eebfa1670e60c", "cause": "CRYSTALLIZE", "k": 20, "ox": 0.477436, "oy": 0.18, "gx": 0.139422, "gy": 0.32, "dx": 0.286923, "dy": 0.486154, "cr": 16, "within": 3}, {"id": "5", "group": "MIXED", "r": 0.00482, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "01715065bcecd7e6", "cause": "CRYSTALLIZE", "k": 21, "ox": 0.483077, "oy": 0.18, "gx": 0.134469, "gy": 0.32, "dx": 0.31, "dy": 0.486154, "cr": 17, "within": 4}, {"id": "6", "group": "MIXED", "r": 0.145288, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "e46fc6d279c633a5", "cause": "CRYSTALLIZE", "k": 22, "ox": 0.488718, "oy": 0.18, "gx": 0.556138, "gy": 0.32, "dx": 0.333077, "dy": 0.486154, "cr": 18, "within": 5}, {"id": "7", "group": "MIXED", "r": 0.006299, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "f8313b30758af2fe", "cause": "CRYSTALLIZE", "k": 23, "ox": 0.494359, "oy": 0.18, "gx": 0.138909, "gy": 0.32, "dx": 0.356154, "dy": 0.486154, "cr": 19, "within": 6}, {"id": "8", "group": "MIXED", "r": 0.227282, "d": "r", "sH": false, "sSolv": true, "rHbit": false, "audit": "be3b8a905fd8d48f", "cause": "DISSOLVE:residual", "k": 24, "ox": 0.5, "oy": 0.18, "gx": 0.802275, "gy": 0.32, "dx": 0.736154, "dy": 0.472308, "cr": 4, "within": 7}, {"id": "9", "group": "MIXED", "r": 0.003449, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "329d8f2ead70fec7", "cause": "CRYSTALLIZE", "k": 25, "ox": 0.505641, "oy": 0.18, "gx": 0.130354, "gy": 0.32, "dx": 0.379231, "dy": 0.486154, "cr": 20, "within": 8}, {"id": "10", "group": "MIXED", "r": 0.220089, "d": "r", "sH": false, "sSolv": true, "rHbit": false, "audit": "948ec9be7c74b3a4", "cause": "DISSOLVE:residual", "k": 26, "ox": 0.511282, "oy": 0.18, "gx": 0.780683, "gy": 0.32, "dx": 0.643846, "dy": 0.486154, "cr": 5, "within": 9}, {"id": "11", "group": "MIXED", "r": 0.012904, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "bc9f5047d0bdb261", "cause": "CRYSTALLIZE", "k": 27, "ox": 0.516923, "oy": 0.18, "gx": 0.158736, "gy": 0.32, "dx": 0.240769, "dy": 0.5, "cr": 21, "within": 10}, {"id": "12", "group": "MIXED", "r": 0.185565, "d": "r", "sH": false, "sSolv": true, "rHbit": false, "audit": "3bcd9b713a34a4ec", "cause": "DISSOLVE:residual", "k": 28, "ox": 0.522564, "oy": 0.18, "gx": 0.677045, "gy": 0.32, "dx": 0.666923, "dy": 0.486154, "cr": 6, "within": 11}, {"id": "13", "group": "MIXED", "r": 0.01005, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "e55e05dd78ba1111", "cause": "CRYSTALLIZE", "k": 29, "ox": 0.528205, "oy": 0.18, "gx": 0.150169, "gy": 0.32, "dx": 0.263846, "dy": 0.5, "cr": 22, "within": 12}, {"id": "14", "group": "MIXED", "r": 0.237351, "d": "r", "sH": false, "sSolv": true, "rHbit": false, "audit": "68fad8bbbcc776b9", "cause": "DISSOLVE:residual", "k": 30, "ox": 0.533846, "oy": 0.18, "gx": 0.832501, "gy": 0.32, "dx": 0.69, "dy": 0.486154, "cr": 7, "within": 13}, {"id": "15", "group": "MIXED", "r": 0.006856, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "d2b4b90994321b1e", "cause": "CRYSTALLIZE", "k": 31, "ox": 0.539487, "oy": 0.18, "gx": 0.140581, "gy": 0.32, "dx": 0.286923, "dy": 0.5, "cr": 23, "within": 14}, {"id": "1-0", "group": "BEST-12OF12", "r": 0.169742, "d": "r", "sH": false, "sSolv": true, "rHbit": false, "audit": "8b67bbf3688b517f", "cause": "DISSOLVE:residual", "k": 32, "ox": 0.587128, "oy": 0.18, "gx": 0.629546, "gy": 0.32, "dx": 0.713077, "dy": 0.486154, "cr": 8, "within": 0}, {"id": "2-0", "group": "BEST-12OF12", "r": 0.006789, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "5d09bb7cbd5bc30f", "cause": "CRYSTALLIZE", "k": 33, "ox": 0.592769, "oy": 0.18, "gx": 0.14038, "gy": 0.32, "dx": 0.31, "dy": 0.5, "cr": 24, "within": 1}, {"id": "3-0", "group": "BEST-12OF12", "r": 0.178373, "d": "r", "sH": false, "sSolv": true, "rHbit": false, "audit": "63c3c59aa5cee7ee", "cause": "DISSOLVE:residual", "k": 34, "ox": 0.59841, "oy": 0.18, "gx": 0.655456, "gy": 0.32, "dx": 0.736154, "dy": 0.486154, "cr": 9, "within": 2}, {"id": "4-0", "group": "BEST-12OF12", "r": 0.003122, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "6bc47f5f31d2ef12", "cause": "CRYSTALLIZE", "k": 35, "ox": 0.604051, "oy": 0.18, "gx": 0.129372, "gy": 0.32, "dx": 0.333077, "dy": 0.5, "cr": 25, "within": 3}, {"id": "5-0", "group": "BEST-12OF12", "r": 0.207143, "d": "r", "sH": false, "sSolv": true, "rHbit": false, "audit": "8177e0843656a59e", "cause": "DISSOLVE:residual", "k": 36, "ox": 0.609692, "oy": 0.18, "gx": 0.74182, "gy": 0.32, "dx": 0.643846, "dy": 0.5, "cr": 10, "within": 4}, {"id": "6-0", "group": "BEST-12OF12", "r": 0.006789, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "ad6961a01fdcd277", "cause": "CRYSTALLIZE", "k": 37, "ox": 0.615333, "oy": 0.18, "gx": 0.14038, "gy": 0.32, "dx": 0.356154, "dy": 0.5, "cr": 26, "within": 5}, {"id": "7-0", "group": "BEST-12OF12", "r": 0.174057, "d": "r", "sH": false, "sSolv": true, "rHbit": false, "audit": "8398079f9890d566", "cause": "DISSOLVE:residual", "k": 38, "ox": 0.620974, "oy": 0.18, "gx": 0.6425, "gy": 0.32, "dx": 0.666923, "dy": 0.5, "cr": 11, "within": 6}, {"id": "8-0", "group": "BEST-12OF12", "r": 0.010942, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "5ad300e7fdd1c4e0", "cause": "CRYSTALLIZE", "k": 39, "ox": 0.626615, "oy": 0.18, "gx": 0.152847, "gy": 0.32, "dx": 0.379231, "dy": 0.5, "cr": 27, "within": 7}, {"id": "9-0", "group": "BEST-12OF12", "r": 0.253174, "d": "r", "sH": false, "sSolv": true, "rHbit": false, "audit": "e555a51469371952", "cause": "DISSOLVE:residual", "k": 40, "ox": 0.632256, "oy": 0.18, "gx": 0.88, "gy": 0.32, "dx": 0.69, "dy": 0.5, "cr": 12, "within": 8}, {"id": "10-0", "group": "BEST-12OF12", "r": 0.010942, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "ab99384b015807d3", "cause": "CRYSTALLIZE", "k": 41, "ox": 0.637897, "oy": 0.18, "gx": 0.152847, "gy": 0.32, "dx": 0.240769, "dy": 0.513846, "cr": 28, "within": 9}, {"id": "11-1", "group": "BEST-12OF12", "r": 0.214335, "d": "r", "sH": false, "sSolv": true, "rHbit": false, "audit": "daebd0e45811ad14", "cause": "DISSOLVE:residual", "k": 42, "ox": 0.643538, "oy": 0.18, "gx": 0.76341, "gy": 0.32, "dx": 0.713077, "dy": 0.5, "cr": 13, "within": 10}, {"id": "12-0", "group": "BEST-12OF12", "r": 0.013681, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "b7c6fb8e19efc62f", "cause": "CRYSTALLIZE", "k": 43, "ox": 0.649179, "oy": 0.18, "gx": 0.161069, "gy": 0.32, "dx": 0.263846, "dy": 0.513846, "cr": 29, "within": 11}, {"id": "13-0", "group": "BEST-12OF12", "r": 0.175496, "d": "r", "sH": false, "sSolv": true, "rHbit": false, "audit": "2163052d9789a145", "cause": "DISSOLVE:residual", "k": 44, "ox": 0.654821, "oy": 0.18, "gx": 0.646819, "gy": 0.32, "dx": 0.736154, "dy": 0.5, "cr": 14, "within": 12}, {"id": "14-0", "group": "BEST-12OF12", "r": 0.006856, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "7eb08cc90d4b43cf", "cause": "CRYSTALLIZE", "k": 45, "ox": 0.660462, "oy": 0.18, "gx": 0.140581, "gy": 0.32, "dx": 0.286923, "dy": 0.513846, "cr": 30, "within": 13}, {"id": "15-0", "group": "BEST-12OF12", "r": 0.192758, "d": "r", "sH": false, "sSolv": true, "rHbit": false, "audit": "627c63e06a602884", "cause": "DISSOLVE:residual", "k": 46, "ox": 0.666103, "oy": 0.18, "gx": 0.698638, "gy": 0.32, "dx": 0.643846, "dy": 0.513846, "cr": 15, "within": 14}, {"id": "16-0", "group": "BEST-12OF12", "r": 0.010547, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "a9a04b7473a52e0f", "cause": "CRYSTALLIZE", "k": 47, "ox": 0.671744, "oy": 0.18, "gx": 0.151661, "gy": 0.32, "dx": 0.31, "dy": 0.513846, "cr": 31, "within": 15}, {"id": "17-0", "group": "BEST-12OF12", "r": 0.19995, "d": "r", "sH": false, "sSolv": true, "rHbit": false, "audit": "2d66bedba091d591", "cause": "DISSOLVE:residual", "k": 48, "ox": 0.677385, "oy": 0.18, "gx": 0.720228, "gy": 0.32, "dx": 0.666923, "dy": 0.513846, "cr": 16, "within": 16}, {"id": "18-0", "group": "BEST-12OF12", "r": 0.010547, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "773248204ca9bceb", "cause": "CRYSTALLIZE", "k": 49, "ox": 0.683026, "oy": 0.18, "gx": 0.151661, "gy": 0.32, "dx": 0.333077, "dy": 0.513846, "cr": 32, "within": 17}, {"id": "19-0", "group": "BEST-12OF12", "r": 0.231597, "d": "r", "sH": false, "sSolv": true, "rHbit": false, "audit": "16bdb544763a5789", "cause": "DISSOLVE:residual", "k": 50, "ox": 0.688667, "oy": 0.18, "gx": 0.815228, "gy": 0.32, "dx": 0.69, "dy": 0.513846, "cr": 17, "within": 18}, {"id": "20-0", "group": "BEST-12OF12", "r": 0.013681, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "b19b9a2f57f58467", "cause": "CRYSTALLIZE", "k": 51, "ox": 0.694308, "oy": 0.18, "gx": 0.161069, "gy": 0.32, "dx": 0.356154, "dy": 0.513846, "cr": 33, "within": 19}, {"id": "21-1", "group": "BEST-12OF12", "r": 0.207143, "d": "r", "sH": false, "sSolv": true, "rHbit": false, "audit": "48194bf360f12209", "cause": "DISSOLVE:residual", "k": 52, "ox": 0.699949, "oy": 0.18, "gx": 0.74182, "gy": 0.32, "dx": 0.713077, "dy": 0.513846, "cr": 18, "within": 20}, {"id": "22-0", "group": "BEST-12OF12", "r": 0.006393, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "ad13c0dc9b2e8686", "cause": "CRYSTALLIZE", "k": 53, "ox": 0.70559, "oy": 0.18, "gx": 0.139191, "gy": 0.32, "dx": 0.379231, "dy": 0.513846, "cr": 34, "within": 21}, {"id": "23-0", "group": "BEST-12OF12", "r": 0.162549, "d": "r", "sH": false, "sSolv": true, "rHbit": false, "audit": "a62fab996128def6", "cause": "DISSOLVE:residual", "k": 54, "ox": 0.711231, "oy": 0.18, "gx": 0.607954, "gy": 0.32, "dx": 0.736154, "dy": 0.513846, "cr": 19, "within": 22}, {"id": "24-0", "group": "BEST-12OF12", "r": 0.009007, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "f72bd193ea3ff16d", "cause": "CRYSTALLIZE", "k": 55, "ox": 0.716872, "oy": 0.18, "gx": 0.147038, "gy": 0.32, "dx": 0.240769, "dy": 0.527692, "cr": 35, "within": 23}, {"id": "1", "group": "TWIN-LADDER", "r": 0.142411, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "8fd07e9af8708333", "cause": "CRYSTALLIZE", "k": 56, "ox": 0.756051, "oy": 0.18, "gx": 0.547502, "gy": 0.32, "dx": 0.263846, "dy": 0.527692, "cr": 36, "within": 0}, {"id": "2", "group": "TWIN-LADDER", "r": 0.010547, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "84ecc3114b920d49", "cause": "CRYSTALLIZE", "k": 57, "ox": 0.761692, "oy": 0.18, "gx": 0.151661, "gy": 0.32, "dx": 0.286923, "dy": 0.527692, "cr": 37, "within": 1}, {"id": "3", "group": "TWIN-LADDER", "r": 0.139534, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "eba8d4f359a10a69", "cause": "CRYSTALLIZE", "k": 58, "ox": 0.767333, "oy": 0.18, "gx": 0.538865, "gy": 0.32, "dx": 0.31, "dy": 0.527692, "cr": 38, "within": 2}, {"id": "4", "group": "TWIN-LADDER", "r": 0.007778, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "f9679b28d0706a5c", "cause": "CRYSTALLIZE", "k": 59, "ox": 0.772974, "oy": 0.18, "gx": 0.143349, "gy": 0.32, "dx": 0.333077, "dy": 0.527692, "cr": 39, "within": 3}, {"id": "5", "group": "TWIN-LADDER", "r": 0.225843, "d": "r", "sH": false, "sSolv": true, "rHbit": false, "audit": "2828411f2f7f8d2b", "cause": "DISSOLVE:residual", "k": 60, "ox": 0.778615, "oy": 0.18, "gx": 0.797955, "gy": 0.32, "dx": 0.643846, "dy": 0.527692, "cr": 20, "within": 4}, {"id": "6", "group": "TWIN-LADDER", "r": 0.010942, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "d6071d321d6ff84f", "cause": "CRYSTALLIZE", "k": 61, "ox": 0.784256, "oy": 0.18, "gx": 0.152847, "gy": 0.32, "dx": 0.356154, "dy": 0.527692, "cr": 40, "within": 5}, {"id": "7", "group": "TWIN-LADDER", "r": 0.176934, "d": "r", "sH": false, "sSolv": true, "rHbit": false, "audit": "94eb84e8bf814330", "cause": "DISSOLVE:residual", "k": 62, "ox": 0.789897, "oy": 0.18, "gx": 0.651136, "gy": 0.32, "dx": 0.666923, "dy": 0.527692, "cr": 21, "within": 6}, {"id": "8", "group": "TWIN-LADDER", "r": 0.003122, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "1990c07f6b63f90f", "cause": "CRYSTALLIZE", "k": 63, "ox": 0.795538, "oy": 0.18, "gx": 0.129372, "gy": 0.32, "dx": 0.379231, "dy": 0.527692, "cr": 41, "within": 7}, {"id": "9", "group": "TWIN-LADDER", "r": 0.240228, "d": "r", "sH": false, "sSolv": true, "rHbit": false, "audit": "2dd18f0b46335e3e", "cause": "DISSOLVE:residual", "k": 64, "ox": 0.801179, "oy": 0.18, "gx": 0.841138, "gy": 0.32, "dx": 0.69, "dy": 0.527692, "cr": 22, "within": 8}, {"id": "10", "group": "TWIN-LADDER", "r": 0.006789, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "2e2660a7a25120c0", "cause": "CRYSTALLIZE", "k": 65, "ox": 0.806821, "oy": 0.18, "gx": 0.14038, "gy": 0.32, "dx": 0.240769, "dy": 0.541538, "cr": 42, "within": 9}, {"id": "11", "group": "TWIN-LADDER", "r": 0.129464, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "d87d579facb0a7e8", "cause": "CRYSTALLIZE", "k": 66, "ox": 0.812462, "oy": 0.18, "gx": 0.508636, "gy": 0.32, "dx": 0.263846, "dy": 0.541538, "cr": 43, "within": 10}, {"id": "12", "group": "TWIN-LADDER", "r": 0.003993, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "5518d86f6b37cd19", "cause": "CRYSTALLIZE", "k": 67, "ox": 0.818103, "oy": 0.18, "gx": 0.131987, "gy": 0.32, "dx": 0.286923, "dy": 0.541538, "cr": 44, "within": 11}, {"id": "13", "group": "TWIN-LADDER", "r": 0.136657, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "7a00b5ad869def7a", "cause": "CRYSTALLIZE", "k": 68, "ox": 0.823744, "oy": 0.18, "gx": 0.530229, "gy": 0.32, "dx": 0.31, "dy": 0.541538, "cr": 45, "within": 12}, {"id": "14", "group": "TWIN-LADDER", "r": 0.004516, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "babb48cef4e75090", "cause": "CRYSTALLIZE", "k": 69, "ox": 0.829385, "oy": 0.18, "gx": 0.133557, "gy": 0.32, "dx": 0.333077, "dy": 0.541538, "cr": 46, "within": 13}, {"id": "15", "group": "TWIN-LADDER", "r": 0.197073, "d": "r", "sH": false, "sSolv": true, "rHbit": false, "audit": "75bb0dc14289bb07", "cause": "DISSOLVE:residual", "k": 70, "ox": 0.835026, "oy": 0.18, "gx": 0.711591, "gy": 0.32, "dx": 0.713077, "dy": 0.527692, "cr": 23, "within": 14}, {"id": "16", "group": "TWIN-LADDER", "r": 0.006789, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "12b2c038b3b8c05f", "cause": "CRYSTALLIZE", "k": 71, "ox": 0.840667, "oy": 0.18, "gx": 0.14038, "gy": 0.32, "dx": 0.356154, "dy": 0.541538, "cr": 47, "within": 15}, {"id": "17", "group": "TWIN-LADDER", "r": 0.234474, "d": "r", "sH": false, "sSolv": true, "rHbit": false, "audit": "1e38a7216f27d84c", "cause": "DISSOLVE:residual", "k": 72, "ox": 0.846308, "oy": 0.18, "gx": 0.823865, "gy": 0.32, "dx": 0.736154, "dy": 0.527692, "cr": 24, "within": 16}, {"id": "18", "group": "TWIN-LADDER", "r": 0.010942, "d": "a", "sH": true, "sSolv": true, "rHbit": true, "audit": "9902db5c0878dc96", "cause": "CRYSTALLIZE", "k": 73, "ox": 0.851949, "oy": 0.18, "gx": 0.152847, "gy": 0.32, "dx": 0.379231, "dy": 0.541538, "cr": 48, "within": 17}]};
+const LIGHT = {x:0.62, y:0.30, i:1.00, fall:4.5, color:"#fff3d6"};
+const SHADE = {floor:0.42, steps:16};
+const FLOW_MS = 74*15, CYCLE = 4000;
+let SW=390, SH=650, cam={cx:0.5, cy:0.5, zoom:1};
+let T = 3000, playing=false, sel=null, t0=0;
+const qs = new URLSearchParams(location.search);
+if(qs.has("t")){ T = Math.max(0, Math.min(CYCLE, parseFloat(qs.get("t")))); }
+if(qs.has("sel")){
+  const s = qs.get("sel");
+  if(s[0]==="t") sel = {type:"thread", k:parseInt(s.slice(1))};
+  else if(s[0]==="b") sel = {type:"bundle", g:s.slice(2)};
+  else if(s[0]==="d") sel = {type:"dest", d:s.slice(2)};
+}
+if(qs.has("focus")){ const g = qs.get("focus"); if(MODEL.originX[g]!==undefined){ cam={cx:MODEL.originX[g], cy:0.32, zoom:2.0}; } }
+const cv = document.getElementById("cv"), ctx = cv.getContext("2d");
+const stageEl = document.getElementById("stage");
+function hexRGB(h){ return [parseInt(h.slice(1,3),16), parseInt(h.slice(3,5),16), parseInt(h.slice(5,7),16)]; }
+function shadeAt(hex, I){
+  const c = hexRGB(hex), L = hexRGB(LIGHT.color), q = 1/SHADE.steps;
+  const Iq = Math.round(I/q)*q;
+  const f = SHADE.floor + (1-SHADE.floor)*Iq;
+  const out = c.map((v,i)=>Math.round(v*f + L[i]*(1-f)*Math.max(0, Iq-0.75)*0.35));
+  return "rgb("+out.join(",")+")";
+}
+function illum(px,py){ const d = Math.hypot(px-LIGHT.x*SW, py-LIGHT.y*SH)/SH; return LIGHT.i/(1+LIGHT.fall*d*d); }
+function shadeCol(hex, px, py){ return shadeAt(hex, illum(px,py)); }
+function X(f){ return (f-cam.cx)*cam.zoom*SW + SW/2; }
+function Y(f){ return (f-cam.cy)*cam.zoom*SH + SH/2; }
+function cubic(p0,p1,p2,p3,s){
+  const u=1-s;
+  return [u*u*u*p0[0]+3*u*u*s*p1[0]+3*u*s*s*p2[0]+s*s*s*p3[0],
+          u*u*u*p0[1]+3*u*u*s*p1[1]+3*u*s*s*p2[1]+s*s*s*p3[1]];
+}
+function threadPts(t){
+  const A=[X(t.ox),Y(t.oy)], G=[X(t.gx),Y(t.gy)], D=[X(t.dx),Y(t.dy)];
+  const pts=[];
+  for(let i=0;i<=16;i++){ const s=i/16;
+    pts.push(cubic(A,[A[0],A[1]+(G[1]-A[1])*0.5],[G[0],G[1]-(G[1]-A[1])*0.5],G,s)); }
+  for(let i=1;i<=16;i++){ const s=i/16;
+    pts.push(cubic(G,[G[0],G[1]+(D[1]-G[1])*0.5],[D[0],D[1]-(D[1]-G[1])*0.5],D,s)); }
+  return pts;
+}
+function landedAt(t){ return t>=FLOW_MS ? 74 : Math.floor(t/15); }
+function ledgerAt(t){ if(t>=FLOW_MS) return 25;
+  let n=0; const L=landedAt(t); for(let k=0;k<L;k++) if(MODEL.threads[k].d==="r") n++; return n; }
+function phaseAt(t){ return t<FLOW_MS ? "FLOWING" : "SETTLED"; }
+function drawSphere(x,y,r,hex){
+  const I = illum(x,y);
+  ctx.fillStyle = shadeAt(hex, 0.55*I); ctx.beginPath(); ctx.arc(x,y,r,0,7); ctx.fill();
+  const dx = LIGHT.x*SW-x, dy = LIGHT.y*SH-y, m = Math.hypot(dx,dy)||1;
+  ctx.fillStyle = shadeAt(hex, I); ctx.beginPath();
+  ctx.arc(x+dx/m*r*0.38, y+dy/m*r*0.38, r*0.62, 0, 7); ctx.fill();
+}
+function draw(){
+  ctx.fillStyle="#000000"; ctx.fillRect(0,0,SW,SH);
+  const L = landedAt(T);
+  ctx.strokeStyle = MODEL.gold; ctx.lineWidth = 2; ctx.beginPath();
+  ctx.moveTo(X(MODEL.hero.x0), Y(MODEL.gateY)); ctx.lineTo(X(MODEL.hero.x1), Y(MODEL.gateY)); ctx.stroke();
+  ctx.lineWidth = 3; ctx.beginPath();
+  ctx.moveTo(X(MODEL.epsTickX), Y(MODEL.gateY)-8); ctx.lineTo(X(MODEL.epsTickX), Y(MODEL.gateY)+8); ctx.stroke();
+  for(let k=0;k<MODEL.threads.length;k++){
+    const t = MODEL.threads[k], pts = threadPts(t);
+    let upto = pts.length;
+    if(k>=L){ if(k===L && T<FLOW_MS){ const p=(T-k*15)/15; upto = Math.max(2, Math.floor(p*(pts.length-1))+1); } else continue; }
+    const mid = pts[Math.floor(pts.length/2)];
+    ctx.strokeStyle = shadeCol(MODEL.ghue[t.group], mid[0], mid[1]);
+    ctx.globalAlpha = (sel && sel.type==="thread" && sel.k===k) ? 1.0 : 0.60;
+    ctx.lineWidth = (sel && sel.type==="thread" && sel.k===k) ? 2.2 : 1.1;
+    ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
+    for(let i=1;i<upto;i++) ctx.lineTo(pts[i][0], pts[i][1]);
+    ctx.stroke(); ctx.globalAlpha = 1;
+  }
+  for(const g of MODEL.groups){
+    drawSphere(X(MODEL.originX[g]), Y(MODEL.originY), 7, MODEL.ghue[g]);
+  }
+  for(const t of MODEL.threads){
+    if(t.k < L || T>=FLOW_MS) drawSphere(X(t.dx), Y(t.dy), 3, MODEL.ghue[t.group]);
+  }
+  drawDash();
+}
+function drawDash(){
+  const L = landedAt(T), led = ledgerAt(T);
+  document.getElementById("flowState").innerHTML =
+    "PHASE " + phaseAt(T) + "<br>T " + T.toFixed(0) + " MS<br>LANDED " + L + " / 74<br>LEDGER " + led + " / 25";
+  document.getElementById("tRead").textContent = "T " + T.toFixed(0) + " MS · " + phaseAt(T);
+  document.getElementById("ledger").innerHTML = "REFUSED LANDED " + led + " / 25<br>" +
+    (led>0 ? "LAST " + MODEL.threads.filter(t=>t.d==="r").slice(0,led).slice(-1)[0].audit : "—");
+  if(!sel){ document.getElementById("insp").textContent = "TAP A THREAD, A BUNDLE, OR A DESTINATION."; }
+  else if(sel.type==="thread"){ const t = MODEL.threads[sel.k];
+    document.getElementById("insp").innerHTML = "SOURCE " + t.id + "<br>GROUP " + t.group + "<br>r_H " + t.r.toFixed(6) +
+      "<br>GATE r_H " + t.r.toFixed(6) + (t.d==="a" ? " &lt; " : " &gt; ") + "ε_H 0.15 → " + (t.d==="a" ? "ADMIT" : "REFUSE") +
+      "<br>S_H " + t.sH + " · S_solv " + t.sSolv + " · R_H " + t.rHbit + "<br>CAUSE " + t.cause + "<br>AUDIT " + t.audit; }
+  else if(sel.type==="bundle"){ const g = sel.g, mem = MODEL.threads.filter(t=>t.group===g);
+    const a = mem.filter(t=>t.d==="a").length;
+    document.getElementById("insp").innerHTML = "ORIGIN " + g + "<br>COUNT " + mem.length + " · ADMIT " + a + " · REFUSE " + (mem.length-a) +
+      "<br>HUE " + MODEL.ghue[g] + "<br>MEMBERS " + mem.map(t=>t.id).join(" "); }
+  else if(sel.type==="dest"){ const d = sel.d, mem = MODEL.threads.filter(t=>t.d===d);
+    document.getElementById("insp").innerHTML = (d==="a" ? "ORGANIZED" : "ASIDE") + " · " + mem.length +
+      "<br>MEMBERS " + mem.map(t=>t.id).join(" "); }
+  const gd = document.getElementById("groups");
+  gd.innerHTML = MODEL.groups.map(g=>{
+    const c = MODEL.counts[g];
+    return "<div style='white-space:nowrap'><span class='tag' data-g='"+g+"'>"+g+" "+c+"</span></div>";
+  }).join("");
+  gd.querySelectorAll(".tag").forEach(el=>el.onclick=()=>{ sel={type:"bundle", g:el.dataset.g}; draw(); });
+  document.getElementById("scrub").value = T;
+}
+function buildLabels(){
+  const L = document.getElementById("labels"); L.innerHTML = "";
+  const mk = (fx, fy, html, cls)=>{
+    const d = document.createElement("div"); d.className = "ov"+(cls?" "+cls:"");
+    d.style.left = (fx*100)+"%"; d.style.top = (fy*100)+"%"; d.innerHTML = html; L.appendChild(d); return d; };
+  const LROW = {"QUIET":[0.062,0.090], "KEEPERS":[0.118,0.146], "MIXED":[0.062,0.090], "BEST-12OF12":[0.118,0.146], "TWIN-LADDER":[0.062,0.090]};
+  for(const g of MODEL.groups){
+    const el = mk(MODEL.originX[g], LROW[g][0], g, "tag olab");
+    el.dataset.g = g;
+    el.onclick = ()=>{ sel={type:"bundle", g:g}; draw(); };
+    const ec = mk(MODEL.originX[g], LROW[g][1], "· "+MODEL.counts[g], "tag olab");
+    ec.dataset.g = g;
+    ec.onclick = ()=>{ sel={type:"bundle", g:g}; draw(); };
+  }
+  mk(0.5, 0.285, "THE GATE · ε_H 0.15");
+  mk(MODEL.epsTickX, 0.365, "ε_H");
+  const oL = mk(0.31, 0.565, "ORGANIZED · 49", "tag"); oL.onclick = ()=>{ sel={type:"dest", d:"a"}; draw(); };
+  const oR = mk(0.69, 0.565, "ASIDE · 25", "tag"); oR.onclick = ()=>{ sel={type:"dest", d:"r"}; draw(); };
+}
+function sizeStage(){
+  SW = stageEl.clientWidth; SH = Math.round(SW*5/3);
+  stageEl.style.height = SH+"px"; cv.width = SW; cv.height = SH;
+  const f = (r)=>Math.max(13, Math.round(r*SH));
+  document.getElementById("hudT").style.fontSize = f(0.020)+"px";
+  document.getElementById("hudS").style.fontSize = f(0.020)+"px";
+  document.querySelectorAll(".ov").forEach(el=>el.style.fontSize = f(0.020)+"px");
+  document.querySelectorAll(".pan").forEach(el=>el.style.fontSize = f(0.020)+"px");
+  document.querySelectorAll(".pan h3").forEach(el=>el.style.fontSize = f(0.022)+"px");
+  document.getElementById("transport").style.fontSize = f(0.020)+"px";
+  document.querySelectorAll("#transport button").forEach(el=>el.style.fontSize = f(0.020)+"px");
+}
+cv.addEventListener("click", (e)=>{
+  const r = cv.getBoundingClientRect(), x = e.clientX-r.left, y = e.clientY-r.top;
+  for(const g of MODEL.groups){
+    if(Math.hypot(X(MODEL.originX[g])-x, Y(MODEL.originY)-y)<=16){ sel={type:"bundle", g:g}; draw(); return; } }
+  let best = null, bd = 1e9;
+  for(const t of MODEL.threads){ const pts = threadPts(t);
+    for(const p of pts){ const d = Math.hypot(p[0]-x, p[1]-y); if(d<bd){ bd=d; best=t; } } }
+  if(best && bd<=10){ sel={type:"thread", k:best.k}; draw(); return; }
+  for(const t of MODEL.threads){
+    if(Math.hypot(X(t.dx)-x, Y(t.dy)-y)<=10){ sel={type:"thread", k:t.k}; draw(); return; } }
+  const dl = Math.hypot(X(0.31)-x, Y(0.50)-y), dr = Math.hypot(X(0.69)-x, Y(0.50)-y);
+  if(Math.min(dl,dr)<=60){ sel={type:"dest", d: dl<dr ? "a" : "r"}; draw(); return; }
+});
+document.getElementById("bPlay").onclick = ()=>{
+  if(playing){ playing=false; document.getElementById("bPlay").textContent="PLAY"; return; }
+  playing=true; document.getElementById("bPlay").textContent="PAUSE";
+  const start = performance.now()-T;
+  const step = (now)=>{ if(!playing) return; T = (now-start)%CYCLE; draw(); requestAnimationFrame(step); };
+  requestAnimationFrame(step);
+};
+document.getElementById("bSettled").onclick = ()=>{ playing=false; document.getElementById("bPlay").textContent="PLAY"; T=3000; draw(); };
+document.getElementById("bStep").onclick = ()=>{ playing=false; document.getElementById("bPlay").textContent="PLAY"; T=Math.min(CYCLE, T+15); draw(); };
+document.getElementById("scrub").oninput = (e)=>{ playing=false; document.getElementById("bPlay").textContent="PLAY"; T=parseFloat(e.target.value); draw(); };
+document.getElementById("bReset").onclick = ()=>{ cam={cx:0.5, cy:0.5, zoom:1}; draw(); };
+document.getElementById("bZoomSel").onclick = ()=>{
+  let g = null;
+  if(sel && sel.type==="bundle") g = sel.g;
+  else if(sel && sel.type==="thread") g = MODEL.threads[sel.k].group;
+  if(g && MODEL.originX[g]!==undefined){ cam={cx:MODEL.originX[g], cy:0.32, zoom:2.0}; draw(); } };
+window.__MAP__ = { model: MODEL,
+  phaseAt: phaseAt, landedAt: landedAt, ledgerAt: ledgerAt,
+  threadPoint: (k, s)=>{ const pts = threadPts(MODEL.threads[k]); return pts[Math.min(pts.length-1, s)]; },
+  originXY: (g)=>[X(MODEL.originX[g]), Y(MODEL.originY)],
+  destXY: (d)=>[X(d==="a"?0.31:0.69), Y(0.50)],
+  stage: ()=>({SW: SW, SH: SH}),
+  setT: (t)=>{ T=t; draw(); }, getT: ()=>T, getSel: ()=>sel };
+sizeStage(); buildLabels(); draw();
+window.addEventListener("resize", ()=>{ sizeStage(); buildLabels(); draw(); });
+</script></body></html>

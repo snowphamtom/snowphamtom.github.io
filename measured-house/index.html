@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>THE MEASURED HOUSE — a graphing series</title>
+<meta name="description" content="Six graph plates and a judge slate, drawn from measured records only, on the staggered-ignition rotational weave. Nothing random."/>
+<style>
+  /* ONE STYLE · ONE FORMAT (Taylor's law, 2026-10-23 23:09 CT): every plate sits on the
+     same 3:5 stage, the same HUD/dashboard/slate geometry, the same type scale (the --t-*
+     sizes are set by the script from TYPE, as fractions of stage height — one scale). */
+  :root{ --gold:#c9a227; --ink:#e8e6f8; --mut:#8595b8; --line:#1d2a47;
+    --t-hud:10.5px; --t-kick:11px; --t-name:17px; --t-quest:11px; --t-lab:11px; --t-lab-sm:9.5px;
+    --t-slate:11px; --t-big:12px; --t-big-h:14px; }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:#000000;color:var(--ink);overflow:hidden;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  #cv{position:fixed;inset:0;width:100vw;height:100dvh;display:block;touch-action:none}
+  #hud{position:fixed;z-index:10;display:flex;justify-content:space-between;align-items:flex-start;
+    gap:8px;pointer-events:none}
+  #hud .ttl{font-size:var(--t-hud);letter-spacing:.12em;color:#f2c14e;border:1px solid rgba(201,162,39,.55);
+    padding:5px 10px;background:rgba(4,8,16,.72)}
+  #hud .fr{font-size:var(--t-hud);color:var(--mut);border:1px solid var(--line);padding:5px 10px;
+    background:rgba(4,8,16,.72);text-align:right}
+  #hud .fr b{color:var(--ink)}
+  #nav{position:fixed;left:50%;transform:translateX(-50%);bottom:max(12px,env(safe-area-inset-bottom));z-index:11;
+    display:flex;gap:8px;align-items:center}
+  #nav .dot{width:26px;height:26px;border-radius:50%;border:1px solid var(--line);background:rgba(4,8,16,.8);
+    color:var(--mut);font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  #nav .dot.on{border-color:var(--gold);color:#f2c14e}
+  #nav button.snd{border:1px solid var(--line);background:rgba(4,8,16,.8);color:var(--mut);border-radius:999px;
+    padding:5px 12px;font-size:11px;cursor:pointer;font-family:inherit}
+  #labels{position:fixed;inset:0;z-index:5;pointer-events:none}
+  .lab{position:absolute;transform:translate(-50%,-50%);font-size:var(--t-lab);letter-spacing:.06em;color:var(--ink);
+    border:1px solid rgba(232,230,248,.35);background:rgba(4,8,16,.66);padding:2px 7px;white-space:nowrap}
+  .lab.gold{border-color:rgba(201,162,39,.6);color:#f2c14e}
+  .lab.blue{border-color:rgba(87,200,255,.5);color:#a8dcff}
+  .lab.pink{border-color:rgba(244,114,182,.55);color:#ffb1d6}
+  .lab.dim{color:var(--mut);border-color:rgba(29,42,71,.9)}
+  .lab.sm{font-size:var(--t-lab-sm);padding:1px 5px}
+  .plateTitle{position:absolute;transform:translateX(-50%);text-align:center}
+  .plateTitle .k{font-size:var(--t-kick);color:var(--mut);letter-spacing:.22em}
+  .plateTitle .n{font-size:var(--t-name);letter-spacing:.14em;color:#f2c14e;margin-top:3px}
+  .plateTitle .q{font-size:var(--t-quest);color:var(--ink);margin-top:4px;opacity:.85}
+  #slate{position:fixed;z-index:9;border:1px solid rgba(201,162,39,.65);background:rgba(5,9,18,.92);
+    padding:10px 14px;font-size:var(--t-slate);line-height:1.7;opacity:0;pointer-events:none}
+  #slate .h{color:#57c8ff;letter-spacing:.1em}
+  #slate .g{color:#f2c14e}
+  #slate .p{color:#ffb1d6}
+  #slate .d{color:var(--mut)}
+  #bigSlate{position:fixed;inset:0;z-index:8;display:none;pointer-events:none}
+  #bigSlate .box{position:absolute;border:1px solid rgba(201,162,39,.65);background:rgba(5,9,18,.94);
+    padding:14px 18px;font-size:var(--t-big);line-height:1.7}
+  #bigSlate .h{color:#f2c14e;letter-spacing:.16em;font-size:var(--t-big)}
+  #bigSlate .bl{color:#57c8ff}
+  #bigSlate .d{color:var(--mut)}
+  #stepBox{position:fixed;z-index:10;display:none;font-size:var(--t-hud);color:var(--mut);
+    border:1px solid rgba(201,162,39,.55);padding:5px 10px;background:rgba(4,8,16,.72);text-align:right}
+  #stepBox b{color:#f2c14e}
+  #countBox{position:fixed;z-index:10;display:none;font-size:var(--t-hud);color:var(--mut);
+    border:1px solid var(--line);padding:5px 10px;background:rgba(4,8,16,.72);text-align:left}
+  #countBox b{color:var(--ink)}
+  /* ---------- the 4D transport + inspector (page chrome, same kit) ---------- */
+  #transport{position:fixed;left:50%;transform:translateX(-50%);bottom:46px;z-index:12;
+    display:flex;flex-direction:column;gap:4px;width:min(96vw,430px)}
+  #transport .row{display:flex;gap:6px;align-items:center;justify-content:center}
+  .tbtn{border:1px solid var(--line);background:rgba(4,8,16,.85);color:var(--ink);
+    font-family:inherit;font-size:12px;min-height:32px;padding:4px 10px;cursor:pointer;white-space:nowrap}
+  .tbtn.gold{border-color:rgba(201,162,39,.55);color:#f2c14e}
+  #scrub{flex:1;accent-color:#c9a227;height:32px;min-width:60px;cursor:pointer}
+  #tRead{font-size:10px;color:var(--mut);white-space:nowrap;letter-spacing:.04em}
+  .chip{border:1px solid var(--line);background:rgba(4,8,16,.85);cursor:pointer;
+    min-height:24px;padding:2px 7px;font-family:inherit;font-size:10px;color:var(--ink);
+    display:flex;align-items:center;gap:5px}
+  .chip .cdot{width:8px;height:8px;border-radius:50%;display:inline-block}
+  .chip.off{opacity:.32}
+  #inspector{position:fixed;z-index:12;display:none;border:1px solid rgba(201,162,39,.65);
+    background:rgba(5,9,18,.94);padding:8px 12px;font-size:11px;line-height:1.6;color:var(--ink)}
+  #inspector .h{color:#f2c14e;letter-spacing:.08em}
+  #inspector .d{color:var(--mut)}
+</style>
+</head>
+<body>
+<canvas id="cv"></canvas>
+<div id="labels"></div>
+<div id="hud">
+  <div class="ttl">THE MEASURED HOUSE · A GRAPHING SERIES</div>
+  <div class="fr" id="frameBox">F0 · PLATE 1/7 · 0.125 FPS</div>
+</div>
+<div id="countBox"></div>
+<div id="stepBox"></div>
+<div id="slate"></div>
+<div id="bigSlate"><div class="box" id="bigSlateBox"></div></div>
+<div id="inspector"></div>
+<div id="transport">
+  <div class="row">
+    <button class="tbtn" id="stepBack" aria-label="step back">−STEP</button>
+    <button class="tbtn gold" id="playBtn" aria-label="play or pause">❚❚</button>
+    <button class="tbtn" id="stepFwd" aria-label="step forward">+STEP</button>
+    <input type="range" id="scrub" min="0" max="392000" step="15" value="0" aria-label="time scrubber">
+    <span id="tRead">T+0.0s</span>
+  </div>
+  <div class="row" id="chipRow"></div>
+</div>
+<div id="nav"></div>
+<script>
+"use strict";
+/* THE MEASURED HOUSE — one clock, pinned to the floor.
+   Pattern-frame F = floor(t/8s). Every element's state is a pure function of (t, its data).
+   No random calls anywhere in this file. All variation derives from data or the golden angle. */
+const DATA = {"gate": [{"decision": "refuse", "r_H": 0.169742, "audit": "8b67bbf3688b517f"}, {"decision": "admit", "r_H": 0.006789, "audit": "5d09bb7cbd5bc30f"}, {"decision": "refuse", "r_H": 0.178373, "audit": "63c3c59aa5cee7ee"}, {"decision": "admit", "r_H": 0.003122, "audit": "6bc47f5f31d2ef12"}, {"decision": "refuse", "r_H": 0.207143, "audit": "8177e0843656a59e"}, {"decision": "admit", "r_H": 0.006789, "audit": "ad6961a01fdcd277"}, {"decision": "refuse", "r_H": 0.174057, "audit": "8398079f9890d566"}, {"decision": "admit", "r_H": 0.010942, "audit": "5ad300e7fdd1c4e0"}, {"decision": "refuse", "r_H": 0.253174, "audit": "e555a51469371952"}, {"decision": "admit", "r_H": 0.010942, "audit": "ab99384b015807d3"}, {"decision": "refuse", "r_H": 0.214335, "audit": "daebd0e45811ad14"}, {"decision": "admit", "r_H": 0.013681, "audit": "b7c6fb8e19efc62f"}, {"decision": "refuse", "r_H": 0.175496, "audit": "2163052d9789a145"}, {"decision": "admit", "r_H": 0.006856, "audit": "7eb08cc90d4b43cf"}, {"decision": "refuse", "r_H": 0.192758, "audit": "627c63e06a602884"}, {"decision": "admit", "r_H": 0.010547, "audit": "a9a04b7473a52e0f"}, {"decision": "refuse", "r_H": 0.19995, "audit": "2d66bedba091d591"}, {"decision": "admit", "r_H": 0.010547, "audit": "773248204ca9bceb"}, {"decision": "refuse", "r_H": 0.231597, "audit": "16bdb544763a5789"}, {"decision": "admit", "r_H": 0.013681, "audit": "b19b9a2f57f58467"}, {"decision": "refuse", "r_H": 0.207143, "audit": "48194bf360f12209"}, {"decision": "admit", "r_H": 0.006393, "audit": "ad13c0dc9b2e8686"}, {"decision": "refuse", "r_H": 0.162549, "audit": "a62fab996128def6"}, {"decision": "admit", "r_H": 0.009007, "audit": "f72bd193ea3ff16d"}], "pipeline": {"seats": [{"name": "BUILDER (Overwatch seat)", "x": 0.5, "y": 0.245, "lx": 0.5, "ly": 0.208, "g": 0}, {"name": "SEREPHIM \u00b7 king bee", "x": 0.5, "y": 0.46, "lx": 0.5, "ly": 0.505, "g": 1, "king": true}, {"name": "MUTATOR", "x": 0.16, "y": 0.26, "lx": 0.17, "ly": 0.223, "g": 5}, {"name": "EXPERIMENTALIST", "x": 0.13, "y": 0.4, "lx": 0.185, "ly": 0.363, "g": 2}, {"name": "DESTROYER", "x": 0.68, "y": 0.365, "lx": 0.66, "ly": 0.328, "g": 2}, {"name": "SG VERIFIER", "x": 0.865, "y": 0.445, "lx": 0.815, "ly": 0.408, "g": 3}, {"name": "SYNTHESIZER", "x": 0.13, "y": 0.575, "lx": 0.175, "ly": 0.538, "g": 3}, {"name": "FORMAL JUDGE", "x": 0.78, "y": 0.59, "lx": 0.78, "ly": 0.553, "g": 4}, {"name": "HERMES", "x": 0.5, "y": 0.66, "lx": 0.5, "ly": 0.623, "g": 6}], "edges": [{"a": 0, "b": 1, "n": 6, "bend": -30, "ph": 0.0}, {"a": 1, "b": 5, "n": 5, "bend": -40, "ph": 0.137}, {"a": 1, "b": 3, "n": 4, "bend": -25, "ph": 0.274}, {"a": 1, "b": 4, "n": 4, "bend": -20, "ph": 0.411}, {"a": 1, "b": 6, "n": 4, "bend": 25, "ph": 0.548}, {"a": 1, "b": 7, "n": 5, "bend": 30, "ph": 0.685}, {"a": 7, "b": 1, "n": 4, "bend": 45, "ph": 0.822}, {"a": 1, "b": 8, "n": 4, "bend": 0, "ph": 0.959}, {"a": 2, "b": 1, "n": 2, "bend": -35, "ph": 1.096}]}, "register": {"points": [["23", 40], ["00", 55], ["01", 56], ["02", 61], ["03", 73], ["04", 86], ["05", 87], ["06", 121], ["07", 165], ["08", 240], ["09", 275], ["10", 303], ["11", 309], ["12", 329], ["13", 344], ["14", 366], ["15", 392], ["16", 413], ["17", 423], ["18", 446], ["19", 464], ["20", 477], ["21", 489], ["22", 502], ["23", 515], ["00", 529], ["01", 539], ["02", 549], ["03", 556], ["04", 557], ["05", 562]], "rows": 562, "tip": "571e26cf9399bebb5e7f8643c7602c4a55078ef742595db90ef1ca0463914377", "firstTs": "2026-10-22 23:21 UTC", "lastTs": "2026-10-24 05:40 UTC"}, "frontier": {"targets": 29991, "hits": 29965, "nonhits": 26, "total_steps": 278075290444, "max_n": 4733484458, "n_le_50k": 21059, "cont": 10000}, "sets": [{"name": "seed6", "short": "seed6", "bits": 347, "closed": false, "cap2": "347b", "distinct": 69084}, {"name": "CERT CLOSED_48", "short": "CERT_48", "bits": 338, "closed": false, "cap2": "338b", "distinct": 69176}, {"name": "SET A", "short": "SET A", "bits": 348, "closed": true, "cap2": "CLOSED", "distinct": 69184}, {"name": "SET B \u00b7 CANONICAL", "short": "SET B", "bits": 339, "closed": true, "cap2": "CLOSED", "rows": [27, 26, 23, 25, 22, 23, 26, 27, 23, 24, 26, 25, 23, 19], "distinct": 69184}, {"name": "F\u2086\u2084", "short": "F\u2086\u2084", "bits": 381, "closed": false, "cap2": "381b", "distinct": 67926, "refusal": true}], "sorting": {"items": [{"r": 0.142411, "d": "a", "run": 0}, {"r": 0.192758, "d": "r", "run": 0}, {"r": 0.139534, "d": "a", "run": 0}, {"r": 0.125149, "d": "a", "run": 0}, {"r": 0.225843, "d": "r", "run": 0}, {"r": 0.145288, "d": "a", "run": 0}, {"r": 0.176934, "d": "r", "run": 0}, {"r": 0.227282, "d": "r", "run": 0}, {"r": 0.011691, "d": "a", "run": 1}, {"r": 0.00647, "d": "a", "run": 1}, {"r": 0.00482, "d": "a", "run": 1}, {"r": 0.006299, "d": "a", "run": 1}, {"r": 0.003449, "d": "a", "run": 1}, {"r": 0.012904, "d": "a", "run": 1}, {"r": 0.01005, "d": "a", "run": 1}, {"r": 0.006856, "d": "a", "run": 1}, {"r": 0.0, "d": "a", "run": 1}, {"r": 0.0, "d": "a", "run": 2}, {"r": 0.011691, "d": "a", "run": 2}, {"r": 0.139534, "d": "a", "run": 2}, {"r": 0.00647, "d": "a", "run": 2}, {"r": 0.00482, "d": "a", "run": 2}, {"r": 0.145288, "d": "a", "run": 2}, {"r": 0.006299, "d": "a", "run": 2}, {"r": 0.227282, "d": "r", "run": 2}, {"r": 0.003449, "d": "a", "run": 2}, {"r": 0.220089, "d": "r", "run": 2}, {"r": 0.012904, "d": "a", "run": 2}, {"r": 0.185565, "d": "r", "run": 2}, {"r": 0.01005, "d": "a", "run": 2}, {"r": 0.237351, "d": "r", "run": 2}, {"r": 0.006856, "d": "a", "run": 2}, {"r": 0.169742, "d": "r", "run": 3}, {"r": 0.006789, "d": "a", "run": 3}, {"r": 0.178373, "d": "r", "run": 3}, {"r": 0.003122, "d": "a", "run": 3}, {"r": 0.207143, "d": "r", "run": 3}, {"r": 0.006789, "d": "a", "run": 3}, {"r": 0.174057, "d": "r", "run": 3}, {"r": 0.010942, "d": "a", "run": 3}, {"r": 0.253174, "d": "r", "run": 3}, {"r": 0.010942, "d": "a", "run": 3}, {"r": 0.214335, "d": "r", "run": 3}, {"r": 0.013681, "d": "a", "run": 3}, {"r": 0.175496, "d": "r", "run": 3}, {"r": 0.006856, "d": "a", "run": 3}, {"r": 0.192758, "d": "r", "run": 3}, {"r": 0.010547, "d": "a", "run": 3}, {"r": 0.19995, "d": "r", "run": 3}, {"r": 0.010547, "d": "a", "run": 3}, {"r": 0.231597, "d": "r", "run": 3}, {"r": 0.013681, "d": "a", "run": 3}, {"r": 0.207143, "d": "r", "run": 3}, {"r": 0.006393, "d": "a", "run": 3}, {"r": 0.162549, "d": "r", "run": 3}, {"r": 0.009007, "d": "a", "run": 3}, {"r": 0.142411, "d": "a", "run": 4}, {"r": 0.010547, "d": "a", "run": 4}, {"r": 0.139534, "d": "a", "run": 4}, {"r": 0.007778, "d": "a", "run": 4}, {"r": 0.225843, "d": "r", "run": 4}, {"r": 0.010942, "d": "a", "run": 4}, {"r": 0.176934, "d": "r", "run": 4}, {"r": 0.003122, "d": "a", "run": 4}, {"r": 0.240228, "d": "r", "run": 4}, {"r": 0.006789, "d": "a", "run": 4}, {"r": 0.129464, "d": "a", "run": 4}, {"r": 0.003993, "d": "a", "run": 4}, {"r": 0.136657, "d": "a", "run": 4}, {"r": 0.004516, "d": "a", "run": 4}, {"r": 0.197073, "d": "r", "run": 4}, {"r": 0.006789, "d": "a", "run": 4}, {"r": 0.234474, "d": "r", "run": 4}, {"r": 0.010942, "d": "a", "run": 4}], "swaps": [[0, 9], [1, 10], [2, 11], [3, 12], [4, 14], [5, 15], [6, 16], [7, 17], [8, 20], [9, 21], [10, 23], [11, 25], [12, 29], [13, 31], [14, 33], [15, 35], [16, 37], [17, 39], [18, 41], [19, 45], [20, 47], [21, 49], [22, 53], [23, 55], [24, 57], [25, 59], [26, 61], [27, 63], [28, 65], [29, 67], [30, 69], [31, 71], [32, 73], [4, 6], [5, 7], [6, 8], [7, 9], [8, 10], [9, 11], [10, 14], [11, 15], [12, 16], [13, 22], [14, 27], [15, 28], [16, 29], [17, 30], [18, 31], [0, 3], [1, 4], [2, 5], [3, 9], [4, 11], [5, 14], [6, 16], [7, 17], [0, 1], [1, 2], [2, 4], [3, 5], [8, 11], [9, 17], [10, 11], [11, 13], [12, 14], [13, 17], [10, 12], [11, 12], [14, 16], [15, 17], [26, 27], [27, 28], [28, 29], [29, 30], [30, 31], [20, 22], [21, 23], [22, 25], [23, 26], [24, 27], [25, 28], [19, 24], [21, 24], [23, 24], [26, 28], [27, 28], [33, 35], [34, 41], [35, 43], [36, 45], [37, 47], [38, 49], [39, 51], [40, 53], [41, 54], [42, 56], [43, 58], [44, 59], [45, 63], [46, 66], [47, 67], [48, 68], [49, 71], [50, 73], [33, 34], [34, 37], [35, 49], [33, 34], [36, 45], [37, 49], [40, 42], [41, 43], [42, 44], [43, 45], [44, 46], [45, 47], [46, 48], [47, 49], [38, 39], [39, 44], [40, 45], [41, 46], [39, 40], [44, 46], [45, 46], [53, 54], [54, 55], [55, 56], [56, 57], [57, 58], [58, 59], [59, 60], [60, 61], [61, 62], [62, 63], [63, 65], [64, 66], [65, 67], [66, 68], [67, 70], [68, 71], [69, 73], [51, 68], [56, 57], [57, 58], [58, 59], [59, 60], [60, 61], [61, 62], [62, 63], [63, 64], [64, 65], [65, 66], [66, 67], [67, 68], [52, 53], [53, 54], [54, 57], [55, 60], [56, 62], [57, 63], [58, 64], [59, 66], [52, 54], [53, 58], [57, 58], [54, 55], [62, 63], [63, 65], [64, 66], [60, 63], [70, 72], [71, 73], [72, 73]], "frames": 175, "tick_ms": 15, "pass_ms": 2625, "admit": 49, "refuse": 25, "admit_max": 0.145288, "refuse_min": 0.162549, "audits": ["a02ca181946d22a9", "3db470a0e807e84a", "4cae9236727db3b3", "7d264f0e455aa475", "5ab79a5e57ed9314", "d600a3bf6c9618b9", "b3b3964169775d96", "be309ff35ab8053b", "2c57ce6fb52d93f7", "33cb5c79cba4d9c6", "c3709a2541cc0411", "12f983bf1aff8154", "564f7088f8acb17b", "da7b97879027f056", "2befb482986292f9", "210e747fbea5e7f7", "db1b05dbf52e7bc2", "b3f5a1dafeb69600", "9786d5b163f8227b", "283699e0cf0be916", "170eebfa1670e60c", "01715065bcecd7e6", "e46fc6d279c633a5", "f8313b30758af2fe", "be3b8a905fd8d48f", "329d8f2ead70fec7", "948ec9be7c74b3a4", "bc9f5047d0bdb261", "3bcd9b713a34a4ec", "e55e05dd78ba1111", "68fad8bbbcc776b9", "d2b4b90994321b1e", "8b67bbf3688b517f", "5d09bb7cbd5bc30f", "63c3c59aa5cee7ee", "6bc47f5f31d2ef12", "8177e0843656a59e", "ad6961a01fdcd277", "8398079f9890d566", "5ad300e7fdd1c4e0", "e555a51469371952", "ab99384b015807d3", "daebd0e45811ad14", "b7c6fb8e19efc62f", "2163052d9789a145", "7eb08cc90d4b43cf", "627c63e06a602884", "a9a04b7473a52e0f", "2d66bedba091d591", "773248204ca9bceb", "16bdb544763a5789", "b19b9a2f57f58467", "48194bf360f12209", "ad13c0dc9b2e8686", "a62fab996128def6", "f72bd193ea3ff16d", "8fd07e9af8708333", "84ecc3114b920d49", "eba8d4f359a10a69", "f9679b28d0706a5c", "2828411f2f7f8d2b", "d6071d321d6ff84f", "94eb84e8bf814330", "1990c07f6b63f90f", "2dd18f0b46335e3e", "2e2660a7a25120c0", "d87d579facb0a7e8", "5518d86f6b37cd19", "7a00b5ad869def7a", "babb48cef4e75090", "75bb0dc14289bb07", "12b2c038b3b8c05f", "1e38a7216f27d84c", "9902db5c0878dc96"], "runs": [8, 9, 15, 24, 18], "run_names": ["QUIET", "KEEPERS", "MIXED", "BEST-12OF12", "TWIN-LADDER"]}, "slates": ["<span class=\"h\">JUDGE \u00b7 THE GATE</span><br/>live-gather \u00b7 24 interactions \u00b7 organized <span class=\"g\">12</span> \u00b7 aside <span class=\"p\">12</span><br/>admit max r_H <span class=\"g\">0.013681</span> \u00b7 refuse min r_H <span class=\"p\">0.162549</span> \u00b7 the band between is EMPTY<br/><span class=\"d\">source: Seraphim reference engine (organize.py), run at generation</span>", "<span class=\"h\">JUDGE \u00b7 THE PIPELINE</span> \u2014 the base, 2026-10-18 CDT<br/>HELD 11 \u00b7 BROKE 14 (5 by-design) \u00b7 PENDING 8 of 33<br/>VER \u00b7 <span class=\"g\">38/38 bound shas EXACT</span> \u00b7 GATE ATTACK rev3.5 \u00b7 KILL 0 \u00b7 MAJOR 4<br/>r2 tests 143/143 \u00b7 p5 53 \u00b7 anchor 48 \u00b7 s1c 42<br/><span class=\"d\">38 particles = 38 bound shas in transit \u00b7 grade: REPORTED</span>", "<span class=\"h\">JUDGE \u00b7 THE REGISTER</span><br/><span class=\"g\">562 rows</span> \u00b7 hash-chained \u00b7 tip 571e26cf9399bebb<br/>span 2026-10-22 23:21 UTC \u2192 2026-10-24 05:40 UTC \u00b7 growth hourly, cumulative<br/><span class=\"d\">source: swarm/register/register.jsonl, read at generation \u2014 the register keeps writing</span>", "<span class=\"h\">JUDGE \u00b7 THE FRONTIER</span><br/>targets 29,991 \u00b7 hits <span class=\"g\">29,965</span> \u00b7 nonhits <span class=\"p\">26</span><br/>total steps 278,075,290,444 \u00b7 max n 4,733,484,458 (istar 8030 \u00b7 v 24086)<br/>n \u2264 50,000: 21,059 \u00b7 continuation 10,000<br/><span class=\"d\">source: kimberling/data.json \u2014 the live sweep record \u00b7 nonhit identities are not in the published record; the ring shows their count, not their places</span>", "<span class=\"h\">JUDGE \u00b7 THE SETS</span><br/>FULL FIX \u00b7 2026-10-23 \u00b7 two implementations, agreeing exactly<br/>Set A 348b + Set B 339b: <span class=\"g\">69,184/69,184 CLOSED</span> \u00b7 Set B canonical (seq 525)<br/>seed6 69,084 \u00b7 certificate 69,176 \u00b7 F\u2086\u2084 refusal-closed, 67,926 distinct<br/><span class=\"d\">one point = one bit \u00b7 Set B segmented by its true row sums \u00b7 totals exact</span>", "<span class=\"h\">JUDGE \u00b7 THE SORTING ENGINE</span><br/><span class=\"g\">74 interactions</span> \u2014 the full held record: stories 32 \u00b7 best-12of12 24 \u00b7 twin-ladder 18<br/>organized <span class=\"g\">49</span> \u00b7 aside <span class=\"p\">25</span> \u00b7 admit max r_H <span class=\"g\">0.145288</span> \u00b7 refuse min r_H <span class=\"p\">0.162549</span><br/>Quicksort \u2014 the desk's own steps: 175 frames at <span class=\"g\">15 ms/step</span> \u00b7 one pass 2,625 ms \u00b7 no cap, no stride<br/><span class=\"d\">sources: story_reference.json + the recorded run CSVs \u00b7 verdicts recomputed by organize.py at generation \u00b7 matched 74/74</span>", ""], "closing": [{"t": "JUDGE REGISTER \u00b7 7 PLATES", "c": "h"}, {"t": "PLATE 1 \u00b7 THE GATE \u2014 24 interactions \u00b7 organized 12 \u00b7 aside 12 \u00b7 margin empty"}, {"t": "PLATE 2 \u00b7 THE PIPELINE \u2014 38/38 bound shas EXACT \u00b7 HELD 11 \u00b7 BROKE 14 \u00b7 PENDING 8/33"}, {"t": "PLATE 3 \u00b7 THE REGISTER \u2014 562 rows hash-chained \u00b7 tip 571e26cf9399bebb"}, {"t": "PLATE 4 \u00b7 THE FRONTIER \u2014 29,991 swept \u00b7 29,965 found \u00b7 26 refused"}, {"t": "PLATE 5 \u00b7 THE SETS \u2014 closures 69,184/69,184 \u00d72 \u00b7 three non-closures"}, {"t": "PLATE 6 \u00b7 THE SORTING ENGINE \u2014 74 interactions, every one drawn \u00b7 175 frames \u00b7 15 ms/step \u00b7 49 organized \u00b7 25 aside"}, {"t": "ONE STYLE \u00b7 ONE FORMAT \u2014 one stage for all: 3:5 \u00b7 black \u00b7 HUD 4% \u00b7 dashboard 30% \u00b7 hero 76% \u00b7 one type scale \u00b7 one kit", "c": "bl"}, {"t": "ONE LIGHT \u2014 one constant source, fixed \u00b7 light, reflections, shadows, shades \u2014 all computed from it \u00b7 it never moves", "c": "bl"}, {"t": "THE FLOOR \u00b7 0.125 FPS \u2014 ignition weave \u00b7 one ignition per frame \u00b7 1/56 turn \u00b7 pattern k = 110 Hz \u00d7 k", "c": "bl"}, {"t": "NOTHING RANDOM \u2014 every position from data, golden angle, clock"}, {"t": "NO GLOW \u2014 every mark a record \u00b7 dust decorative, labeled \u00b7 text 2.00% min", "c": "d"}], "strings": {"hues": ["#35ffc4", "#ffd94a", "#ff7a59", "#57c8ff", "#b78cff", "#ff6fa5", "#b6ff4a"], "names": ["SERAPHIM \u00b7 GATE VERDICTS", "SERAPHIM \u00b7 QUICKSORT STEPS", "SWARM \u00b7 REGISTER ROWS", "SWARM \u00b7 SEAT TRANSITS", "SWARM \u00b7 LOCUST FEED", "SWARM \u00b7 KEEPER PULSES", "SERAPHIM \u00b7 THREADS"], "descs": ["the gate's verdict stream \u2014 r_H of all 74 interactions in chain order (the Seraphim desk record)", "the Quicksort step stream \u2014 exchange distance of all 174 swaps, stepped at the desk's 15 ms", "the register's growth \u2014 rows written per hour across 31 hourly points (562 rows, hash-chained)", "seat transits \u2014 packets the GATE admitted and routed to each of the 14 seats of the measured structure (register PACKET_ADMITTED rows, destination seat in payload; 31 routed \u00b7 5 refused at the gate never transited)", "the locust feed \u2014 refused fraction per 378 examined items (18,144 examined \u00b7 13,208 admitted \u00b7 4,936 refused)", "KEEPER pulses \u2014 fraction of lives ALIVE at each of 54 pulses (the-keeper ledger)", "the desk's threads \u2014 thread index of each interaction in chain order (quiet \u00b7 keepers \u00b7 mixed \u00b7 best-12of12 \u00b7 twin-ladder)"], "series": [[0.5274, 0.7139, 0.5168, 0.4635, 0.8365, 0.5381, 0.6553, 0.8418, 0.0433, 0.024, 0.0179, 0.0233, 0.0128, 0.0478, 0.0372, 0.0254, 0.0, 0.0, 0.0433, 0.5168, 0.024, 0.0179, 0.5381, 0.0233, 0.8418, 0.0128, 0.8151, 0.0478, 0.6873, 0.0372, 0.8791, 0.0254, 0.6287, 0.0251, 0.6606, 0.0116, 0.7672, 0.0251, 0.6447, 0.0405, 0.9377, 0.0405, 0.7938, 0.0507, 0.65, 0.0254, 0.7139, 0.0391, 0.7406, 0.0391, 0.8578, 0.0507, 0.7672, 0.0237, 0.602, 0.0334, 0.5274, 0.0391, 0.5168, 0.0288, 0.8365, 0.0405, 0.6553, 0.0116, 0.8897, 0.0251, 0.4795, 0.0148, 0.5061, 0.0167, 0.7299, 0.0251, 0.8684, 0.0405], [0.1233, 0.1233, 0.1233, 0.1233, 0.137, 0.137, 0.137, 0.137, 0.1644, 0.1644, 0.1781, 0.1918, 0.2329, 0.2466, 0.2603, 0.274, 0.2877, 0.3014, 0.3151, 0.3562, 0.3699, 0.3836, 0.4247, 0.4384, 0.4521, 0.4658, 0.4795, 0.4932, 0.5068, 0.5205, 0.5342, 0.5479, 0.5616, 0.0274, 0.0274, 0.0274, 0.0274, 0.0274, 0.0274, 0.0548, 0.0548, 0.0548, 0.1233, 0.1781, 0.1781, 0.1781, 0.1781, 0.1781, 0.0411, 0.0411, 0.0411, 0.0822, 0.0959, 0.1233, 0.137, 0.137, 0.0137, 0.0137, 0.0274, 0.0274, 0.0411, 0.1096, 0.0137, 0.0274, 0.0274, 0.0548, 0.0274, 0.0137, 0.0274, 0.0274, 0.0137, 0.0137, 0.0137, 0.0137, 0.0137, 0.0274, 0.0274, 0.0411, 0.0411, 0.0411, 0.0411, 0.0685, 0.0411, 0.0137, 0.0274, 0.0137, 0.0274, 0.0959, 0.1096, 0.1233, 0.137, 0.1507, 0.1644, 0.1781, 0.1781, 0.1918, 0.2055, 0.2055, 0.2466, 0.274, 0.274, 0.274, 0.3014, 0.3151, 0.0137, 0.0411, 0.1918, 0.0137, 0.1233, 0.1644, 0.0274, 0.0274, 0.0274, 0.0274, 0.0274, 0.0274, 0.0274, 0.0274, 0.0137, 0.0685, 0.0685, 0.0685, 0.0137, 0.0274, 0.0137, 0.0137, 0.0137, 0.0137, 0.0137, 0.0137, 0.0137, 0.0137, 0.0137, 0.0137, 0.0137, 0.0274, 0.0274, 0.0274, 0.0274, 0.0411, 0.0411, 0.0548, 0.2329, 0.0137, 0.0137, 0.0137, 0.0137, 0.0137, 0.0137, 0.0137, 0.0137, 0.0137, 0.0137, 0.0137, 0.0137, 0.0137, 0.0137, 0.0411, 0.0685, 0.0822, 0.0822, 0.0822, 0.0959, 0.0274, 0.0685, 0.0137, 0.0137, 0.0137, 0.0274, 0.0274, 0.0411, 0.0274, 0.0274, 0.0137], [0.5333, 0.2, 0.0133, 0.0667, 0.16, 0.1733, 0.0133, 0.4533, 0.5867, 1.0, 0.4667, 0.3733, 0.08, 0.2667, 0.2, 0.2933, 0.3467, 0.28, 0.1333, 0.3067, 0.24, 0.1733, 0.16, 0.1733, 0.1733, 0.1867, 0.1333, 0.1333, 0.0933, 0.0133, 0.0667], [0.125, 0.0, 0.0, 0.625, 0.125, 0.0, 0.625, 0.25, 1.0, 0.0, 0.0, 0.75, 0.375, 0.0], [0.1164, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.172, 0.3651, 0.4101, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.836, 0.9974, 1.0, 1.0, 0.9974, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.9709, 0.0159, 0.0317, 0.0, 0.0, 0.0, 0.0397, 0.0265, 0.0026, 0.0767], [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.8333, 0.0, 0.8333, 1.0, 0.0, 0.0, 0.3333, 1.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.8333, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.75, 0.75, 0.75, 0.75, 0.75, 0.75, 0.75, 0.75, 0.75, 0.75, 0.75, 0.75, 0.75, 0.75, 0.75, 0.75, 0.75, 0.75, 0.75, 0.75, 0.75, 0.75, 0.75, 0.75, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]], "counts": {"verdicts": 74, "swaps": 174, "hours": 31, "seats": 14, "routed_packets": 31, "refused_packets": 5, "locust_examined": 18144, "locust_admitted": 13208, "locust_refused": 4936, "keeper_pulses": 54, "threads": 5}}};
+const Q = new URLSearchParams(location.search);
+const T_OVR = Q.has("t") ? parseFloat(Q.get("t")) : null;
+const SLOT_OVR = Q.has("slot") ? parseInt(Q.get("slot"),10) : null;
+const T0 = performance.now();
+function nowS(){ return vt(); }   /* the transport is the only clock (defined below) */
+const FRAME_S = 8, PLATE_F = 7, SLOT_S = FRAME_S*PLATE_F, N_SLOTS = 7;
+const W7 = ["#35ffc4","#ffd94a","#ff7a59","#57c8ff","#b78cff","#ff6fa5","#b6ff4a"];
+const GOLD="#f2c14e", TEAL="#35ffc4", PINK="#f472b6", BLUE="#57c8ff", VIOLET="#b78cff",
+      MUT="#8595b8", INK="#e8e6f8", GRID="#1d2a47", BASEL="#2a3d63";
+const EPS = 0.15;                            /* ε_H — the gate's refusal threshold */
+const GA = 2.399963229728653;               /* golden angle, radians — determined, never random */
+
+/* ============ THE ONE FORMAT — the measured benchmark stage, as named constants.
+   Every plate is drawn inside this single stage; every geometry below is computed
+   from these constants and the data. No per-plate layout exists anywhere else. */
+const FMT = {
+  arW: 3, arH: 5,                 // stage aspect 3:5 (portrait, measured)
+  hudFrac: 0.04,                 // HUD band height / stage height (measured 4%)
+  dashTop: 0.70,                 // dashboard band top / stage height (band = bottom 30%)
+  heroCX: 0.50, heroCY: 0.32,    // hero zone centre / stage — the benchmark's 0.32 exactly.
+                                 //   The plate title block moved OUT of the stage (bottom-
+                                 //   anchored above it by titleGap), so the hero centre no
+                                 //   longer carries the title's height.
+  heroW: 0.76,                   // hero data field width / stage width (measured ≈76%)
+  titleGap: 0.012,               // gap between the title block's bottom and the stage top
+  railTop: 0.066,                // HUD data rails top / stage height (true top rails, in-band
+                                 //   with the benchmark's counters; the title no longer sits
+                                 //   between the HUD and the field)
+  plotX0: 0.12, plotX1: 0.88,    // data field horizontal extent = the hero width, centred
+  plotTop: 0.125, plotBase: 0.515, // shared plot field vertical extent (bar/line plates);
+                                 //   height unchanged 0.39, centre exactly (0.125+0.515)/2 = 0.32
+  panelX0: 0.03, panelX1: 0.97,  // dashboard panels span the band full width
+  panelTop: 0.715, panelH: 0.115, panelGapF: 0.015, // dashboard panel geometry
+  slateX: 0.03, slateW: 0.94, slateBot: 0.012,      // judge slate, bottom-anchored in the band
+  fieldInset: 0.93,              // radial field radius = inset × hero half-width (clearance
+                                 //   between the field's rim and the plot field's edges)
+  ringF: 1.14                    // frontier refusal ring radius / point-field radius
+};
+/* ============ THE ONE TYPE SCALE — fractions of stage height, one scale for all plates.
+   (Benchmark: largest ≈2–2.5% of frame height, smallest ≈0.7–1%; where its smallest
+   would fall below legibility at phone width, legibility wins — this scale's smallest
+   is 1.08% of stage height, stated here and on the design board.) */
+/* the type scale — fractions of stage height. BO-4 floor: every DATA text step
+   (labels, slates, panels, annotations) measures at least 0.0200 of stage height;
+   hud/kick/quest are plate furniture and series chrome, not data text. */
+const TYPE = { hud:0.0160, kick:0.0169, name:0.0262, quest:0.0169, lab:0.0200, labSm:0.0200,
+               slate:0.0200, big:0.0200, bigH:0.0215, pLab:0.0200, pVal:0.0200, pSub:0.0200,
+               grid:0.0200, seg:0.0200 };
+/* ============ THE SINGLE CONSTANT LIGHT SOURCE — defined exactly once, here.
+   Position in stage fractions (right of and above the hero centre, after the
+   benchmark's hot core, which sits right of its hero centre), intensity, colour.
+   It never moves, never changes with time, never varies per plate. ALL lighting
+   in the series — light, reflections, shadows, shades of colour — is derived
+   from it by the formulas stated at illum()/shadeCol()/castShadow() below.
+   There is no fill light and no ambient term: the darkest a mark can be is set
+   by SHADE.floor, a named constant of this kit. */
+const LIGHT = { x:0.62, y:0.30, i:1.00, fall:4.5, color:"#fff3d6" };
+const REFL = { att:0.30, alpha:0.30 };   // floor reflection: mirrored height × att, alpha × alpha·illum
+const SHADOW = { k:0.50, a:0.34, dot:0.007, aDot:0.35 };  // post shadows: length = height·k along the
+                                 // light direction from the mark's base; dot marks: offset dot·SH, alpha aDot
+const SHADE = { floor:0.42, tintK:0.35, tintThresh:0.75, steps:16 };  // colour shading (see shadeCol)
+const RIM_FRAC = 0.62;             // rim highlight length / mark width, on the source-facing edges
+
+/* ---------- stage geometry: computed from the viewport and FMT only */
+const cv = document.getElementById("cv"), ctx = cv.getContext("2d");
+let W=0, H=0, DPR=1, SX=0, SY=0, SW=0, SH=0, LX=0, LY=0, FIELD_R=0;
+let TP = {};                       // the type scale, in px — recomputed with the stage
+const X = f => SX + SW*f, Y = f => SY + SH*f;
+function hexRGB(hex){ return [parseInt(hex.slice(1,3),16), parseInt(hex.slice(3,5),16), parseInt(hex.slice(5,7),16)]; }
+/* THE LIGHT FORMULAS — every mark's brightness in the series, from the one source.
+   Nothing is added to a mark: no additive pass exists anywhere in this file.
+   d(p)    = distance from p to the source, in stage heights
+   illum(p)= LIGHT.i / (1 + LIGHT.fall · d²)          (inverse falloff)
+   shade   = shadeCol: the hue shaded by illum — toward black low, toward the
+             light's colour high (SHADE, below) — the only colour a mark takes
+   rim     = the source-facing edges of a mark, alpha 0.85 · illum, length RIM_FRAC
+   firing  = an event raises the mark's illumination to I_eff = 1 inside shadeCol's
+             own formula (shadeFire) — the hue turns pale toward the light colour
+             against its saturated neighbours; the mark's geometry never changes
+   vignette= radial gradient centred on the source, 0 → 0.40 black at 1.05 stage
+             heights (falloff — the stage darkens away from the source) */
+function illum(px,py){ const d=Math.hypot(px-LX,py-LY)/SH; return LIGHT.i/(1+LIGHT.fall*d*d); }
+function headR(px,py){ return SH*0.0038*(0.7+0.6*illum(px,py)); }
+const hudEl=document.getElementById("hud"), slateEl=document.getElementById("slate"),
+      bigBox=document.getElementById("bigSlateBox"),
+      stepBox=document.getElementById("stepBox"), countBox=document.getElementById("countBox");
+function layout(){
+  const root=document.documentElement.style;
+  root.setProperty("--t-hud",(TYPE.hud*SH)+"px"); root.setProperty("--t-kick",(TYPE.kick*SH)+"px");
+  root.setProperty("--t-name",(TYPE.name*SH)+"px"); root.setProperty("--t-quest",(TYPE.quest*SH)+"px");
+  root.setProperty("--t-lab",(TYPE.lab*SH)+"px"); root.setProperty("--t-lab-sm",(TYPE.labSm*SH)+"px");
+  root.setProperty("--t-slate",(TYPE.slate*SH)+"px"); root.setProperty("--t-big",(TYPE.big*SH)+"px");
+  root.setProperty("--t-big-h",(TYPE.bigH*SH)+"px");
+  hudEl.style.left=SX+"px"; hudEl.style.top=SY+"px"; hudEl.style.width=SW+"px";
+  countBox.style.left=X(FMT.plotX0)+"px"; countBox.style.top=Y(FMT.railTop)+"px";
+  stepBox.style.right=(W-X(FMT.plotX1))+"px"; stepBox.style.top=Y(FMT.railTop)+"px";
+  slateEl.style.left=X(FMT.slateX)+"px"; slateEl.style.width=(SW*FMT.slateW)+"px";
+  slateEl.style.bottom=(H-(SY+SH)+SH*FMT.slateBot)+"px";
+  bigBox.style.left=X(FMT.slateX)+"px"; bigBox.style.width=(SW*FMT.slateW)+"px";
+  bigBox.style.bottom=(H-(SY+SH)+SH*FMT.slateBot)+"px";
+  const inspEl=document.getElementById("inspector");   /* positioned here, not via the later const */
+  if(inspEl){ inspEl.style.left=X(FMT.slateX)+"px"; inspEl.style.width=(SW*FMT.slateW)+"px";
+    inspEl.style.top=Y(FMT.dashTop+0.012)+"px"; }
+}
+function resize(){ DPR=Math.min(devicePixelRatio||1,3); W=innerWidth; H=innerHeight;
+  cv.width=Math.round(W*DPR); cv.height=Math.round(H*DPR); ctx.setTransform(DPR,0,0,DPR,0,0);
+  SW=Math.min(W, H*FMT.arW/FMT.arH); SH=SW*FMT.arH/FMT.arW;
+  if(SH>H){ SH=H; SW=SH*FMT.arW/FMT.arH; }
+  SX=(W-SW)/2; SY=(H-SH)/2; LX=X(LIGHT.x); LY=Y(LIGHT.y);
+  FIELD_R=SW*FMT.heroW/2*FMT.fieldInset;
+  TP={ pLab:TYPE.pLab*SH, pVal:TYPE.pVal*SH, pSub:TYPE.pSub*SH, grid:TYPE.grid*SH, seg:TYPE.seg*SH };
+  layout(); }
+addEventListener("resize",resize); resize();
+const clamp=(x,a,b)=>x<a?a:(x>b?b:x);
+const ease=x=>{ x=clamp(x,0,1); return 1-Math.pow(1-x,3); };
+const ramp=(lt,g)=>ease(lt-g);              /* ignition ramp of group g at local frame lt */
+const fmtN=n=>n.toLocaleString("en-US");
+
+/* ---------- audio: pattern k sounds harmonic k (110 Hz × k). Tones encode ignitions only. */
+let actx=null, soundOn=false, lastF=-1, lastSlot=-1;
+function tone(f,t0,dur,peak){ if(!actx) return; const o=actx.createOscillator(), g=actx.createGain();
+  o.type="sine"; o.frequency.value=f; g.gain.setValueAtTime(0.0001,t0);
+  g.gain.exponentialRampToValueAtTime(peak,t0+0.04); g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+  o.connect(g); g.connect(actx.destination); o.start(t0); o.stop(t0+dur+0.05); }
+function clockAudio(F,slot){ if(!soundOn||!actx||T_OVR!==null) return;
+  if(F!==lastF){ lastF=F; try{ tone(110*((F%7)+1), actx.currentTime+0.02, 2.4, 0.05); }catch(e){} }
+  if(slot!==lastSlot){ lastSlot=slot; try{ const t0=actx.currentTime+0.05;
+    tone(110*((slot%7)+1),t0,3.2,0.035); tone(110*((slot%7)+1)*2,t0,3.2,0.02); }catch(e){} } }
+
+/* ---------- drawing helpers */
+function stream(x0,y0,x1,y1,bend,color,alpha,width){
+  const mx=(x0+x1)/2, my=(y0+y1)/2, dx=x1-x0, dy=y1-y0, L=Math.hypot(dx,dy)||1;
+  const cx=mx+(-dy/L)*bend, cy=my+(dx/L)*bend;
+  ctx.strokeStyle=color; ctx.globalAlpha=alpha*0.16; ctx.lineWidth=width*3.2;
+  ctx.beginPath(); ctx.moveTo(x0,y0); ctx.quadraticCurveTo(cx,cy,x1,y1); ctx.stroke();
+  ctx.globalAlpha=alpha; ctx.lineWidth=width;
+  ctx.beginPath(); ctx.moveTo(x0,y0); ctx.quadraticCurveTo(cx,cy,x1,y1); ctx.stroke();
+  ctx.globalAlpha=1;
+  return [cx,cy];
+}
+function qpoint(x0,y0,cx,cy,x1,y1,u){ const v=1-u;
+  return [v*v*x0+2*v*u*cx+u*u*x1, v*v*y0+2*v*u*cy+u*u*y1]; }
+function dot(x,y,r,color,alpha){ ctx.globalAlpha=alpha; ctx.fillStyle=color;
+  ctx.beginPath(); ctx.arc(x,y,r,0,6.283185307); ctx.fill(); ctx.globalAlpha=1; }
+
+/* a bar's rim: the two edges facing the one light source — the top edge, lit from the
+   source side across RIM_FRAC of its width, and the source-side edge down from the top */
+function rimBar(x,y,w,h,cx){
+  const il=illum(cx,y); if(h<1.5||il<=0) return;
+  ctx.globalAlpha=0.85*il; ctx.strokeStyle=LIGHT.color; ctx.lineWidth=1.2;
+  const dir = LX>=cx ? 1 : -1, xe = dir>0 ? x+w : x;
+  ctx.beginPath(); ctx.moveTo(xe,y); ctx.lineTo(xe-dir*w*RIM_FRAC,y); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(xe,y); ctx.lineTo(xe,y+Math.min(h*0.5,SH*0.028)); ctx.stroke();
+  ctx.globalAlpha=1; }
+/* SHADES OF COLOR — no flat fills. A mark's colour is its weave hue shaded by the
+   illumination at its own position: out = base·dark·(1−tint) + light·tint per channel,
+   dark = SHADE.floor + (1−SHADE.floor)·I  (toward black at low illumination),
+   tint = SHADE.tintK · max(0, I−SHADE.tintThresh)/(1−SHADE.tintThresh)  (toward the
+   light's colour at high illumination). I is quantized to SHADE.steps for fill reuse. */
+const _shadeCache={};
+function shadeI(hex,I){
+  I=Math.round(I*SHADE.steps)/SHADE.steps; const key=hex+"|"+I;
+  if(_shadeCache[key]) return _shadeCache[key];
+  const c=hexRGB(hex), L=hexRGB(LIGHT.color);
+  const dark=SHADE.floor+(1-SHADE.floor)*I,
+        tint=SHADE.tintK*Math.max(0,I-SHADE.tintThresh)/(1-SHADE.tintThresh);
+  const out=`rgb(${Math.round(c[0]*dark*(1-tint)+L[0]*tint)},${Math.round(c[1]*dark*(1-tint)+L[1]*tint)},${Math.round(c[2]*dark*(1-tint)+L[2]*tint)})`;
+  _shadeCache[key]=out; return out; }
+function shadeCol(hex,px,py){ return shadeI(hex, illum(px,py)); }
+/* a firing mark's shade: the SHADE formula fed I_eff = 1 — the event raises the
+   illumination the formula sees, exactly as the brain's firing method does. */
+function shadeFire(hex){ return shadeI(hex, 1); }
+/* SHADOWS — a bar is a post on the baseline. Its shadow is the parallelogram cast
+   from its base along the light direction v = normalize(base − L)·(height·SHADOW.k),
+   fading from SHADOW.a to nothing at the tip. No fixed offsets: direction and
+   length are computed from the mark's position, its height, and the one source. */
+function castShadow(cx,base,w,h){
+  if(h<1.5) return;
+  const dx=cx-LX, dy=base-LY, m=Math.hypot(dx,dy)||1, vx=dx/m*h*SHADOW.k, vy=dy/m*h*SHADOW.k;
+  const g=ctx.createLinearGradient(cx,base,cx+vx,base+vy);
+  g.addColorStop(0,`rgba(0,0,0,${SHADOW.a})`); g.addColorStop(1,"rgba(0,0,0,0)");
+  ctx.fillStyle=g; ctx.beginPath();
+  ctx.moveTo(cx-w/2,base); ctx.lineTo(cx+w/2,base);
+  ctx.lineTo(cx+w/2+vx,base+vy); ctx.lineTo(cx-w/2+vx,base+vy);
+  ctx.closePath(); ctx.fill(); }
+/* a dot mark's shadow: the same light direction, offset SHADOW.dot·SH, alpha SHADOW.aDot */
+function shadowDot(px,py){
+  const dx=px-LX, dy=py-LY, m=Math.hypot(dx,dy)||1, d=SHADOW.dot*SH;
+  dot(px+dx/m*d, py+dy/m*d, SH*0.0032, "#000000", SHADOW.aDot); }
+/* REFLECTIONS — a bar mirrored across its baseline: height × REFL.att, drawn in the
+   bar's shaded colour at alpha REFL.alpha · illum(reflected centre). Mirror geometry,
+   computed — not a cosmetic flipped copy. */
+function reflectBar(x,base,w,h,hex,cx){
+  if(h<1.5) return; const rh=h*REFL.att, my=base+rh/2;
+  ctx.globalAlpha=REFL.alpha*illum(cx,my); ctx.fillStyle=shadeCol(hex,cx,my);
+  ctx.fillRect(x,base,w,rh); ctx.globalAlpha=1; }
+/* the shared dashboard: one component, four mono panels, exact figures only.
+   A panel is [label, value, sub, accent]. Drawn while a plate works; the judge
+   slate takes this same band when the plate rests. */
+function drawPanels(panels){
+  /* the dashboard component: four panels in a 2×2 grid inside the band — at the
+     2% type floor the micro-labels of a 1×4 row would overflow their panels */
+  const px0=X(FMT.panelX0), px1=X(FMT.panelX1), dy=Y(FMT.panelTop), dh=SH*FMT.panelH,
+        gap=SW*FMT.panelGapF, pw=((px1-px0)-gap)/2;
+  panels.forEach((p,pi)=>{ const px=px0+(pi%2)*(pw+gap), py=dy+Math.floor(pi/2)*(dh+gap);
+    ctx.fillStyle="rgba(5,9,18,0.82)"; ctx.fillRect(px,py,pw,dh);
+    ctx.strokeStyle=GRID; ctx.lineWidth=1; ctx.strokeRect(px+0.5,py+0.5,pw-1,dh-1);
+    ctx.textAlign="left"; ctx.textBaseline="top";
+    ctx.font=TP.pLab+"px ui-monospace,Menlo,monospace"; ctx.fillStyle=MUT;
+    ctx.fillText(p[0], px+8, py+dh*0.08);
+    ctx.font="bold "+TP.pVal+"px ui-monospace,Menlo,monospace"; ctx.fillStyle=INK;
+    ctx.fillText(p[1], px+8, py+dh*0.34);
+    ctx.font=TP.pSub+"px ui-monospace,Menlo,monospace"; ctx.fillStyle=MUT;
+    ctx.fillText(p[2], px+8, py+dh*0.64);
+    ctx.fillStyle=p[3]; ctx.fillRect(px, py+dh-SH*0.003, pw, SH*0.003); });
+  ctx.textAlign="center"; }
+/* each plate's four dashboard panels — every figure computed here from DATA */
+function panelsFor(slot){
+  const G=DATA.gate, P=DATA.pipeline, R=DATA.register, F=DATA.frontier, S=DATA.sets;
+  if(slot===0){ const a=G.filter(v=>v.decision==="admit").length,
+      mx=Math.max(...G.filter(v=>v.decision==="admit").map(v=>v.r_H)),
+      mn=Math.min(...G.filter(v=>v.decision==="refuse").map(v=>v.r_H));
+    return [["COUNT",String(G.length),"INTERACTIONS",GOLD],
+            ["ORGANIZED",String(a),"ADMIT · UNDER ε_H",TEAL],
+            ["ASIDE",String(G.length-a),"REFUSED · ABOVE",PINK],
+            ["MARGIN BAND","EMPTY",mx.toFixed(6)+"–"+mn.toFixed(6),GOLD]]; }
+  if(slot===1){ const parts=P.edges.reduce((s,e)=>s+e.n,0);
+    return [["SEATS",String(P.seats.length),"KING: SEREPHIM",GOLD],
+            ["EDGES",String(P.edges.length),"LOGGED FLOWS",BLUE],
+            ["PARTICLES",String(parts),"= BOUND SHAS",TEAL],
+            ["VERDICT",parts+"/"+parts,"EXACT · REPORTED",GOLD]]; }
+  if(slot===2){ return [["ROWS",fmtN(R.rows),"HASH-CHAINED",GOLD],
+            ["POINTS",String(R.points.length),"HOURLY STEPS",BLUE],
+            ["TIP",R.tip.slice(0,8),"CHAIN TIP",GOLD],
+            ["REGISTER","OPEN","KEEPS WRITING",TEAL]]; }
+  if(slot===3){ return [["TARGETS",fmtN(F.targets),"SWEPT",GOLD],
+            ["HITS",fmtN(F.hits),"INDEX ORDER",TEAL],
+            ["NONHITS",String(F.nonhits),"COUNT EXACT",PINK],
+            ["TOTAL","STEPS",fmtN(F.total_steps),BLUE]]; }
+  if(slot===4){ const bits=S.reduce((s,x)=>s+x.bits,0), closed=S.filter(x=>x.closed).length,
+      ref=S.find(x=>x.refusal);
+    return [["SETS",String(S.length),"FIVE COLUMNS",GOLD],
+            ["BITS",fmtN(bits),"ONE POINT EACH",BLUE],
+            ["CLOSED",String(closed),fmtN(S[2].distinct)+" / "+fmtN(S[3].distinct),GOLD],
+            ["REFUSAL-CLOSED",String(S.filter(x=>x.refusal).length),fmtN(ref.distinct)+" DISTINCT",PINK]]; }
+  return []; }
+
+/* ---------- labels & slates (DOM, the base's boxed mono vernacular) */
+const labelsEl=document.getElementById("labels"), bigSlateEl=document.getElementById("bigSlate"),
+      frameBox=document.getElementById("frameBox");
+function lab(txt,fx,fy,cls){ const d=document.createElement("div"); d.className="lab "+(cls||"");
+  d.textContent=txt; d.style.left=X(fx)+"px"; d.style.top=Y(fy)+"px"; labelsEl.appendChild(d); return d; }
+function labPx(txt,px,py,cls){ const d=document.createElement("div"); d.className="lab "+(cls||"");
+  d.textContent=txt; d.style.left=px+"px"; d.style.top=py+"px"; labelsEl.appendChild(d); return d; }
+function plateHead(kicker,name,question){ const d=document.createElement("div"); d.className="plateTitle";
+  d.style.left=(SX+SW/2)+"px"; d.style.width=(SW*0.94)+"px";
+  const a=document.createElement("div"); a.className="k"; a.textContent=kicker;
+  const b=document.createElement("div"); b.className="n"; b.textContent=name;
+  d.append(a,b);
+  if(question){ const c=document.createElement("div"); c.className="q"; c.textContent=question; d.append(c); }
+  labelsEl.appendChild(d);
+  /* the title block sits ABOVE the stage field: its bottom anchored a named gap
+     above the stage top, so the hero centre inside the stage is the benchmark's
+     0.32 exactly. (Its measured height varies per slot with the question's lines;
+     on a resize without a slot change it goes stale exactly like the other labels
+     in this kit — parity with the existing behaviour, not a new rule.) */
+  d.style.top=(SY - d.offsetHeight - SH*FMT.titleGap)+"px"; }
+/* the pipeline's one layout transform: seat coordinates fitted uniformly (aspect kept)
+   into the shared plot rectangle — the same map for seats and their labels */
+function seatMap(){
+  const S=DATA.pipeline.seats;
+  let mnx=1e9,mxx=-1e9,mny=1e9,mxy=-1e9;
+  for(const s of S){ mnx=Math.min(mnx,s.x); mxx=Math.max(mxx,s.x); mny=Math.min(mny,s.y); mxy=Math.max(mxy,s.y); }
+  const fx0=X(FMT.plotX0), fx1=X(FMT.plotX1), fy0=Y(FMT.plotTop), fy1=Y(FMT.plotBase);
+  const sc=Math.min((fx1-fx0)/((mxx-mnx)*SW), (fy1-fy0)/((mxy-mny)*SH));
+  const bcx=SX+(mnx+mxx)/2*SW, bcy=SY+(mny+mxy)/2*SH, fcx=(fx0+fx1)/2, fcy=(fy0+fy1)/2;
+  const m=(fx,fy)=>[fcx+(X(fx)-bcx)*sc, fcy+(Y(fy)-bcy)*sc];
+  return { seat:S.map(s=>m(s.x,s.y)), lab:S.map(s=>m(s.lx,s.ly)) };
+}
+const RAILS = [   /* the HUD data rails — one pair for every slot: count left, state right */
+  ["<b>24</b> INTERACTIONS", "CHAIN ORDER · 24"],
+  ["<b>9</b> SEATS", "9 EDGES · 38 SHA"],
+  ["", "HOURLY · CUMULATIVE"],
+  ["", "FIELD · INDEX ORDER"],
+  ["", "ONE POINT = ONE BIT"],
+  ["", ""],   /* slot 5: both rails are the engine's own, set in renderLabels/draw */
+  ["<b>7</b> PLATES", "THE FLOOR · 0.125 FPS"]];
+let curSlot=-1;
+function renderLabels(slot){
+  labelsEl.innerHTML=""; hideInspector(); bigSlateEl.style.display = slot===6 ? "block" : "none";
+  stepBox.style.display = slot===6 ? "none" : "block";   /* on the closing plate the */
+  countBox.style.display = slot===6 ? "none" : "block";  /* register box is the data */
+  if(slot===2) RAILS[2][0] = "<b>"+fmtN(DATA.register.rows)+"</b> ROWS";
+  if(slot===3) RAILS[3][0] = "<b>"+fmtN(DATA.frontier.targets)+"</b> TARGETS";
+  if(slot===4) RAILS[4][0] = "<b>"+fmtN(DATA.sets.reduce((s,x)=>s+x.bits,0))+"</b> BITS";
+  if(slot===5) countBox.innerHTML = "<b>"+DATA.sorting.items.length+" INTERACTIONS</b>";
+  else countBox.innerHTML = RAILS[slot][0];
+  if(slot!==5) stepBox.innerHTML = RAILS[slot][1];
+  if(slot===0){ plateHead("PLATE 1 / 6 · THE DESK'S GATE","THE GATE","what does the leftover look like, interaction by interaction?");
+    lab("ε_H 0.15 — REFUSAL LINE", 0.5, FMT.plotBase-(EPS/0.26)*(FMT.plotBase-FMT.plotTop), "gold");
+    lab("chain order → · the audit chain across the tops", 0.5, FMT.plotBase+0.028, "dim"); }
+  if(slot===1){ plateHead("PLATE 2 / 6 · THE BASE, FORMALIZED","THE PIPELINE","");
+    const S=DATA.pipeline.seats, M=seatMap(), railBot=Y(FMT.railTop)+26;
+    S.forEach((s,i)=>{ let ly=M.lab[i][1];
+      if(ly<railBot) ly=M.seat[i][1]+SH*0.032;   /* a label that would strike the rails goes under its seat */
+      labPx(s.name, M.lab[i][0], ly, s.king?"gold":""); }); }
+  if(slot===2){ plateHead("PLATE 3 / 6 · THE HASH-CHAINED REGISTER","THE REGISTER","what does a memory look like while it is being written?");
+    const tipD=lab("tip "+DATA.register.tip.slice(0,16), FMT.plotX0, FMT.plotTop+0.024, "gold");
+    tipD.style.left=(X(FMT.plotX0)+tipD.offsetWidth/2+4)+"px"; }
+  if(slot===3){ plateHead("PLATE 4 / 6 · THE KIMBERLING OBSERVATORY","THE FRONTIER","where does the sequence refuse to be found?");
+    lab(fmtN(DATA.frontier.hits)+" HITS — phyllotaxis field, index order", 0.5, FMT.heroCY-FIELD_R/SH+0.060, "gold");
+    lab(DATA.frontier.nonhits+" NONHITS", FMT.heroCX+FIELD_R/SW-0.020, FMT.heroCY-0.085, "pink sm"); }
+  if(slot===4){ plateHead("PLATE 5 / 6 · THE FIVE SETS","THE SETS","which sets close — and which only refuse?");
+    DATA.sets.forEach((s,i)=>{ const fx=FMT.plotX0+(i+0.5)*(FMT.plotX1-FMT.plotX0)/DATA.sets.length;
+      lab(s.short+" · "+s.cap2, fx, FMT.plotBase+(i%2? 0.052 : 0.025), (s.closed?"gold":"")+" sm"); }); }
+  if(slot===5){ plateHead("PLATE 6 / 6 · THE SORTING ENGINE","THE SORTING ENGINE","the whole record, sorted — every interaction?");
+    lab("one neuron · height = r_H · depth = thread", 0.5, FMT.plotTop+0.024, "dim"); }
+  if(slot===6){ bigBox.innerHTML = DATA.closing.map(l=>`<div class="${l.c||''}">${l.t}</div>`).join(""); }
+  slateEl.innerHTML = DATA.slates[slot] || "";
+}
+
+/* ================= PLATE 1 · THE GATE — residual skyline, chain order.
+   Every bar is a neuron of the gate: a head dot sits at its head, shaded from
+   the one light, and the gold audit chain across the tops is the web that
+   joins them. Light from the one source. */
+const MAXV_G = 0.26;
+function drawGate(t,lt){
+  const vs=DATA.gate, x0=X(FMT.plotX0), x1=X(FMT.plotX1), base=Y(FMT.plotBase), top=Y(FMT.plotTop);
+  const cw=(x1-x0)/vs.length, plotH=base-top, yOf=v=>base-(v/MAXV_G)*plotH;
+  ctx.font=TP.grid+"px ui-monospace,Menlo,monospace"; ctx.textAlign="right"; ctx.textBaseline="middle";
+  for(let gv=0.05; gv<MAXV_G; gv+=0.05){ const y=yOf(gv);
+    ctx.strokeStyle=GRID; ctx.globalAlpha=.5; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(x0,y); ctx.lineTo(x1,y); ctx.stroke(); ctx.globalAlpha=1;
+    ctx.fillStyle=MUT; ctx.fillText(gv.toFixed(2), x0-3, y); }
+  const ey=yOf(EPS); ctx.strokeStyle=GOLD; ctx.globalAlpha=.9; ctx.setLineDash([6,5]);
+  ctx.beginPath(); ctx.moveTo(x0,ey); ctx.lineTo(x1,ey); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha=1;
+  const tops=[], geom=[];
+  vs.forEach((v,j)=>{ const g=Math.min(6,Math.floor(j*7/vs.length)), r=ramp(lt,g);
+    const h=(v.r_H/MAXV_G)*plotH*r, x=x0+j*cw+cw*0.18, wdt=cw*0.64;
+    geom.push({x, w:wdt, h, cx:x+wdt/2, col:v.decision==="admit"?TEAL:PINK}); tops.push([x+wdt/2, base-h]); });
+  /* the floor pass — reflections and shadows on the baseline band, from the one light */
+  ctx.save(); ctx.beginPath(); ctx.rect(SX, base, SW, Y(FMT.dashTop)-base); ctx.clip();
+  for(const b of geom){ reflectBar(b.x, base, b.w, b.h, b.col, b.cx); castShadow(b.cx, base, b.w, b.h); }
+  ctx.restore();
+  for(const b of geom){ const y=base-b.h, sc=shadeCol(b.col,b.cx,y);
+    ctx.globalAlpha=.92; ctx.fillStyle=sc;
+    ctx.fillRect(b.x, y, b.w, b.h); ctx.globalAlpha=1;
+    if(b.h>1.5){ rimBar(b.x, y, b.w, b.h, b.cx); dot(b.cx, y, headR(b.cx,y), sc, illum(b.cx,y)); } }
+  /* the audit chain — the web across the tops, shaded segment by segment from the light */
+  ctx.lineWidth=1.4;
+  for(let i=0;i<tops.length-1;i++){ const mx=(tops[i][0]+tops[i+1][0])/2, my=(tops[i][1]+tops[i+1][1])/2;
+    ctx.globalAlpha=.5; ctx.strokeStyle=shadeCol(GOLD,mx,my);
+    ctx.beginPath(); ctx.moveTo(tops[i][0],tops[i][1]); ctx.lineTo(tops[i+1][0],tops[i+1][1]); ctx.stroke(); }
+  ctx.globalAlpha=1;
+  ctx.strokeStyle=BASEL; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(x0,base); ctx.lineTo(x1,base); ctx.stroke();
+}
+
+/* ================= PLATE 2 · THE PIPELINE — the base, formalized */
+function drawPipeline(t,lt){
+  const seats=DATA.pipeline.seats, M=seatMap(), S=M.seat, FL=2*Y(FMT.plotBase); // mirror line = 2·baseline
+  const edgeC=e=>e.pink?PINK:GOLD;
+  /* the floor reflection — the whole diagram mirrored across the field's baseline */
+  ctx.save(); ctx.beginPath(); ctx.rect(SX, FL/2, SW, Y(FMT.dashTop)-FL/2); ctx.clip();
+  for(const e of DATA.pipeline.edges){ const r=Math.min(ramp(lt,seats[e.a].g), ramp(lt,seats[e.b].g));
+    if(r<=0) continue;
+    const mx=(S[e.a][0]+S[e.b][0])/2, my=(S[e.a][1]+S[e.b][1])/2;
+    const c=stream(S[e.a][0],FL-S[e.a][1],S[e.b][0],FL-S[e.b][1], -e.bend, edgeC(e),
+                   .5*r*REFL.alpha*(0.35+0.65*illum(mx,FL-my)), 1.3);
+    for(let i=0;i<e.n;i++){ const u=((i/e.n)+t*0.011+e.ph)%1;
+      const p=qpoint(S[e.a][0],FL-S[e.a][1],c[0],c[1],S[e.b][0],FL-S[e.b][1],u);
+      dot(p[0],p[1],1.6, shadeCol(edgeC(e),p[0],p[1]), .95*r*REFL.alpha*illum(p[0],p[1])); } }
+  S.forEach((p,j)=>{ const r=ramp(lt,seats[j].g); if(r<=0) return;
+    dot(p[0],FL-p[1], (seats[j].king?4:2.6), shadeCol(seats[j].king?GOLD:BLUE,p[0],FL-p[1]), r*REFL.alpha*illum(p[0],FL-p[1])); });
+  ctx.restore();
+  for(const e of DATA.pipeline.edges){ const ra=ramp(lt,seats[e.a].g), rb=ramp(lt,seats[e.b].g), r=Math.min(ra,rb);
+    if(r<=0) continue;
+    const mx=(S[e.a][0]+S[e.b][0])/2, my=(S[e.a][1]+S[e.b][1])/2;
+    const c=stream(S[e.a][0],S[e.a][1],S[e.b][0],S[e.b][1], e.bend, edgeC(e),
+                   .5*r*(0.35+0.65*illum(mx,my)), 1.3);
+    for(let i=0;i<e.n;i++){ const u=((i/e.n)+t*0.011+e.ph)%1;
+      const p=qpoint(S[e.a][0],S[e.a][1],c[0],c[1],S[e.b][0],S[e.b][1],u);
+      dot(p[0],p[1],1.6, shadeCol(edgeC(e),p[0],p[1]), .95*r*illum(p[0],p[1])); } }
+  S.forEach((p,j)=>{ const r=ramp(lt,seats[j].g); if(r<=0) return;
+    shadowDot(p[0],p[1]);
+    dot(p[0],p[1], (seats[j].king?4:2.6)*(0.7+0.6*illum(p[0],p[1])),
+            shadeCol(seats[j].king?GOLD:BLUE,p[0],p[1]), r*illum(p[0],p[1])); });
+}
+
+/* ================= PLATE 3 · THE REGISTER — cumulative rows by hour */
+function drawRegister(t,lt){
+  const pts=DATA.register.points, x0=X(FMT.plotX0), x1=X(FMT.plotX1), base=Y(FMT.plotBase), top=Y(FMT.plotTop);
+  const maxC=pts[pts.length-1][1];
+  const P=pts.map((p,i)=>[x0+(x1-x0)*(i/(pts.length-1)), base-(p[1]/maxC)*(base-top)]);
+  const upto=Math.max(2, Math.ceil(P.length*ease(lt/6)));
+  const stair=(ctx2,dy)=>{ ctx2.beginPath(); ctx2.moveTo(P[0][0],P[0][1]+dy);
+    for(let i=1;i<upto;i++){ ctx2.lineTo(P[i][0],P[i-1][1]+dy); ctx2.lineTo(P[i][0],P[i][1]+dy); } };
+  /* the staircase's shadow — its silhouette cast along the light direction from
+     the field's centroid, and its reflection mirrored across the baseline */
+  const cen=[(x0+x1)/2,(top+base)/2], cvx=cen[0]-LX, cvy=cen[1]-LY, cm=Math.hypot(cvx,cvy)||1,
+        shx=cvx/cm*SH*0.010, shy=cvy/cm*SH*0.010;
+  ctx.save(); ctx.beginPath(); ctx.rect(SX, base, SW, Y(FMT.dashTop)-base); ctx.clip();
+  ctx.save(); ctx.translate(0,2*base); ctx.scale(1,-1);
+  stair(ctx,0); ctx.strokeStyle=GOLD; ctx.globalAlpha=REFL.alpha*0.67; ctx.lineWidth=1.8; ctx.stroke(); ctx.restore();
+  ctx.restore();
+  ctx.save(); ctx.translate(shx,shy); stair(ctx,0);
+  ctx.strokeStyle="#000000"; ctx.globalAlpha=0.22; ctx.lineWidth=SH*0.010; ctx.stroke(); ctx.restore();
+  ctx.beginPath(); ctx.moveTo(P[0][0],base);
+  for(let i=0;i<upto;i++){ if(i>0) ctx.lineTo(P[i][0],P[i-1][1]); ctx.lineTo(P[i][0],P[i][1]); }
+  ctx.lineTo(P[upto-1][0],base); ctx.closePath();
+  /* the staircase's area wash: one computed shade — the staircase's own colour
+     shaded by the illumination at its centroid, flat at 0.12 — no gradient pass */
+  ctx.globalAlpha=0.12; ctx.fillStyle=shadeCol(VIOLET,cen[0],cen[1]); ctx.fill(); ctx.globalAlpha=1;
+  ctx.strokeStyle=shadeCol(GOLD,cen[0],cen[1]); ctx.lineWidth=1.8; stair(ctx,0); ctx.stroke();
+  for(let i=0;i<upto;i++) dot(P[i][0],P[i][1], headR(P[i][0],P[i][1])*1.1, shadeCol(GOLD,P[i][0],P[i][1]), illum(P[i][0],P[i][1]));
+  if(lt>=6){ const L=P[P.length-1];
+    ctx.globalAlpha=.5; ctx.strokeStyle=GOLD; ctx.lineWidth=1.2;
+    ctx.beginPath(); ctx.arc(L[0],L[1],SH*0.011,0,6.2832); ctx.stroke(); ctx.globalAlpha=1; }
+  ctx.strokeStyle=BASEL; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(x0,base); ctx.lineTo(x1,base); ctx.stroke();
+}
+
+/* ================= PLATE 4 · THE FRONTIER — phyllotaxis field, exact counts.
+   Point positions are the data (θ_i = i × golden angle, r = c√i); their brightness
+   on the stage comes from the one light's vignette falloff pass, like every plate. */
+let fOff=null, fDrawn=0, fKey=-1;
+function drawFrontier(t,lt,key){
+  const F=DATA.frontier, cx=X(FMT.heroCX), cy=Y(FMT.heroCY), ringR=FIELD_R, maxR=ringR/FMT.ringF,
+        c=maxR/Math.sqrt(F.hits);
+  if(!fOff||fOff.width!==cv.width||fOff.height!==cv.height){
+    fOff=document.createElement("canvas"); fOff.width=cv.width; fOff.height=cv.height; fDrawn=0; fKey=-1; }
+  if(fKey!==key){ const o=fOff.getContext("2d"); o.clearRect(0,0,fOff.width,fOff.height); fDrawn=0; fKey=key; }
+  const target= lt>=6 ? F.hits : Math.floor(F.hits*ease(lt/6));
+  if(target>fDrawn){ const o=fOff.getContext("2d"); o.setTransform(DPR,0,0,DPR,0,0); o.fillStyle=GOLD;
+    o.beginPath();
+    for(let i=fDrawn;i<target;i++){ const r=c*Math.sqrt(i), a=i*GA;
+      o.rect(cx+Math.cos(a)*r-0.9, cy+Math.sin(a)*r-0.9, 1.8, 1.8); }
+    o.fill(); fDrawn=target; }
+  const yaw=(t/8)*(6.283185307/56);            /* the weave's rotation: one 1/56 turn per pattern-frame */
+  /* the field disc's cast shadow — its silhouette offset along the light direction
+     from the disc centre, in stage space (it does not rotate with the field) */
+  const dvx=cx-LX, dvy=cy-LY, dm=Math.hypot(dvx,dvy)||1, doff=SH*0.012;
+  ctx.globalAlpha=0.30; ctx.fillStyle="#000000";
+  ctx.beginPath(); ctx.arc(cx+dvx/dm*doff, cy+dvy/dm*doff, maxR, 0, 6.2832); ctx.fill(); ctx.globalAlpha=1;
+  ctx.save(); ctx.translate(cx,cy); ctx.rotate(yaw); ctx.drawImage(fOff,-cx,-cy,W,H); ctx.restore();
+  /* the field's floor reflection — the same field mirrored across its baseline,
+     at REFL.alpha, fading to nothing at the dashboard band */
+  const FL=cy+ringR;
+  ctx.save(); ctx.beginPath(); ctx.rect(cx-ringR, FL, ringR*2, Y(FMT.dashTop)-FL); ctx.clip();
+  ctx.globalAlpha=REFL.alpha*0.6; ctx.translate(cx,2*FL-cy); ctx.scale(1,-1); ctx.rotate(yaw);
+  ctx.drawImage(fOff,-cx,-cy,W,H); ctx.restore();
+  const fgr=ctx.createLinearGradient(0,FL,0,Y(FMT.dashTop));
+  fgr.addColorStop(0,"rgba(0,0,0,0)"); fgr.addColorStop(1,"rgba(0,0,0,0.88)");
+  ctx.fillStyle=fgr; ctx.fillRect(cx-ringR, FL, ringR*2, Y(FMT.dashTop)-FL);
+  const ra=ramp(lt,5);
+  if(ra>0){ ctx.globalAlpha=.25*ra*(0.35+0.65*illum(cx,cy)); ctx.strokeStyle=PINK;
+    ctx.beginPath(); ctx.arc(cx,cy,ringR,0,6.2832); ctx.stroke(); ctx.globalAlpha=1;
+    for(let i=0;i<F.nonhits;i++){ const a=yaw+i*(6.283185307/F.nonhits)-1.5708, px=cx+Math.cos(a)*ringR, py=cy+Math.sin(a)*ringR;
+      shadowDot(px,py); dot(px, py, 2.2, shadeCol(PINK,px,py), ra*illum(px,py)); } }
+  dot(cx,cy,3,shadeCol(GOLD,cx,cy),.9*illum(cx,cy));
+}
+
+/* ================= PLATE 5 · THE SETS — one point per bit, exact */
+function drawSets(t,lt){
+  const sets=DATA.sets, base=Y(FMT.plotBase), colW=SW*(FMT.plotX1-FMT.plotX0)/sets.length,
+        xStart=X(FMT.plotX0), perRow=13, ps=colW*0.92/perRow;
+  sets.forEach((s,ci)=>{ const r=ramp(lt,ci); if(r<=0) return;
+    const cxp=xStart+(ci+0.5)*colW, gw=perRow*ps, shown=Math.floor(s.bits*r),
+          col=s.closed?GOLD:(ci%2?BLUE:VIOLET);
+    for(let i=0;i<shown;i++){
+      const row=Math.floor(i/perRow), colI=i%perRow, px=cxp-gw/2+colI*ps, py=base-row*ps;
+      const ry=base+(base-py)*REFL.att;   /* the bit's reflection, mirrored across the baseline */
+      dot(px, ry, ps*0.30, shadeCol(col,px,ry), REFL.alpha*illum(px,ry));
+      shadowDot(px,py);
+      dot(px, py, ps*0.30, shadeCol(col,px,py), 0.45+0.55*illum(px,py)); }
+    if(s.rows && r>=1){ /* Set B's true row boundaries: gold hairlines ON the shared grid — height stays ∝ bits */
+      let cum=0; ctx.globalAlpha=.85; ctx.strokeStyle=GOLD; ctx.lineWidth=1;
+      for(let b=0;b<s.rows.length-1;b++){ cum+=s.rows[b];
+        const brow=Math.floor(cum/perRow), y=base-brow*ps+ps*0.5;
+        ctx.beginPath(); ctx.moveTo(cxp-gw/2-3,y); ctx.lineTo(cxp+gw/2+3,y); ctx.stroke(); }
+      ctx.globalAlpha=1; }
+    if(r>=1){ const topY=base-Math.ceil(s.bits/perRow)*ps-SH*0.012;
+      ctx.globalAlpha=.9; ctx.strokeStyle=s.closed?GOLD:PINK; ctx.lineWidth=1.6;
+      ctx.beginPath(); ctx.moveTo(cxp-gw/2-4,topY); ctx.lineTo(cxp+gw/2+4,topY); ctx.stroke(); ctx.globalAlpha=1; } });
+  ctx.strokeStyle=BASEL; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(X(0.05),base); ctx.lineTo(X(0.95),base); ctx.stroke();
+}
+
+/* ================= PLATE 6 · THE SORTING ENGINE — digital neurons and synapses.
+   NEURONS: the 74 interactions of the sorting engine's full held record (generation-
+   asserted in DATA.sorting) — one bar each, length = its recorded r_H (Stevens), a
+   head dot at its head, shaded from the one light source.
+   SYNAPSES: the connections between neurons, firing ONLY on real engine events —
+   the arc between the two neurons the current Quicksort frame actually swaps, with
+   a pulse travelling it inside that frame's own tick (the desk's 15 ms cadence).
+   The gold audit chain across the tops is the synaptic web at rest.
+   REACTION: when the sort settles, the field resolves into the engine's determined
+   reaction — organized below the ε_H line, aside above it (49 / 25, exact).
+   The step sequence is the desk's own vizFrames() output, recomputed at generation
+   and verified frame-for-frame: 175 frames, no bar cap, no frame stride.
+   Passes start from chain order every 4 s (pass 2,625 ms at cadence + a settled
+   hold), and from local second 44 the sorted skyline rests under the slate.
+   State is a pure function of the local clock, like every plate. */
+const MAXV_S = 0.27;
+let srtOrders=null, lastHeads=[];   /* lastHeads: the drawn neurons' screen heads (tap targets) */
+function srtBuild(){
+  const n=DATA.sorting.items.length; let cur=Array.from({length:n},(_,i)=>i);
+  srtOrders=[cur.slice()];
+  for(const sw of DATA.sorting.swaps){ const a=cur.slice(), tmp=a[sw[0]]; a[sw[0]]=a[sw[1]]; a[sw[1]]=tmp;
+    srtOrders.push(a); cur=a; }
+  srtOrders.push(cur.slice());            /* the settle frame — same order, frame 175 */
+}
+/* ================= THE MEASURED CUBE — Plate 6's scene space.
+   The sorting engine lives in a cube: x = the interaction's slot, by formula
+   x = -1 + 2·(slot+0.5)/74; y = its r_H, y = -1 + 2·(r_H/0.27), rising from the
+   cube floor; z = its thread plane, z = (run-2)/2 over the 5 runs. The camera
+   is three named constants (focal length, default azimuth, default elevation);
+   the live view (drag / pinch / ?view=) orbits it. Projection: yaw around Y,
+   pitch around X, perspective divide by (f - z') — every projected point is a
+   stated function of (item, t, view). The ONE light sits in the cube at
+   LIGHT3, derived from LIGHT by x' = 2x-1, y' = 1-2y, z' = +1.30 (in front of
+   the field); marks are shaded in stage space by shadeCol at their projected
+   position, so the series' single light law holds unchanged. */
+const CUBE = { f:3.4, az:-0.38, el:0.34, fit:0.78 };   /* fit: the rotated cube fits the field */
+const VIEW = { az:CUBE.az, el:CUBE.el, zoom:1 };
+{ const vq = Q.get("view"); if(vq){ const p = vq.split(",").map(Number);
+  if(p.length===3 && p.every(isFinite)){ VIEW.az=p[0]; VIEW.el=p[1]; VIEW.zoom=p[2]; } } }
+const LIGHT3 = { x:2*LIGHT.x-1, y:1-2*LIGHT.y, z:1.30 };
+function cubeProject(x,y,z){
+  const ca=Math.cos(VIEW.az), sa=Math.sin(VIEW.az), ce=Math.cos(VIEW.el), se=Math.sin(VIEW.el);
+  const rx=x*ca - z*sa, rz=x*sa + z*ca, ry=y*ce - rz*se, rz2=y*se + rz*ce;
+  const persp=CUBE.f/(CUBE.f-rz2), unit=(Y(FMT.plotBase)-Y(FMT.plotTop))/2*CUBE.fit*persp*VIEW.zoom;
+  return [X(FMT.heroCX)+rx*unit, Y(FMT.heroCY)-ry*unit, persp, rz2]; }
+/* the sort's phase at local second s — one function, used by the draw and by
+   the harness hooks, so the step the viewer sees is the step the checks read */
+function sortPhase(s,D){
+  const PASS_MS=D.pass_ms, TICK=D.tick_ms/1000;
+  let o={fIdx:0, phase:"chain", passP:0, passNo:0, offIn:0, burstP:-1, burstScale:1};
+  if(s>=44){ o.fIdx=D.frames; o.phase="sorted"; if(s<44.8){ o.burstP=(s-44)/0.8; o.burstScale=1.7; } }
+  else if(s>=4){ o.passNo=Math.floor((s-4)/4)+1; o.offIn=s-4-(o.passNo-1)*4;
+    if(o.offIn<PASS_MS/1000){ o.fIdx=Math.min(D.frames-1, Math.floor(o.offIn/TICK)); o.phase="sorting";
+      o.passP=o.offIn/(PASS_MS/1000); }
+    else { o.fIdx=D.frames; o.phase="hold";
+      if(o.offIn<3.35){ o.burstP=(o.offIn-PASS_MS/1000)/0.725; o.burstScale=1; } } }
+  return o; }
+function drawSorting(t,lt){
+  const D=DATA.sorting, it=D.items, n=it.length;
+  if(!srtOrders) srtBuild();
+  const s=lt*8;                            /* local seconds inside the 56 s slot */
+  const PASS_MS=D.pass_ms, TICK=D.tick_ms/1000;
+  const PH=sortPhase(s,D), fIdx=PH.fIdx, phase=PH.phase, passP=PH.passP,
+        passNo=PH.passNo, offIn=PH.offIn, burstP=PH.burstP, burstScale=PH.burstScale;
+  let hiPos=null;
+  const order=srtOrders[fIdx];
+  if(phase==="sorting"&&fIdx>=1&&fIdx<=D.swaps.length) hiPos=D.swaps[fIdx-1];
+  const status = phase==="chain" ? "CHAIN ORDER · <b>"+n+"</b>"
+    : phase==="sorting" ? "QUICKSORT · STEP <b>"+fIdx+" / "+D.frames+"</b>"
+    : "SORTED · <b>"+n+"/"+n+"</b> BY r_H \u2191";
+  if(stepBox.innerHTML!==status) stepBox.innerHTML=status;
+  const x0=X(FMT.plotX0), x1=X(FMT.plotX1), base=Y(FMT.plotBase), top=Y(FMT.plotTop),
+        plotH=base-top, yOf=v=>base-(v/MAXV_S)*plotH, bw=(x1-x0)/n;
+  /* faint orbit rings turning on the weave's rotation — depth behind the data,
+     lit from the one source (illumination sampled at the ring centre) */
+  const oyaw=(t/8)*(6.283185307/56), ringIl=0.35+0.65*illum(X(FMT.heroCX),Y(FMT.heroCY));
+  for(let k=0;k<4;k++){ ctx.globalAlpha=0.10*ringIl; ctx.strokeStyle=W7[(k*2)%7]; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.ellipse(X(FMT.heroCX), Y(FMT.heroCY), SW*FMT.heroW/2*(0.80+0.09*k),
+      SW*FMT.heroW/2*(0.80+0.09*k)*0.36, oyaw*0.6+k*0.45, 0, 6.2832); ctx.stroke(); ctx.globalAlpha=1; }
+  /* the cube's furniture — its floor grid (one line per thread plane, one per
+     8 slots), its edges, its r_H axis on the front-left vertical, and the
+     refusal plane at ε_H: a gold plane through the cube at y(ε_H) */
+  const ey=base-(EPS/MAXV_S)*plotH;      /* the flat ε height — the REACTION line's anchor */
+  const seg3=(a,b,style,alpha,lw)=>{ const A=cubeProject(a[0],a[1],a[2]), B=cubeProject(b[0],b[1],b[2]);
+    ctx.globalAlpha=alpha; ctx.strokeStyle=style; ctx.lineWidth=lw||1;
+    ctx.beginPath(); ctx.moveTo(A[0],A[1]); ctx.lineTo(B[0],B[1]); ctx.stroke(); ctx.globalAlpha=1; };
+  for(let zi=0; zi<5; zi++){ const z=-1+zi*0.5; seg3([-1,-1,z],[1,-1,z],GRID,.55); }
+  for(let k2=0; k2<=9; k2++){ const gx=-1+2*(k2*8)/n; seg3([gx,-1,-1],[gx,-1,1],GRID,.4); }
+  seg3([-1,-1,1],[1,-1,1],BASEL,.9); seg3([-1,-1,-1],[-1,-1,1],BASEL,.7);
+  seg3([-1,-1,1],[-1,1,1],BASEL,.9); seg3([1,-1,1],[1,1,1],BASEL,.6);
+  seg3([-1,1,1],[1,1,1],BASEL,.5); seg3([-1,-1,-1],[1,-1,-1],BASEL,.45);
+  ctx.font=TP.grid+"px ui-monospace,Menlo,monospace"; ctx.textAlign="right"; ctx.textBaseline="middle";
+  for(let gv=0.05; gv<MAXV_S; gv+=0.05){ const P=cubeProject(-1,-1+2*gv/MAXV_S,1);
+    ctx.fillStyle=MUT; ctx.fillText(gv.toFixed(2), P[0]-4, P[1]); }
+  { const yE=-1+2*EPS/MAXV_S, c1=cubeProject(-1,yE,-1), c2=cubeProject(1,yE,-1),
+        c3=cubeProject(1,yE,1), c4=cubeProject(-1,yE,1);
+    ctx.globalAlpha=.055; ctx.fillStyle=GOLD; ctx.beginPath();
+    ctx.moveTo(c1[0],c1[1]); ctx.lineTo(c2[0],c2[1]); ctx.lineTo(c3[0],c3[1]); ctx.lineTo(c4[0],c4[1]);
+    ctx.closePath(); ctx.fill();
+    ctx.globalAlpha=.6; ctx.strokeStyle=GOLD; ctx.lineWidth=1.1; ctx.setLineDash([6,5]); ctx.stroke();
+    ctx.setLineDash([]); ctx.globalAlpha=1;
+    ctx.font=TP.grid+"px ui-monospace,Menlo,monospace"; ctx.textAlign="left"; ctx.textBaseline="bottom";
+    ctx.fillStyle=GOLD; ctx.fillText("ε_H 0.15 — REFUSAL PLANE", c4[0]+4, c4[1]-2); }
+  /* the neurons — every interaction a bar in the cube. x from its slot (the
+     two items a step swaps glide between their slots on the step's own fraction
+     u, eased — a pure function of (frame, u)); y from its r_H; z from its thread
+     plane. Shadows are the one light's rays through the heads, met at the cube
+     floor; reflections mirror the bars under the floor at REFL.att; head dots
+     ride the heads; every mark is shaded by shadeCol at its projected position. */
+  const invOf=ord=>{ const inv=new Array(n); for(let sl=0;sl<n;sl++) inv[ord[sl]]=sl; return inv; };
+  const fA=(phase==="sorting"&&fIdx>=1)?fIdx-1:fIdx;
+  const invA=invOf(srtOrders[fA]), invB=invOf(srtOrders[fIdx]);
+  const uStep=phase==="sorting"?ease(((offIn*1000)%D.tick_ms)/D.tick_ms):0;
+  const slotX=p2=>-1+2*(p2+0.5)/n, scr=[];
+  for(let item=0; item<n; item++){ const v=it[item], slot=invB[item],
+        grow = s<4 ? ease(clamp((s-0.2-slot*0.012)/1.1,0,1)) : 1,
+        xa=slotX(invA[item]), xx=xa+(slotX(slot)-xa)*uStep, zz=(v.run-2)*0.5,
+        yH=-1+2*(v.r/MAXV_S)*grow;
+    scr.push({ item, xx, yH, zz, hp:cubeProject(xx,yH,zz), bp:cubeProject(xx,-1,zz),
+               col: v.d==="a" ? TEAL : PINK,
+               hot: !!(hiPos && (item===order[hiPos[0]] || item===order[hiPos[1]])) }); }
+  for(const q of scr.slice().sort((a,b)=>a.bp[3]-b.bp[3])){   /* painter: far first */
+    const rp=cubeProject(q.xx, -1-(q.yH+1)*REFL.att, q.zz);   /* the floor reflection */
+    ctx.globalAlpha=REFL.alpha*illum((q.bp[0]+rp[0])/2,(q.bp[1]+rp[1])/2);
+    ctx.strokeStyle=shadeCol(q.col,rp[0],rp[1]); ctx.lineWidth=Math.max(1,2.2*q.bp[2]);
+    ctx.beginPath(); ctx.moveTo(q.bp[0],q.bp[1]); ctx.lineTo(rp[0],rp[1]); ctx.stroke(); ctx.globalAlpha=1;
+    const sf=(-1-LIGHT3.y)/(q.yH-LIGHT3.y);                    /* the cast shadow */
+    if(sf>1){ const sp=cubeProject(LIGHT3.x+(q.xx-LIGHT3.x)*sf, -1, LIGHT3.z+(q.zz-LIGHT3.z)*sf);
+      ctx.globalAlpha=.30; ctx.strokeStyle="#000000"; ctx.lineWidth=Math.max(1,2*q.bp[2]);
+      ctx.beginPath(); ctx.moveTo(q.bp[0],q.bp[1]); ctx.lineTo(sp[0],sp[1]); ctx.stroke(); ctx.globalAlpha=1; }
+    /* a firing neuron changes by illumination only: its bar and head take the
+       SHADE formula at I_eff = 1 — pale toward the light colour against the
+       saturated field. Nothing else marks the step: no underlay, no tick. */
+    const sc=q.hot ? shadeFire(q.col) : shadeCol(q.col,q.hp[0],q.hp[1]);
+    ctx.globalAlpha=.93; ctx.strokeStyle=sc;
+    ctx.lineWidth=Math.max(1,2.4*q.hp[2]);
+    ctx.beginPath(); ctx.moveTo(q.bp[0],q.bp[1]); ctx.lineTo(q.hp[0],q.hp[1]); ctx.stroke();
+    ctx.globalAlpha=1;
+    const headHex=(phase==="hold"||phase==="sorted") ? GOLD : q.col;
+    const headCol=q.hot ? shadeFire(headHex) : shadeCol(headHex,q.hp[0],q.hp[1]);
+    dot(q.hp[0], q.hp[1], headR(q.hp[0],q.hp[1])*q.hp[2], headCol, q.hot ? 1 : illum(q.hp[0],q.hp[1]));
+    ctx.globalAlpha=.9; ctx.fillStyle=sc;          /* a presence tick at the floor — */
+    ctx.fillRect(q.bp[0]-2, q.bp[1]-1, 4, 2); ctx.globalAlpha=1;  /* even r_H = 0 is seen */
+    if((phase==="hold"||phase==="sorted")&&q.yH>-1){ ctx.fillStyle=shadeCol(GOLD,q.hp[0],q.hp[1]);
+      ctx.globalAlpha=.85; ctx.fillRect(q.hp[0]-2.2*q.hp[2], q.hp[1]-0.6, 4.4*q.hp[2], 1.2); ctx.globalAlpha=1; } }
+  lastHeads=scr.map(q=>({item:q.item, x:q.hp[0], y:q.hp[1]}));
+  const tops=[]; for(let p2=0;p2<n;p2++){ const q=scr[order[p2]]; tops.push([q.hp[0],q.hp[1]]); }
+  /* the synaptic web — the audit chain across the slots' heads, shaded per segment */
+  ctx.lineWidth=1.3;
+  for(let i=0;i<tops.length-1;i++){ const mx=(tops[i][0]+tops[i+1][0])/2, my=(tops[i][1]+tops[i+1][1])/2;
+    ctx.globalAlpha=.55; ctx.strokeStyle=shadeCol(GOLD,mx,my);
+    ctx.beginPath(); ctx.moveTo(tops[i][0],tops[i][1]); ctx.lineTo(tops[i+1][0],tops[i+1][1]); ctx.stroke(); }
+  ctx.globalAlpha=1;
+  /* THE FIRING SYNAPSE — only on a real step: the arc joins the two neurons this
+     frame swaps, and one pulse travels it inside the frame's own tick */
+  if(hiPos){ const A=tops[hiPos[0]], B=tops[hiPos[1]],
+      my=Math.min(A[1],B[1])-16-10*Math.sin(passP*Math.PI);
+    ctx.globalAlpha=.9; ctx.strokeStyle=GOLD; ctx.lineWidth=1.4; ctx.beginPath();
+    ctx.moveTo(A[0],A[1]-3); ctx.quadraticCurveTo((A[0]+B[0])/2,my,B[0],B[1]-3); ctx.stroke(); ctx.globalAlpha=1;
+    const u=((offIn*1000)%D.tick_ms)/D.tick_ms;
+    const pu=qpoint(A[0],A[1]-3,(A[0]+B[0])/2,my,B[0],B[1]-3,u);
+    dot(pu[0],pu[1], headR(pu[0],pu[1])*1.6, LIGHT.color, .95);
+    dot(A[0],A[1]-3,2.4,shadeFire(GOLD),1); dot(B[0],B[1]-3,2.4,shadeFire(GOLD),1); }
+  /* the burst — at the settle frame of each pass the field discharges: one orb per
+     neuron, sprayed by its own hash (determined, never random), with trails, lit
+     from the one source at the orb's own position */
+  if(burstP>=0){ const bp=ease(burstP);
+    for(let i=0;i<n;i++){ const o=tops[i], a=hash01(i*7+3)*6.283185307, dist=(6+34*hash01(i*3+11))*burstScale*bp;
+      const px=o[0]+Math.cos(a)*dist*0.62, py=o[1]+Math.sin(a)*dist*0.38-bp*7, il=illum(px,py);
+      ctx.globalAlpha=0.30*(1-burstP)*il; ctx.strokeStyle=W7[i%7]; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(o[0],o[1]); ctx.lineTo(px,py); ctx.stroke();
+      ctx.globalAlpha=0.9*(1-burstP)*il; ctx.fillStyle=W7[i%7];
+      ctx.beginPath(); ctx.arc(px,py,1.35,0,6.2832); ctx.fill(); ctx.globalAlpha=1; } }
+  /* run segments under the field while chain order holds (staggered rows at the
+     2% annotation size); the REACTION when it rests */
+  ctx.font=TP.seg+"px ui-monospace,Menlo,monospace"; ctx.textAlign="center"; ctx.textBaseline="top";
+  const segA = phase==="chain" ? 0.95 : phase==="sorting" ? clamp(1-passP*1.5,0,1)*0.95 : 0;
+  if(segA>0.02){ let acc=0;
+    for(let gI=0; gI<D.runs.length; gI++){ const c0=acc; acc+=D.runs[gI];
+      const gx0=x0+(c0/n)*(x1-x0), gx1=x0+(acc/n)*(x1-x0);
+      ctx.globalAlpha=segA; ctx.fillStyle=MUT;
+      ctx.fillText(D.run_names[gI]+" "+D.runs[gI], (gx0+gx1)/2, base+SH*0.02+(gI%2)*SH*0.034); ctx.globalAlpha=1; } }
+  if(phase==="hold"||phase==="sorted"){ /* the REACTION — read in the field, under the
+       refusal plane, where the resting slate cannot cover it */
+    const rTxt="REACTION — "+D.admit+" ORGANIZED · "+D.refuse+" ASIDE · ε_H DECIDES",
+          rW=ctx.measureText(rTxt).width, rY=ey+SH*0.044;
+    ctx.globalAlpha=.78; ctx.fillStyle="#040810";
+    ctx.fillRect(X(0.5)-rW/2-7, rY-2, rW+14, TP.seg+5);
+    ctx.globalAlpha=.95; ctx.fillStyle=GOLD; ctx.fillText(rTxt, X(0.5), rY); ctx.globalAlpha=1; }
+  /* the dashboard band — while the engine works; the slate takes the band at rest */
+  if(s<44.8){ const exVal = hiPos ? "POS "+hiPos[0]+" ↔ "+hiPos[1] : (phase==="chain" ? "—" : "SETTLED");
+    const exSub = hiPos ? "ITEM "+order[hiPos[0]]+" ↔ ITEM "+order[hiPos[1]]
+                        : (phase==="chain" ? "NO EXCHANGE YET" : "EVERY BAR PLACED");
+    drawPanels([
+      ["STEP", fIdx+" / "+D.frames, "PASS "+fmtN(D.pass_ms)+" MS", BASEL],
+      ["PASS", phase==="chain" ? "—" : (phase==="sorted" ? "DONE" : passNo+" / 10"),
+             phase==="sorting" ? fmtN(Math.floor(offIn*1000))+" MS IN" : (phase==="chain" ? "FIRST PASS AT 4 S" : "SETTLE HOLD"), TEAL],
+      ["EXCHANGE", exVal, exSub, GOLD],
+      ["THE GATE", D.admit+" ORGANIZED", D.refuse+" ASIDE · ε_H", BASEL]]); }
+}
+
+/* ================= PLATE 7 · THE WEAVE — the floor itself, as a graph */
+function drawWeave(t){
+  const cx=X(FMT.heroCX), cy=Y(FMT.heroCY), R=FIELD_R, yaw=(t/8)*(6.283185307/56);
+  const P=[]; for(let k=0;k<7;k++){ const a=yaw+k*(6.283185307/7)-1.5708; P.push([cx+Math.cos(a)*R, cy+Math.sin(a)*R]); }
+  const FL=2*(cy+R);   // mirror line = 2 × the field's baseline
+  const hep=(ctx2,alphaMul,fy)=>{ ctx2.lineWidth=1;
+    for(let i=0;i<7;i++) for(let j=i+1;j<7;j++){
+      const mx=(P[i][0]+P[j][0])/2, my=(P[i][1]+P[j][1])/2, iy=fy(my);
+      ctx2.globalAlpha=.10*alphaMul*(0.35+0.65*illum(mx,iy)); ctx2.strokeStyle=shadeCol(W7[i],mx,iy);
+      ctx2.beginPath(); ctx2.moveTo(P[i][0],P[i][1]); ctx2.lineTo(P[j][0],P[j][1]); ctx2.stroke(); }
+    ctx2.globalAlpha=1; };
+  /* the heptagon's floor reflection, mirrored across its baseline */
+  ctx.save(); ctx.beginPath(); ctx.rect(SX, FL/2, SW, Y(FMT.dashTop)-FL/2); ctx.clip();
+  ctx.save(); ctx.translate(0,FL); ctx.scale(1,-1); hep(ctx,REFL.alpha,y=>FL-y); ctx.restore(); ctx.restore();
+  /* its cast shadow — the silhouette offset along the light direction from its centre */
+  const dvx=cx-LX, dvy=cy-LY, dm=Math.hypot(dvx,dvy)||1, so=SH*0.012;
+  ctx.save(); ctx.translate(dvx/dm*so, dvy/dm*so);
+  ctx.lineWidth=1;
+  for(let i=0;i<7;i++) for(let j=i+1;j<7;j++){ ctx.globalAlpha=.16; ctx.strokeStyle="#000000";
+    ctx.beginPath(); ctx.moveTo(P[i][0],P[i][1]); ctx.lineTo(P[j][0],P[j][1]); ctx.stroke(); }
+  ctx.restore(); ctx.globalAlpha=1;
+  hep(ctx,1,y=>y);
+  for(let i=0;i<7;i++){ const nx=P[(i+1)%7],
+      mx=(P[i][0]+nx[0])/2, my=(P[i][1]+nx[1])/2;
+    stream(P[i][0],P[i][1],nx[0],nx[1],0,shadeCol(W7[i],mx,my),.5*(0.35+0.65*illum(mx,my)),1.2); }
+  P.forEach((p,k)=>{ shadowDot(p[0],p[1]);
+    dot(p[0],p[1],3.4*(0.7+0.6*illum(p[0],p[1])),shadeCol(W7[k],p[0],p[1]),.95*illum(p[0],p[1])); });
+  dot(cx,cy,3,shadeCol(GOLD,cx,cy),.9*illum(cx,cy));
+}
+
+/* ambient dust — DETERMINISTIC hash field, decorative only (the base's rule, labeled
+   on the slate); its brightness is the one light's, at each mote’s own position */
+function hash01(n){ const s=Math.sin(n*127.1)*43758.5453; return s-Math.floor(s); }
+function drawAmbient(t){
+  for(let i=0;i<70;i++){ const x=SX+hash01(i*2+1)*SW, y=SY+hash01(i*3+7)*SH;
+    dot(x,y,1.1,INK, (0.02+0.08*illum(x,y))*(0.5+0.5*Math.sin(t*.7+i))); }
+}
+
+/* ---------- the transport — time is the fourth axis, and it is driven, not
+   merely watched. vt() reads the transport: a base time plus real elapsed time
+   while playing. Play runs at the true cadence — the series clock is real time,
+   so Plate 6's Quicksort steps land every 15 ms of it, never silently sped.
+   Pause freezes t: at a frozen t the scene is a still frame, a pure function
+   of (t, data, view). Scrub and step set t exactly. ?t= starts paused at that
+   t — the frozen renders the harness verifies. Nav shifts T_OFF; the floor
+   never moves. */
+let T_OFF=0;
+const transport={ paused: T_OVR!==null, base: T_OVR||0, since: performance.now() };
+function vt(){ return transport.base + (transport.paused?0:(performance.now()-transport.since)/1000) + T_OFF; }
+function setT(v){ T_OFF=0; transport.base=v; transport.since=performance.now(); }
+function slotAt(t){ if(SLOT_OVR!==null) return SLOT_OVR; return Math.floor(t/SLOT_S)%N_SLOTS; }
+function ltAt(t){ if(SLOT_OVR!==null) return 6.6; return (t%SLOT_S)/FRAME_S; }
+
+/* ---------- nav */
+const navEl=document.getElementById("nav"), dots=[];
+for(let k=0;k<N_SLOTS;k++){ const b=document.createElement("button"); b.className="dot"; b.textContent=k+1;
+  b.onclick=()=>{ T_OFF += (k-slotAt(vt()))*SLOT_S; }; navEl.appendChild(b); dots.push(b); }
+const sndBtn=document.createElement("button"); sndBtn.className="snd"; sndBtn.textContent="♪ sound off";
+sndBtn.onclick=()=>{ soundOn=!soundOn;
+  if(soundOn){ try{ if(!actx) actx=new (window.AudioContext||window.webkitAudioContext)();
+    if(actx.state==="suspended"){ const rp=actx.resume(); if(rp&&rp.catch) rp.catch(()=>{}); } }catch(e){} }
+  sndBtn.textContent=soundOn?"♪ sound on":"♪ sound off"; };
+navEl.appendChild(sndBtn);
+
+/* ---------- the interface — touch first: drag, pinch, spread, tap.
+   On Plate 6 a one-finger drag orbits the cube and a pinch zooms it; on every
+   other plate a horizontal drag scrubs t. A tap selects: on Plate 6 the neuron
+   whose head it lands on — its record opens in the inspector (source id, r_H,
+   verdict, audit digest, all read from DATA — the viewer-checkable provenance
+   path); anywhere, the string it lands on — its bound movement source is
+   named. The chips toggle each wire; VIEW resets the camera. When paused,
+   nothing moves: the scene is the data at that t. */
+const inspector=document.getElementById("inspector"), scrubEl=document.getElementById("scrub"),
+      playBtn=document.getElementById("playBtn"), tRead=document.getElementById("tRead");
+const stringOff=new Set();
+function showInspector(html){ inspector.innerHTML=html; inspector.style.display="block"; }
+function hideInspector(){ inspector.style.display="none"; }
+function neuronRecord(item){ const D=DATA.sorting, v=D.items[item];
+  return { item, run: D.run_names[v.run], r: v.r,
+           verdict: v.d==="a" ? "ADMIT · ORGANIZED" : "REFUSE · ASIDE", audit: D.audits[item] }; }
+function tapNeuron(item){ const r=neuronRecord(item);
+  showInspector(`<span class="h">NEURON ${r.item}</span> · ${r.run}<br/>r_H ${r.r.toFixed(6)} · ${r.verdict}<br/>`+
+    `audit ${r.audit}<br/><span class="d">source: the Seraphim desk record · verdict recomputed by `+
+    `organize.py at generation — check it against the JUDGE slate</span>`); }
+function tapString(k){ const S=DATA.strings;
+  showInspector(`<span class="h">STRING ${k}</span> · <span style="color:${S.hues[k]}">■</span> ${S.names[k]}<br/>${S.descs[k]}`); }
+{ const row=document.getElementById("chipRow");
+  DATA.strings.names.forEach((nm,k)=>{ const c=document.createElement("button"); c.className="chip";
+    c.innerHTML=`<span class="cdot" style="background:${DATA.strings.hues[k]}"></span>${k}`;
+    c.title=nm; c.setAttribute("aria-label","toggle string "+k+" — "+nm);
+    c.onclick=()=>{ if(stringOff.has(k)){ stringOff.delete(k); c.classList.remove("off"); }
+      else { stringOff.add(k); c.classList.add("off"); } tapString(k); };
+    row.appendChild(c); });
+  const rv=document.createElement("button"); rv.className="chip"; rv.textContent="VIEW";
+  rv.title="reset the cube view"; rv.setAttribute("aria-label","reset view");
+  rv.onclick=()=>{ VIEW.az=CUBE.az; VIEW.el=CUBE.el; VIEW.zoom=1; };
+  row.appendChild(rv); }
+playBtn.onclick=()=>{ transport.base=vt()-T_OFF; T_OFF=0; transport.since=performance.now();
+  transport.paused=!transport.paused; };
+function stepQuantum(){ const t=vt(), slot=slotAt(t);
+  if(slot===5) return (t%SLOT_S)>=4 ? 0.015 : 8;    /* Plate 6 sorting: one Quicksort step */
+  if(slot===2) return 1.6;                          /* the register: one hourly point */
+  return 8; }                                       /* everywhere else: one pattern-frame */
+document.getElementById("stepFwd").onclick=()=>setT(vt()+stepQuantum());
+document.getElementById("stepBack").onclick=()=>setT(Math.max(0, vt()-stepQuantum()));
+let scrubbing=false;
+scrubEl.addEventListener("pointerdown",()=>scrubbing=true);
+scrubEl.addEventListener("pointerup",()=>scrubbing=false);
+scrubEl.addEventListener("input",()=>{ const cyc=Math.floor(vt()/(SLOT_S*N_SLOTS))*(SLOT_S*N_SLOTS);
+  setT(cyc + Number(scrubEl.value)/1000); });
+function handleTap(x,y){ const slot=slotAt(vt());
+  if(slot===5){ let best=null, bd=18;
+    for(const h of lastHeads){ const d=Math.hypot(h.x-x, h.y-y); if(d<bd){ bd=d; best=h; } }
+    if(best){ tapNeuron(best.item); return; } }
+  const S=DATA.strings;
+  if(S && slot!==6){ const t=vt(), lt=ltAt(t),
+      x0=X(FMT.plotX0), x1=X(FMT.plotX1), top=Y(FMT.plotTop), base=Y(FMT.plotBase), ph=base-top;
+    for(let k=0;k<7;k++){ if(stringOff.has(k)) continue; const ser=S.series[k],
+        mean=ser.reduce((a,b)=>a+b,0)/ser.length, cy=top+(k+0.5)*ph/7, amp=ph*0.052;
+      for(let s2=0;s2<=72;s2++){ const p=stringPt(ser,mean,x0,x1,cy,amp,s2/72);
+        if(Math.hypot(p[0]-x, p[1]-y)<12){ tapString(k); return; } } } }
+  hideInspector(); }
+const pointers=new Map(); let dragMoved=0, pinchD0=0, tapCand=null;
+cv.addEventListener("pointerdown", e=>{ try{ cv.setPointerCapture(e.pointerId); }catch(err){}
+  pointers.set(e.pointerId, {x:e.clientX, y:e.clientY});
+  if(pointers.size===1){ dragMoved=0; tapCand={x:e.clientX, y:e.clientY, t:performance.now()}; }
+  if(pointers.size===2){ const p=[...pointers.values()];
+    pinchD0=Math.hypot(p[0].x-p[1].x, p[0].y-p[1].y); tapCand=null; } });
+cv.addEventListener("pointermove", e=>{ if(!pointers.has(e.pointerId)) return;
+  const prev=pointers.get(e.pointerId), dx=e.clientX-prev.x, dy=e.clientY-prev.y;
+  pointers.set(e.pointerId, {x:e.clientX, y:e.clientY});
+  if(pointers.size===1){ dragMoved+=Math.abs(dx)+Math.abs(dy);
+    if(slotAt(vt())===5){ VIEW.az+=dx*0.008; VIEW.el=clamp(VIEW.el+dy*0.005, -0.05, 1.25); }
+    else if(dx!==0) setT(Math.max(0, vt()+dx*0.08)); }
+  else if(pointers.size===2){ const p=[...pointers.values()],
+      d=Math.hypot(p[0].x-p[1].x, p[0].y-p[1].y);
+    if(pinchD0>0 && d>0) VIEW.zoom=clamp(VIEW.zoom*d/pinchD0, 0.6, 2.4); pinchD0=d; } });
+function endPointer(e){ pointers.delete(e.pointerId);
+  if(tapCand && pointers.size===0){ if(performance.now()-tapCand.t<400 && dragMoved<10)
+    handleTap(tapCand.x, tapCand.y); tapCand=null; } }
+cv.addEventListener("pointerup", endPointer); cv.addEventListener("pointercancel", endPointer);
+
+/* harness/uniformity hook: the shared constants, readable from outside */
+/* ================= THE SEVEN STRINGS — the series' wires.
+   Seven strands, one per weave hue, run through the plot field of every plate
+   behind the data (on the closing plate the weave heptagon is the web itself).
+   String k's waveform is its bound source's own data series — computed in
+   inject_data.py from the same source bytes as the plates; the binding table is
+   on the design board. Displacement at u = the series value at u, centred on
+   the series mean, amplitude a named fraction of the field height. Strings are
+   lit by the one light through shadeCol, like every other mark.
+   Each string carries one bead, and the bead moves only on its source's events:
+   on the plate whose subject is the string's own source it rides that plate's
+   event front (gate verdict-ignition · seat-transit phase · register growth ·
+   frontier sweep · sets fill); on Plate 6 string 1's bead is the firing synapse
+   itself, drawn in drawSorting and not duplicated here. Everywhere else the
+   bead makes one traverse during the string's own pattern-frame — the floor's
+   staggered ignition lights frame k's string k. Nothing moves for decoration. */
+function stringPt(ser,mean,x0,x1,cy,amp,u){
+  const n=ser.length, fi=u*(n-1), i0=Math.min(n-2,Math.floor(fi)), fr=fi-i0;
+  return [x0+u*(x1-x0), cy+((ser[i0]*(1-fr)+ser[i0+1]*fr)-mean)*amp*2]; }
+function stringBeadU(slot,k,lt,t){
+  if(slot===0&&k===0) return clamp(lt/7,0,1);                 /* verdict ignition: groups 0..6 over the slot */
+  if(slot===1&&k===3) return (t*0.011)%1;                     /* the transits' own phase rate */
+  if(slot===2&&k===2) return ease(clamp(lt/6,0,1));           /* register growth front (the staircase's upto) */
+  if(slot===3&&k===4) return (t/448)%1;                       /* the sweep: one field turn per 448 s */
+  if(slot===4&&k===5) return DATA.sets.reduce((a,_,ci)=>a+ramp(lt,ci),0)/DATA.sets.length; /* aggregate fill front */
+  if(slot===5&&k===1) return -1;                              /* the firing synapse is this string's bead */
+  const f=Math.floor(lt); return f===k ? lt-k : -1;           /* the floor's ignition: frame k, string k */
+}
+function drawStrings(t,lt,slot){
+  const S=DATA.strings; if(!S) return;
+  const x0=X(FMT.plotX0), x1=X(FMT.plotX1), top=Y(FMT.plotTop), base=Y(FMT.plotBase),
+        ph=base-top, SEG=72;
+  for(let k=0;k<7;k++){ if(stringOff.has(k)) continue; const ser=S.series[k], mean=ser.reduce((a,b)=>a+b,0)/ser.length,
+        cy=top+(k+0.5)*ph/7, amp=ph*0.052;
+    ctx.lineWidth=1.1; let prev=null;
+    for(let s2=0;s2<=SEG;s2++){ const p=stringPt(ser,mean,x0,x1,cy,amp,s2/SEG);
+      if(prev){ ctx.globalAlpha=0.20; ctx.strokeStyle=shadeCol(S.hues[k],(prev[0]+p[0])/2,(prev[1]+p[1])/2);
+        ctx.beginPath(); ctx.moveTo(prev[0],prev[1]); ctx.lineTo(p[0],p[1]); ctx.stroke(); }
+      prev=p; }
+    ctx.globalAlpha=1;
+    const bu=stringBeadU(slot,k,lt,t);
+    if(bu>=0){ const bp=stringPt(ser,mean,x0,x1,cy,amp,bu);
+      dot(bp[0],bp[1],1.8,shadeCol(S.hues[k],bp[0],bp[1]),0.9*illum(bp[0],bp[1])); } }
+}
+window.MH = { FMT, TYPE, LIGHT, REFL, SHADOW, SHADE,
+  stage:()=>({x:SX,y:SY,w:SW,h:SH}), illum:(px,py)=>illum(px,py),
+  shade:(hex,px,py)=>shadeCol(hex,px,py),
+  stringsLens: DATA.strings ? DATA.strings.series.map(s=>s.length) : [],
+  stringsHues: DATA.strings ? DATA.strings.hues : [],
+  /* the interface hooks — the harness drives the same state the viewer touches */
+  view: ()=>({az:VIEW.az, el:VIEW.el, zoom:VIEW.zoom}),
+  transportState: ()=>({t:vt(), paused:transport.paused}),
+  sortStep: ()=>sortPhase(vt()%SLOT_S, DATA.sorting),
+  projectHeads: ()=>lastHeads.map(h=>({item:h.item, x:h.x, y:h.y})),
+  recordOf: item=>neuronRecord(item),
+  stringsOff: ()=>[...stringOff],
+  stringPointAt: (k,u)=>{ const S=DATA.strings, ser=S.series[k],
+      x0=X(FMT.plotX0), x1=X(FMT.plotX1), top=Y(FMT.plotTop), base=Y(FMT.plotBase), ph=base-top,
+      mean=ser.reduce((a,b)=>a+b,0)/ser.length,
+      p=stringPt(ser,mean,x0,x1,top+(k+0.5)*ph/7, ph*0.052, u); return {x:p[0], y:p[1]}; },
+  canvasSize: ()=>({w:cv.width, h:cv.height, dpr:DPR}) };
+
+/* ---------- main loop: state = f(t) only */
+function frame(){
+  const t=vt(), F=Math.floor(t/FRAME_S), slot=slotAt(t), lt=ltAt(t);
+  if(slot!==curSlot){ curSlot=slot; renderLabels(slot);
+    dots.forEach((d,k)=>d.classList.toggle("on",k===slot)); }
+  ctx.fillStyle="#000000"; ctx.fillRect(0,0,W,H);
+  drawAmbient(t);
+  if(slot!==6) drawStrings(t,lt,slot);   /* the seven wires run behind every plate's data */
+  if(slot===0) drawGate(t,lt);
+  else if(slot===1) drawPipeline(t,lt);
+  else if(slot===2) drawRegister(t,lt);
+  else if(slot===3) drawFrontier(t,lt,Math.floor(t/SLOT_S));
+  else if(slot===4) drawSets(t,lt);
+  else if(slot===5) drawSorting(t,lt);
+  else drawWeave(t);
+  if(slot!==5 && slot!==6 && lt<5.6) drawPanels(panelsFor(slot));
+  /* the one light's vignette — falloff over the whole stage, centred on the source */
+  const vg=ctx.createRadialGradient(LX,LY,SH*0.30,LX,LY,SH*1.05);
+  vg.addColorStop(0,"rgba(0,0,0,0)"); vg.addColorStop(1,"rgba(0,0,0,0.40)");
+  ctx.fillStyle=vg; ctx.fillRect(SX,SY,SW,SH);
+  slateEl.style.opacity = slot===6 ? 0 : clamp(lt-5.6,0,1);
+  const ftxt="F"+F+" · PLATE "+(slot+1)+"/7 · 0.125 FPS · WEAVE FLOOR";
+  if(frameBox.textContent!==ftxt) frameBox.textContent=ftxt;
+  /* the transport readout — the viewer drives the same t the harness freezes */
+  const pb=transport.paused?"▶":"❚❚"; if(playBtn.textContent!==pb) playBtn.textContent=pb;
+  if(!scrubbing) scrubEl.value=Math.round((t%(SLOT_S*N_SLOTS))*1000);
+  const rt="T+"+(t%(SLOT_S*N_SLOTS)).toFixed(1)+"s"+
+    (slot===5 ? " · STEP "+sortPhase(lt*8, DATA.sorting).fIdx+"/"+DATA.sorting.frames
+              : " · PLATE "+(slot+1)+"/7");
+  if(tRead.textContent!==rt) tRead.textContent=rt;
+  clockAudio(F,slot);
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

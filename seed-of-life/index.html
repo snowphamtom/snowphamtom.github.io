@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>THE SEED OF LIFE</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { background:#000; height:100%; overflow:hidden; }
+  body { font-family: ui-monospace, "SF Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+         color:#e8e4da; -webkit-user-select:none; user-select:none;
+         -webkit-tap-highlight-color: transparent; }
+  #stage { position:absolute; background:#000; overflow:hidden; }
+  #cv { position:absolute; left:0; top:0; }
+  #hud { position:absolute; left:0; width:100%; top:0; height:4%;
+         display:flex; justify-content:space-between; align-items:center;
+         padding:0 3%; letter-spacing:.04em; color:#e8e4da; z-index:3; }
+  #hud span { white-space:nowrap; }
+  .lab { position:absolute; transform:translate(-50%,-50%); text-align:center;
+         letter-spacing:.08em; cursor:pointer; z-index:2; white-space:nowrap; }
+  .lab.sel { font-weight:700; text-decoration:underline; text-underline-offset:3px; }
+  #dash { position:absolute; left:0; width:100%; top:70%; height:30%; z-index:3;
+          border-top:1px solid rgba(255,243,214,.22);
+          padding:2px 3% 0; display:flex; flex-direction:column; overflow:hidden; }
+  #dHead { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px; line-height:1.1; }
+  #dName { letter-spacing:.10em; }
+  #dPos { color:#9a958a; letter-spacing:.05em; text-align:right; }
+  #dGrid { display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr;
+           gap:2px 12px; flex:1; min-height:0; }
+  .pan { border:1px solid rgba(232,228,218,.14); padding:3px 6px; overflow:hidden; min-height:0; }
+  .pLab { letter-spacing:.06em; margin-bottom:1px; }
+  .pVal { line-height:1.15; color:#e8e4da; }
+  #dSlate { text-align:center; padding:2px 0 4px; color:#c9a227; letter-spacing:.02em; line-height:1.1; white-space:nowrap; }
+  #foot { position:absolute; left:0; width:100%; bottom:10px; text-align:center;
+          color:#9a958a; letter-spacing:.05em; line-height:1.4; z-index:1; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="cv"></canvas>
+  <div id="hud"><span>THE SEED OF LIFE</span><span>7 CATEGORIES · 7 COSINES</span></div>
+  <div id="dash">
+    <div id="dHead"><span id="dName">SLOTH</span><span id="dPos"></span></div>
+    <div id="dGrid">
+      <div class="pan"><div class="pLab">THE CATEGORY</div><div class="pVal" id="vCat"></div></div>
+      <div class="pan"><div class="pLab">THE LEFTOVER</div><div class="pVal" id="vLeft"></div></div>
+      <div class="pan"><div class="pLab" id="pLabHill">HILL</div><div class="pVal" id="vHill"></div></div>
+      <div class="pan"><div class="pLab" id="pLabValley">VALLEY</div><div class="pVal" id="vValley"></div></div>
+    </div>
+    <div id="dSlate">SIN&sup2; + COS&sup2; = 1 &mdash; EACH PAIR SUMS TO ITS PETAL</div>
+  </div>
+</div>
+<div id="foot">TAP A PETAL &mdash; THE DASHBOARD READS ITS ROW<br>
+STATIC GEOMETRY &mdash; NO TIME AXIS &middot; FRAMING, NOT MEASUREMENT &middot; EXACT BY CONSTRUCTION</div>
+<script>
+"use strict";
+/* ============ THE ELEMENTS — injected by build_seed.py from its own table.
+   idx 0 = the center (SLOTH). idx 1..6 = petals clockwise from top. ====== */
+const ELEMENTS = [{"key": "SLOTH", "idx": 0, "phi": null, "hue": "#b6ff4a", "name": "SLOTH", "pos": "THE CENTER · NEUTRAL", "cat": "THE STILL POINT — NEUTRAL CENTER", "leftover": "creates no leftover, takes none", "hill_name": "SLOTH", "hill": "the unopened seed — the upper arc", "valley_name": "IGNITION", "valley": "zero as origin — the same circle"}, {"key": "PRIDE", "idx": 1, "phi": 0, "hue": "#35ffc4", "name": "PRIDE", "pos": "PETAL 1/6 · CLOCKWISE FROM TOP", "cat": "THE CLAIMANT", "leftover": "records the leftover as its own making", "hill_name": "PRIDE", "hill": "the remainder claimed as self-made", "valley_name": "ATTRIBUTION", "valley": "records the leftover to its true source"}, {"key": "ENVY", "idx": 2, "phi": 60, "hue": "#ffd94a", "name": "ENVY", "pos": "PETAL 2/6 · CLOCKWISE FROM TOP", "cat": "THE DESTROYER", "leftover": "destroys what it cannot fit inside", "hill_name": "ENVY", "hill": "destroys what it cannot fit inside", "valley_name": "THE CLEAN REFUSAL", "valley": "refuse and record — destroy nothing"}, {"key": "WRATH", "idx": 3, "phi": 120, "hue": "#ff7a59", "name": "WRATH", "pos": "PETAL 3/6 · CLOCKWISE FROM TOP", "cat": "THE BURNER", "leftover": "burns the leftover", "hill_name": "WRATH", "hill": "the remainder spent as heat", "valley_name": "THE LEDGER", "valley": "heat written, hash-chained — nothing burned"}, {"key": "LUST", "idx": 4, "phi": 180, "hue": "#57c8ff", "name": "LUST", "pos": "PETAL 4/6 · CLOCKWISE FROM TOP", "cat": "THE EARLY SPENDER", "leftover": "spends the leftover before it settles", "hill_name": "LUST", "hill": "spends it before it settles", "valley_name": "TIMING", "valley": "waits for settlement; nothing before its time"}, {"key": "GREED", "idx": 5, "phi": 240, "hue": "#b78cff", "name": "GREED", "pos": "PETAL 5/6 · CLOCKWISE FROM TOP", "cat": "THE TAKER", "leftover": "takes the leftover", "hill_name": "GREED", "hill": "the remainder seized whole", "valley_name": "STEWARDSHIP", "valley": "holds it in trust, admits only what fits"}, {"key": "GLUTTONY", "idx": 6, "phi": 300, "hue": "#ff6fa5", "name": "GLUTTONY", "pos": "PETAL 6/6 · CLOCKWISE FROM TOP", "cat": "THE CONSUMER", "leftover": "consumes past the leftover, into the seed", "hill_name": "GLUTTONY", "hill": "appetite eats the seed itself", "valley_name": "GLUTTON", "valley": "fed only by outcomes; the hunger compounding"}];
+
+/* ============ THE SINGLE CONSTANT LIGHT SOURCE — the series constants,
+   verbatim (~/workspace/graphing_series/template.html). Defined once. ==== */
+const LIGHT = { x:0.62, y:0.30, i:1.00, fall:4.5, color:"#fff3d6", haloR:0.55 };
+const REFL = { att:0.30, alpha:0.30 };
+const SHADOW = { k:0.50, a:0.34, dot:0.007, aDot:0.35 };
+const SHADE = { floor:0.42, tintK:0.35, tintThresh:0.75, steps:16 };
+/* the type scale — every text on the stage at or above 0.0200 of stage height */
+const TYPE = { hud:0.0200, title:0.0240, lab:0.0200, name:0.0300, pos:0.0200,
+               pLab:0.0200, pVal:0.0200, slate:0.0200 };
+
+/* stage geometry: 3:5 stage; hero centre (0.50, 0.32); the seed's full width
+   is 4R and equals 0.76 of stage width, so R = 0.19 of stage width. */
+const stageEl = document.getElementById("stage"), cv = document.getElementById("cv"),
+      ctx = cv.getContext("2d");
+let W=0, H=0, SW=0, SH=0, SX=0, SY=0, OX=0, OY=0, RPX=0, LX=0, LY=0, SEL=0;
+
+function hexRGB(hex){ return [parseInt(hex.slice(1,3),16), parseInt(hex.slice(3,5),16), parseInt(hex.slice(5,7),16)]; }
+function hexA(hex,a){ const c=hexRGB(hex); return `rgba(${c[0]},${c[1]},${c[2]},${a})`; }
+/* THE LIGHT FORMULAS — the series', verbatim:
+   illum(p) = LIGHT.i / (1 + LIGHT.fall * d^2), d in stage heights.
+   shadeCol: out = base*dark*(1-tint) + light*tint per channel,
+   dark = SHADE.floor + (1-SHADE.floor)*I, tint = SHADE.tintK*max(0, I-SHADE.tintThresh)/(1-SHADE.tintThresh),
+   I quantized to SHADE.steps. shadeFromI is that same formula factored on I so the
+   VALLEY arc can take the same hue at illumination scaled by SHADE.floor —
+   the same hue shaded toward black by the one light's shade formula. */
+function illum(px,py){ const d=Math.hypot(px-LX,py-LY)/SH; return LIGHT.i/(1+LIGHT.fall*d*d); }
+function shadeFromI(hex,I){
+  I=Math.round(I*SHADE.steps)/SHADE.steps;
+  const c=hexRGB(hex), L=hexRGB(LIGHT.color);
+  const dark=SHADE.floor+(1-SHADE.floor)*I,
+        tint=SHADE.tintK*Math.max(0,I-SHADE.tintThresh)/(1-SHADE.tintThresh);
+  return `rgb(${Math.round(c[0]*dark*(1-tint)+L[0]*tint)},${Math.round(c[1]*dark*(1-tint)+L[1]*tint)},${Math.round(c[2]*dark*(1-tint)+L[2]*tint)})`;
+}
+function shadeCol(hex,px,py){ return shadeFromI(hex, illum(px,py)); }
+function shadeValley(hex,px,py){ return shadeFromI(hex, illum(px,py)*SHADE.floor); }
+
+/* ---------- the seed geometry, unit space (R = 1, origin O, y down).
+   Direction clockwise from top by phi degrees: (sin phi, -cos phi). */
+function dirOf(phi){ const p=phi*Math.PI/180; return [Math.sin(p), -Math.cos(p)]; }
+function arcOf(el){
+  if(el.idx===0) return { hill:{c:[0,0], r:1, a0:Math.PI, a1:2*Math.PI},
+                          valley:{c:[0,0], r:1, a0:0, a1:Math.PI} };
+  const d=dirOf(el.phi), alpha=Math.atan2(d[1], d[0]);
+  return { hill:{c:[0,0], r:1, a0:alpha-Math.PI/3, a1:alpha+Math.PI/3},
+           valley:{c:d, r:1, a0:alpha+2*Math.PI/3, a1:alpha+4*Math.PI/3} };
+}
+function arcPoint(arc,t){ const a=arc.a0+(arc.a1-arc.a0)*t;
+  return [arc.c[0]+arc.r*Math.cos(a), arc.c[1]+arc.r*Math.sin(a)]; }
+const U = p => [OX + p[0]*RPX, OY + p[1]*RPX];
+
+/* ---------- drawing */
+function traceArc(arc, first){
+  const N=72;
+  for(let i=0;i<=N;i++){ const p=U(arcPoint(arc, i/N));
+    if(i===0 && first) ctx.moveTo(p[0],p[1]); else ctx.lineTo(p[0],p[1]); }
+}
+function drawArc(arc, shadeFn, hue, lw, alpha){
+  const N=72; ctx.lineWidth=lw; ctx.lineCap="round";
+  for(let i=0;i<N;i++){
+    const p0=U(arcPoint(arc, i/N)), p1=U(arcPoint(arc,(i+1)/N));
+    const mx=(p0[0]+p1[0])/2, my=(p0[1]+p1[1])/2;
+    ctx.strokeStyle=shadeFn(hue,mx,my); ctx.globalAlpha=alpha;
+    ctx.beginPath(); ctx.moveTo(p0[0],p0[1]); ctx.lineTo(p1[0],p1[1]); ctx.stroke();
+  }
+  ctx.globalAlpha=1;
+}
+function draw(){
+  ctx.fillStyle="#000"; ctx.fillRect(0,0,SW,SH);
+  /* halo — radial gradient centred on the source, alpha 0.10*i -> 0 at haloR */
+  let g=ctx.createRadialGradient(LX,LY,0,LX,LY,SH*LIGHT.haloR);
+  g.addColorStop(0,hexA(LIGHT.color,0.10)); g.addColorStop(1,hexA(LIGHT.color,0));
+  ctx.fillStyle=g; ctx.fillRect(0,0,SW,SH);
+  /* the construction circles in full — each surrounding circle's equation,
+     faint in its element's hue, shaded by the one light */
+  for(const el of ELEMENTS){ if(el.idx===0) continue; const c=U(dirOf(el.phi));
+    ctx.globalAlpha=0.15; ctx.lineWidth=1; ctx.strokeStyle=shadeCol(el.hue,c[0],c[1]);
+    ctx.beginPath(); ctx.arc(c[0],c[1],RPX,0,6.283185307); ctx.stroke(); }
+  ctx.globalAlpha=1;
+  /* the selected petal, filled: the closed region between its two mirror arcs */
+  const sel=ELEMENTS[SEL], sa=arcOf(sel);
+  ctx.beginPath(); traceArc(sa.hill, true); traceArc(sa.valley, false); ctx.closePath();
+  const cen = sel.idx===0 ? [OX,OY] : U(dirOf(sel.phi).map(v=>v*0.5));
+  ctx.fillStyle=shadeCol(sel.hue, cen[0], cen[1]); ctx.globalAlpha=0.20; ctx.fill(); ctx.globalAlpha=1;
+  /* the 14 arcs — hill at full computed illumination, valley the same hue
+     shaded toward black, both segment by segment from the formulas */
+  for(const el of ELEMENTS){ const a=arcOf(el), s=el.idx===SEL;
+    drawArc(a.valley, shadeValley, el.hue, s?3:2, s?1:0.9);
+    drawArc(a.hill, shadeCol, el.hue, s?3:2, 1);
+  }
+  /* the origin point */
+  ctx.fillStyle=shadeCol(ELEMENTS[0].hue,OX,OY);
+  ctx.beginPath(); ctx.arc(OX,OY,2.2,0,6.283185307); ctx.fill();
+  /* vignette — radial gradient centred on the source, 0 -> 0.40 black at 1.05 stage heights */
+  g=ctx.createRadialGradient(LX,LY,0,LX,LY,SH*1.05);
+  g.addColorStop(0,"rgba(0,0,0,0)"); g.addColorStop(1,"rgba(0,0,0,0.40)");
+  ctx.fillStyle=g; ctx.fillRect(0,0,SW,SH);
+}
+
+
+/* ---------- labels, selection, dashboard */
+const labelEls = ELEMENTS.map(el=>{
+  const d=document.createElement("div"); d.className="lab"; d.textContent=el.name;
+  d.addEventListener("pointerdown", ev=>{ ev.stopPropagation(); select(el.idx); });
+  stageEl.appendChild(d); return d;
+});
+const dName=document.getElementById("dName"), dPos=document.getElementById("dPos"),
+      vCat=document.getElementById("vCat"), vLeft=document.getElementById("vLeft"),
+      vHill=document.getElementById("vHill"), vValley=document.getElementById("vValley"),
+      pLabHill=document.getElementById("pLabHill"), pLabValley=document.getElementById("pLabValley");
+function labelPos(el){ return el.idx===0 ? [OX,OY] : U(dirOf(el.phi).map(v=>v*2.22)); }
+function select(i){
+  SEL=i; const el=ELEMENTS[i];
+  dName.textContent=el.name; dName.style.color=el.hue;
+  dPos.textContent=el.pos;
+  vCat.textContent=el.cat; vLeft.textContent=el.leftover;
+  pLabHill.textContent="HILL \u2014 "+el.hill_name;
+  pLabValley.textContent="VALLEY \u2014 "+el.valley_name;
+  vHill.textContent=el.hill_name+" \u2014 "+el.hill;
+  vValley.textContent=el.valley_name+" \u2014 "+el.valley;
+  const labCol=shadeCol(el.hue,OX,OY);
+  document.querySelectorAll(".pLab").forEach(l=>l.style.color=labCol);
+  labelEls.forEach((le,j)=>{ const e2=ELEMENTS[j], lp=labelPos(e2);
+    le.classList.toggle("sel", j===i);
+    le.style.color = j===i ? e2.hue : shadeCol(e2.hue, lp[0], lp[1]); });
+  publishHook(); draw();
+}
+/* hit test, exact from the circle equations: a point belongs to the element
+   whose circle contains it; inside the overlap of two petals, the nearest
+   surrounding center wins; inside the center circle alone, the center. */
+function hit(cx,cy){
+  const ux=(cx-OX)/RPX, uy=(cy-OY)/RPX;
+  if(Math.hypot(ux,uy)>1) return -1;
+  let best=0, bestD=1;
+  for(const el of ELEMENTS){ if(el.idx===0) continue; const d=dirOf(el.phi);
+    const dd=Math.hypot(ux-d[0], uy-d[1]); if(dd<=1 && dd<bestD){ bestD=dd; best=el.idx; } }
+  return best;
+}
+cv.addEventListener("pointerdown", ev=>{
+  const r=cv.getBoundingClientRect(), i=hit(ev.clientX-r.left, ev.clientY-r.top);
+  if(i>=0) select(i);
+});
+
+/* ---------- layout + the verification hook */
+function publishHook(){
+  window.__SEED = { R:1, selected:ELEMENTS[SEL].key, light:LIGHT, shade:SHADE, typeFrac:TYPE,
+    stage:{ SW:SW, SH:SH, O:[OX,OY], Rpx:RPX, L:[LX,LY] },
+    elements:ELEMENTS.map(el=>{ const a=arcOf(el);
+      return { key:el.key, idx:el.idx, phiDeg:el.phi, hue:el.hue,
+               hill:a.hill, valley:a.valley }; }) };
+}
+function layout(){
+  W=innerWidth; H=innerHeight;
+  SW=Math.min(W, H*3/5); SH=SW*5/3; if(SH>H){ SH=H; SW=SH*3/5; }
+  SX=(W-SW)/2; SY=(H-SH)/2;
+  stageEl.style.left=SX+"px"; stageEl.style.top=SY+"px";
+  stageEl.style.width=SW+"px"; stageEl.style.height=SH+"px";
+  const DPR=Math.min(devicePixelRatio||1,3);
+  cv.width=Math.round(SW*DPR); cv.height=Math.round(SH*DPR);
+  cv.style.width=SW+"px"; cv.style.height=SH+"px";
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  OX=SW*0.50; OY=SH*0.32; RPX=SW*0.19; LX=SW*LIGHT.x; LY=SH*LIGHT.y;
+  document.getElementById("hud").style.fontSize=(TYPE.hud*SH)+"px";
+  dName.style.fontSize=(TYPE.name*SH)+"px"; dPos.style.fontSize=(TYPE.pos*SH)+"px";
+  document.querySelectorAll(".pLab").forEach(l=>l.style.fontSize=(TYPE.pLab*SH)+"px");
+  document.querySelectorAll(".pVal").forEach(l=>l.style.fontSize=(TYPE.pVal*SH)+"px");
+  document.getElementById("dSlate").style.fontSize=(TYPE.slate*SH)+"px";
+  document.getElementById("foot").style.fontSize=(TYPE.lab*SH)+"px";
+  labelEls.forEach((le,j)=>{ const lp=labelPos(ELEMENTS[j]);
+    le.style.left=lp[0]+"px"; le.style.top=lp[1]+"px"; le.style.fontSize=(TYPE.lab*SH)+"px"; });
+}
+addEventListener("resize", ()=>{ layout(); select(SEL); });
+/* initial selection: ?sel=KEY freezes the state (determinism renders), else the center */
+(function init(){
+  const q=new URLSearchParams(location.search).get("sel");
+  let i=0; if(q){ const f=ELEMENTS.find(e=>e.key===q.toUpperCase()); if(f) i=f.idx; }
+  layout(); select(i);
+})();
+</script>
+</body>
+</html>

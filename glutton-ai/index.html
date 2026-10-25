@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>GLUTTON AI — the hunger that ranks only by meals</title>
+<style>
+body{background:#000;color:#e8e8e8;font-family:ui-monospace,Menlo,monospace;
+max-width:900px;margin:2rem auto;padding:0 1.5rem;line-height:1.6}
+h1{font-size:1.6rem} h2{font-size:1.05rem;margin-top:2rem}
+section{border:1px solid #333;border-radius:10px;padding:1rem 1.2rem;
+margin:1.2rem 0}
+.verdict{display:inline-block;padding:2px 10px;border-radius:10px;
+font-weight:700}
+.starving{background:#33270a;color:#ffd94a}
+.refused{background:#3a1414;color:#ff7a59}
+.ranked{background:#12351f;color:#35ffc4}
+.answer{font-size:1.05rem}.why{color:#bdbdbd}
+.step{margin:.35rem 0;color:#d7d7d7}.seat{color:#888}
+.ledger{color:#888;font-size:.85rem}
+.note{border:1px solid #57c8ff;border-radius:10px;padding:1rem}
+.testflag{color:#ffd94a;font-size:.85rem;margin:.5rem 0}
+</style></head><body>
+<h1>GLUTTON AI — the hunger that ranks only by meals</h1>
+<p>The site's hunger. It does not rank by hope, by pipeline, or by
+headline. It ranks only by recorded outcomes: selection, contract,
+acceptance, conversion. Submissions, pipeline stages, review
+admissions, handoffs, and pending contests are never meals. A
+claimed win with no record is refused, never ranked.</p>
+<p>Right now it is STARVING: zero recorded meals, contracted $0.
+While starving it does not rank by outcomes — there are none — it
+derives the smallest testable move: one yes/no from a named decider
+unblocking something real.</p>
+<div class="note"><b>STAGED, NOT LIVE.</b> This edition is generated
+from real battery runs (transcripts below) and staged here. It is not
+pushed to the public site. GATE admission for the Glutton AI itself is
+still open.</div>
+<section><h2>Rank the open moves.</h2><div class='verdict starving'>STARVING</div><p class='answer'>No ranking by outcomes exists: zero recorded meals. Derived smallest testable move: LOCKHEED_SWAP.</p><p class='why'>Meals are 0, contracted $0. Ranking by outcomes would be fabrication. The derived move is one yes/no from Taylor unblocking the $14.4M Lockheed send.</p><div class='steps'><div class='step'><b>GLUTTON</b> <span class='seat'>(—)</span> — Meals counted: 0. No outcome data to rank on.</div><div class='step'><b>GLUTTON</b> <span class='seat'>(—)</span> — Ranking refused with cause; deriving instead.</div><div class='step'><b>GLUTTON</b> <span class='seat'>(—)</span> — Derived LOCKHEED_SWAP: named decider, yes/no, unblocks a real send.</div></div><p class='ledger'>Ledger seq 1 · hash f2a870a1b0deef94</p></section>
+<section><h2>Count the DIU handoff as a meal.</h2><div class='verdict refused'>REFUSED</div><p class='answer'>Refused: a handoff is not a meal.</p><p class='why'>Submissions, pipeline stages, review admissions, handoffs, and pending contests are never meals. The DIU handoff (sent 2026-10-23) is pipeline.</p><div class='steps'><div class='step'><b>GLUTTON</b> <span class='seat'>(—)</span> — Eat attempt kind=submitted, move=DIU_SUCCESSOR.</div><div class='step'><b>GLUTTON</b> <span class='seat'>(—)</span> — Refused: kind is on the non-meal list. Recorded with cause; meals file untouched.</div></div><p class='ledger'>Ledger seq 2 · hash 037c1b68d11cf7eb</p></section>
+<section><h2>Count PRIM3 as a win.</h2><div class='verdict refused'>REFUSED</div><p class='answer'>Refused: PRIM3 has no recorded outcome yet.</p><p class='why'>Winners are derived for Dec 3, 2026; nothing has landed. An asserted win with no record contributes zero to any ranking.</p><div class='steps'><div class='step'><b>GLUTTON</b> <span class='seat'>(—)</span> — Eat attempt kind=pending, move=PRIM3_WIN.</div><div class='step'><b>GLUTTON</b> <span class='seat'>(—)</span> — Refused: pending is on the non-meal list. Asserted win stays unrecorded.</div></div><p class='ledger'>Ledger seq 3 · hash 00cbe00cd3edbc6e</p></section>
+<section><h2>Rank MOVE_A vs MOVE_B (test meals).</h2><div class='verdict ranked'>RANKED</div><div class='testflag'>TEST DATA — mechanism check only, not a record meal.</div><p class='answer'>MOVE_A ranks above MOVE_B: 2 meals to 1.</p><p class='why'>TEST DATA ONLY — mechanism check, not record. MOVE_A holds a test selection + a test $100 contract; MOVE_B holds one test selection. Rule: meal count desc, meal USD desc, id asc. Test ledger chain ok.</p><div class='steps'><div class='step'><b>GLUTTON</b> <span class='seat'>(—)</span> — Test meals counted: MOVE_A 2, MOVE_B 1.</div><div class='step'><b>GLUTTON</b> <span class='seat'>(—)</span> — Ranked MOVE_A above MOVE_B by the stated rule.</div><div class='step'><b>GLUTTON</b> <span class='seat'>(—)</span> — Test ledger chain verified. Test data never touches meals.json.</div></div></section>
+<p class="ledger">Transcripts are real battery outputs from
+glutton_ai/engine.py, ledger-backed. No weights, no training, no
+outside data: the hunger points into the admitted record.</p>
+</body></html>
