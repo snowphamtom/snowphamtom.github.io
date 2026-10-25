@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kimberling — All Twelve, Shown</title>
+<style>
+body { background:#000; color:#fff; font-family:DejaVu Sans Mono, monospace; margin:40px; }
+h1 { color:#ffd94a; }
+h2 { color:#ffd94a; margin-bottom:4px; }
+a { color:#57c8ff; }
+.card { border:1px solid #333; padding:20px; margin:24px 0; }
+.key { color:#ffd94a; }
+.note { color:#a0a0a0; }
+svg, img { max-width:100%; height:auto; }
+</style>
+</head>
+<body>
+<h1>KIMBERLING — ALL TWELVE, SHOWN</h1>
+<p>One math, twelve uses. Each perspective built fully, one at a time. Surjectivity is OPEN. The $300 prize is unclaimed. Nothing here claims otherwise.</p>
+
+<div class="card"><h2>1 — The Gate</h2>
+<p>ADMIT / REFUSE / UNKNOWN. The decision procedure as a gate.</p>
+<p class="key">591/591 ADMIT exact, 0 mismatches; 0 REFUSEs in 29,991 real targets.</p>
+<p><a href="KIMBERLING_GATE_PERSPECTIVE_01.md">Spec 1</a></p></div>
+
+<div class="card"><h2>2 — The One-Way Function</h2>
+<p>Premise refuted by measurement: forward cost = reverse cost + 1, exactly.</p>
+<p class="key">Batch 591: 205,350,528 forward vs 205,349,937 reverse — difference exactly 591.</p>
+<p><a href="KIMBERLING_ONEWAY_PERSPECTIVE_02.md">Spec 2</a></p></div>
+
+<div class="card"><h2>3 — A Code</h2>
+<p>Codebook = row triples. Decode or detect, never falsely decode.</p>
+<p class="key">Roundtrip 591/591 and n = 1..1000: 0 failures, 0 errors, 0 erasures.</p>
+<p><a href="KIMBERLING_CODE_PERSPECTIVE_03.md">Spec 3</a></p></div>
+
+<div class="card"><h2>4 — A Halting Question</h2>
+<p>Premise corrected: never-loops is proved; never-stuck is not.</p>
+<p class="key">Three fates: HALTS / STUCK (certified no) / RUNS ON. Assert-run on v = 502: 118,850,353 steps, 0 invariant failures.</p>
+<p><a href="KIMBERLING_HALTING_PERSPECTIVE_04.md">Spec 4</a></p></div>
+
+<div class="card"><h2>5 — Renormalization</h2>
+<p>Mirror variables halve every step; switches cost (4/3)i + 29/9.</p>
+<p class="key">198,909 steps, 98,712 switches, 0 violations; targets split exactly −12 / −10 / −8 thirds.</p>
+<p><a href="KIMBERLING_RENORM_PERSPECTIVE_05.md">Spec 5</a></p></div>
+
+<div class="card"><h2>6 — Bisection</h2>
+<p>Efficiency corrected: the mechanism bisects, the cost is linear O(n).</p>
+<p class="key">Mean 4,941,608.2 steps, median 12,049 — a long tail, not a logarithm.</p>
+<p><a href="KIMBERLING_BISECTION_PERSPECTIVE_06.md">Spec 6</a></p></div>
+
+<div class="card"><h2>7 — A Fair Coin</h2>
+<p>The branch sequence is a fair coin, statistically — deterministic, not random.</p>
+<p class="key">102,688,349 runs, geometric fit to ~0.5%; even share 0.5000 over 205M flips.</p>
+<p><a href="KIMBERLING_COIN_PERSPECTIVE_07.md">Spec 7</a></p></div>
+
+<div class="card"><h2>8 — Music</h2>
+<p>32 bars of 3/4: drums = branches (exact), melody = d-samples (projection).</p>
+<p class="key">96 drum strokes matching coin.c exactly; MIDI playable (delivered as a file).</p>
+<p><a href="KIMBERLING_MUSIC_PERSPECTIVE_08.md">Spec 8</a></p></div>
+
+<div class="card"><h2>9 — A Pipeline</h2>
+<p>Disjoint paths, no junctions: no merges, no forks, no cycles.</p>
+<p class="key">773,977 nodes, 773,780 edges, 0 violations; nodes − edges = 197 lanes.</p>
+<p><a href="KIMBERLING_PIPELINE_PERSPECTIVE_09.md">Spec 9</a></p></div>
+
+<div class="card"><h2>10 — Identity</h2>
+<p>Identity = (row, position, witness). Row + position are free; the witness costs the walk.</p>
+<p class="key">29,991 identities distinct, 29,965 witnesses distinct, 0 collisions each.</p>
+<p><a href="KIMBERLING_IDENTITY_PERSPECTIVE_10.md">Spec 10</a></p></div>
+
+<div class="card"><h2>11 — Certification Cost</h2>
+<p>Price = steps actually walked. Most certificates are cheap; a few are enormous.</p>
+<p class="key">Median 12,049 steps; 46.7% of all steps spent certified nothing (26 UNKNOWNs).</p>
+<p><a href="KIMBERLING_COST_PERSPECTIVE_11.md">Spec 11</a></p></div>
+
+<div class="card"><h2>12 — A Signature</h2>
+<p>The trajectory itself, as a drawing — a fingerprint no other value can produce.</p>
+<p class="key">Fingerprint SHA-256: 5353f24254d099eaecbdfcff59271da49b313de4fa745e2ed16eb0e374faf254. Invertible both ways; 0 shared states vs v = 503 and v = 504.</p>
+<p><img src="KIMBERLING_SIGNATURE_2026-10-25.svg" alt="Signature of v = 502: 1,190 sampled states"></p>
+<p><a href="KIMBERLING_SIGNATURE_PERSPECTIVE_12.md">Spec 12</a></p></div>
+
+<p class="note">Videos: the frontier (full map) and the math (actual math) live under ../videos/, each with SPEC + BINDING sidecars. The twelve specs live here. Surjectivity remains OPEN.</p>
+</body>
+</html>
