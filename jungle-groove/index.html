@@ -2,11 +2,509 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="refresh" content="0; url=https://cdn.jsdelivr.net/gh/snowphamtom/jungle-groove@main/index.html">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Jungle Groove</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="Jungle Groove — watch or interact. Toca dress-up, jungle animal dance party.">
+<title>Jungle Groove — Dance Party</title>
+<style>
+  :root {
+    --leaf: #2d6a4f; --leaf-deep: #1b4332; --sun: #f4a261; --cream: #fefae0;
+    --night: #0d1b2a; --panel: rgba(15, 40, 30, 0.94); --gold: #e9c46a;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin: 0; padding: 0; height: 100%; overflow: hidden;
+    font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+    background: var(--night); color: var(--cream);
+    touch-action: manipulation; user-select: none;
+  }
+  #app { position: fixed; inset: 0; display: grid; grid-template-rows: auto 1fr auto; }
+  header {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    padding: 10px 14px; padding-top: max(10px, env(safe-area-inset-top));
+    background: linear-gradient(180deg, rgba(0,0,0,.5), transparent);
+    z-index: 20; pointer-events: none;
+  }
+  header > * { pointer-events: auto; }
+  .logo { font-weight: 800; letter-spacing: 0.06em; font-size: 14px; color: var(--gold); text-shadow: 0 2px 8px rgba(0,0,0,.5); }
+  .logo small { display: block; font-weight: 500; font-size: 10px; letter-spacing: 0.12em; color: #9ad5b0; }
+  .chip {
+    background: var(--panel); border: 1px solid rgba(233,196,106,.35);
+    border-radius: 999px; padding: 6px 11px; font-size: 11px; white-space: nowrap;
+  }
+  .mode-toggle {
+    display: flex; border-radius: 999px; overflow: hidden;
+    border: 1px solid rgba(233,196,106,.4);
+  }
+  .mode-toggle button {
+    border: 0; background: transparent; color: #9ad5b0;
+    padding: 7px 12px; font: 700 11px/1 inherit; letter-spacing: 0.06em;
+    cursor: pointer; min-height: 36px;
+  }
+  .mode-toggle button.on { background: var(--gold); color: var(--night); }
+  #stage {
+    position: relative; overflow: hidden;
+    background:
+      radial-gradient(ellipse 120% 80% at 50% 100%, #1b4332 0%, transparent 55%),
+      linear-gradient(180deg, #0d1b2a 0%, #1b4332 50%, #2d6a4f 100%);
+  }
+  .vines {
+    position: absolute; inset: 0; pointer-events: none; opacity: 0.85;
+    background-image:
+      radial-gradient(circle at 8% 18%, rgba(45,106,79,.55) 0 42px, transparent 43px),
+      radial-gradient(circle at 92% 22%, rgba(45,106,79,.5) 0 52px, transparent 53px),
+      radial-gradient(circle at 12% 82%, rgba(27,67,50,.65) 0 64px, transparent 65px),
+      radial-gradient(circle at 88% 78%, rgba(27,67,50,.55) 0 58px, transparent 59px);
+  }
+  .floor {
+    position: absolute; left: 4%; right: 4%; bottom: 6%; height: 48%;
+    border-radius: 50% 50% 0 0 / 28% 28% 0 0;
+    background:
+      radial-gradient(ellipse at 50% 28%, rgba(244,162,97,.22), transparent 62%),
+      linear-gradient(180deg, #40916c 0%, #1b4332 100%);
+    box-shadow: 0 0 48px rgba(233,196,106,.14), inset 0 8px 22px rgba(0,0,0,.28);
+  }
+  .disco {
+    position: absolute; left: 50%; top: 5%; width: 20px; height: 20px; margin-left: -10px;
+    border-radius: 50%;
+    background: conic-gradient(#ff6b6b, #feca57, #48dbfb, #ff9ff3, #1dd1a1, #ff6b6b);
+    box-shadow: 0 0 28px rgba(255,255,255,.55);
+    animation: spin 3.6s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spotlight {
+    position: absolute; left: 50%; top: 6%; width: 130%; height: 72%; margin-left: -65%;
+    background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,.13), transparent 55%);
+    pointer-events: none; animation: pulse 2.2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:.65} 50%{opacity:1} }
+  .cast { position: absolute; left: 0; right: 0; bottom: 10%; top: 22%; pointer-events: none; }
+  .char {
+    position: absolute; width: 88px; height: 120px;
+    margin-left: -44px; margin-top: -60px;
+    cursor: pointer; pointer-events: auto; transition: filter .15s ease;
+  }
+  .char.selected { filter: drop-shadow(0 0 14px var(--gold)); }
+  .char .body {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+  }
+  .char .emoji { font-size: 52px; line-height: 1; will-change: transform; transform-origin: 50% 80%; }
+  .char .name {
+    margin-top: 3px; font-size: 10px; font-weight: 700; letter-spacing: 0.04em;
+    color: var(--cream); text-shadow: 0 1px 4px rgba(0,0,0,.75);
+    background: rgba(0,0,0,.4); padding: 2px 7px; border-radius: 999px;
+  }
+  .char .outfit-tag {
+    position: absolute; top: 2px; right: 2px; font-size: 16px;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,.45));
+  }
+  .char .bubble {
+    position: absolute; top: -6px; left: 50%; transform: translateX(-50%);
+    font-size: 14px; opacity: 0; transition: opacity .25s; pointer-events: none;
+  }
+  .char .bubble.show { opacity: 1; }
+  .char.dancing .emoji { animation: bounce var(--beat, .5s) ease-in-out infinite; }
+  .char.dancing[data-style="sway"] .emoji { animation: sway var(--beat, .5s) ease-in-out infinite; }
+  .char.dancing[data-style="spin"] .emoji { animation: spinDance calc(var(--beat, .5s) * 2) linear infinite; }
+  .char.dancing[data-style="hop"] .emoji { animation: hop var(--beat, .5s) ease-in-out infinite; }
+  .char.dancing.held .emoji { animation: none !important; }
+  @keyframes bounce {
+    0%,100% { transform: translateY(0) rotate(-5deg) scale(1); }
+    25% { transform: translateY(-12px) rotate(4deg) scale(1.06); }
+    50% { transform: translateY(-3px) rotate(-3deg); }
+    75% { transform: translateY(-14px) rotate(5deg) scale(1.07); }
+  }
+  @keyframes sway {
+    0%,100% { transform: translateX(0) rotate(-8deg); }
+    50% { transform: translateX(10px) rotate(8deg); }
+  }
+  @keyframes spinDance {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.05); }
+    100% { transform: rotate(360deg) scale(1); }
+  }
+  @keyframes hop {
+    0%,100% { transform: translateY(0) scale(1,1); }
+    40% { transform: translateY(-16px) scale(1.05,0.95); }
+    50% { transform: translateY(-16px) scale(0.95,1.05); }
+  }
+  .watch-banner {
+    position: absolute; left: 50%; top: 14%; transform: translateX(-50%);
+    background: rgba(0,0,0,.5); border: 1px solid rgba(233,196,106,.3);
+    padding: 6px 14px; border-radius: 999px; font-size: 11px; letter-spacing: 0.08em;
+    color: #9ad5b0; pointer-events: none; z-index: 12; transition: opacity .4s;
+  }
+  .watch-banner.hide { opacity: 0; }
+  nav {
+    display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;
+    padding: 10px 12px; padding-bottom: max(12px, env(safe-area-inset-bottom));
+    background: var(--panel); border-top: 1px solid rgba(233,196,106,.25); z-index: 30;
+  }
+  .btn {
+    border: 0; border-radius: 14px; padding: 10px 14px;
+    font: 700 13px/1.2 inherit; color: var(--night); background: var(--gold);
+    cursor: pointer; min-height: 44px;
+  }
+  .btn.secondary { background: #40916c; color: var(--cream); }
+  .btn.ghost { background: transparent; color: var(--cream); border: 1px solid rgba(254,250,224,.3); }
+  .btn:active { transform: scale(0.97); }
+  .btn:disabled { opacity: 0.4; pointer-events: none; }
+  .sheet {
+    position: fixed; left: 0; right: 0; bottom: 0; max-height: 56%;
+    background: var(--panel); border-radius: 20px 20px 0 0;
+    border: 1px solid rgba(233,196,106,.3); border-bottom: 0;
+    padding: 14px 14px 20px; padding-bottom: max(20px, env(safe-area-inset-bottom));
+    z-index: 40; transform: translateY(110%);
+    transition: transform .28s cubic-bezier(.2,.8,.2,1); overflow: auto;
+  }
+  .sheet.open { transform: translateY(0); }
+  .sheet h2 { margin: 0 0 10px; font-size: 15px; letter-spacing: 0.06em; color: var(--gold); text-transform: uppercase; }
+  .sheet .close {
+    position: absolute; top: 10px; right: 12px; background: transparent; border: 0;
+    color: var(--cream); font-size: 22px; cursor: pointer; min-width: 44px; min-height: 44px;
+  }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 8px; }
+  .tile {
+    aspect-ratio: 1; border-radius: 14px; border: 2px solid transparent;
+    background: rgba(255,255,255,.08);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 3px; cursor: pointer; font-size: 26px;
+  }
+  .tile span { font-size: 10px; font-weight: 600; color: #cfe0d4; }
+  .tile.on { border-color: var(--gold); background: rgba(233,196,106,.18); }
+  .music-list { display: flex; flex-direction: column; gap: 8px; }
+  .track {
+    display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 14px;
+    background: rgba(255,255,255,.06); border: 1px solid transparent; cursor: pointer;
+  }
+  .track.on { border-color: var(--gold); background: rgba(233,196,106,.15); }
+  .track .meta { flex: 1; }
+  .track .meta strong { display: block; font-size: 14px; }
+  .track .meta small { color: #9ad5b0; font-size: 11px; }
+</style>
 </head>
 <body>
-<p><a href="https://cdn.jsdelivr.net/gh/snowphamtom/jungle-groove@main/index.html">Open Jungle Groove</a></p>
+<div id="app">
+  <header>
+    <div class="logo">JUNGLE GROOVE<small>DRESS · DANCE · ROAM</small></div>
+    <div class="mode-toggle">
+      <button type="button" id="btnWatch" class="on">WATCH</button>
+      <button type="button" id="btnInteract">INTERACT</button>
+    </div>
+    <div class="chip" id="trackChip">♪ Groove Safari</div>
+  </header>
+  <div id="stage">
+    <div class="vines"></div>
+    <div class="disco"></div>
+    <div class="spotlight"></div>
+    <div class="floor"></div>
+    <div class="watch-banner" id="watchBanner">PARTY IN PROGRESS — tap INTERACT to join</div>
+    <div class="cast" id="cast"></div>
+  </div>
+  <nav id="dock">
+    <button class="btn" id="btnDress" type="button" disabled>👗 Dress Up</button>
+    <button class="btn secondary" id="btnMusic" type="button">🎵 Music</button>
+    <button class="btn ghost" id="btnMute" type="button">🔇 Mute</button>
+  </nav>
+</div>
+<div class="sheet" id="dressSheet">
+  <button class="close" id="closeDress" type="button" aria-label="Close">×</button>
+  <h2>Dress <span id="dressName">—</span></h2>
+  <p style="margin:0 0 10px;font-size:12px;color:#9ad5b0">They're already at the party — change their look anytime</p>
+  <div class="grid" id="outfitGrid"></div>
+</div>
+<div class="sheet" id="musicSheet">
+  <button class="close" id="closeMusic" type="button" aria-label="Close">×</button>
+  <h2>Dance Floor Playlist</h2>
+  <p style="margin:0 0 10px;font-size:12px;color:#9ad5b0">Change the beat — the whole floor follows</p>
+  <div class="music-list" id="trackList"></div>
+</div>
+<script>
+const ANIMALS = [
+  { id: "leo",  name: "Leo",  base: "🦁", outfit: "cape",   style: "bounce", x: 0.28, y: 0.55 },
+  { id: "zara", name: "Zara", base: "🦓", outfit: "shades", style: "sway",   x: 0.42, y: 0.62 },
+  { id: "momo", name: "Momo", base: "🐵", outfit: "disco",  style: "hop",    x: 0.55, y: 0.50 },
+  { id: "pip",  name: "Pip",  base: "🦜", outfit: "crown",  style: "spin",   x: 0.68, y: 0.58 },
+  { id: "tiko", name: "Tiko", base: "🐯", outfit: "tuxedo", style: "bounce", x: 0.35, y: 0.72 },
+  { id: "nala", name: "Nala", base: "🦒", outfit: "hula",   style: "sway",   x: 0.62, y: 0.70 },
+];
+const OUTFITS = [
+  { id: "natural", label: "Natural", icon: "🌿" },
+  { id: "tuxedo",  label: "Tuxedo",  icon: "🎩" },
+  { id: "hula",    label: "Hula",    icon: "🌺" },
+  { id: "shades",  label: "Shades",  icon: "🕶️" },
+  { id: "cape",    label: "Hero Cape", icon: "🦸" },
+  { id: "disco",   label: "Disco",   icon: "✨" },
+  { id: "rain",    label: "Raincoat", icon: "🌧️" },
+  { id: "crown",   label: "Crown",   icon: "👑" },
+  { id: "chef",    label: "Chef",    icon: "🍳" },
+  { id: "space",   label: "Astro",   icon: "🚀" },
+];
+function makeMelody(mood) {
+  const roots = {
+    major:  [0,2,4,5,7,9,11,12],
+    bright: [0,2,4,7,9,12,14,16],
+    soft:   [0,3,5,7,10,12,15,17],
+    hype:   [0,2,3,5,7,8,10,12],
+    warm:   [0,2,5,7,9,12,14,17],
+  };
+  return { scale: roots[mood] || roots.major };
+}
+const TRACKS = [
+  { id: "safari",   name: "Groove Safari",  bpm: 112, tag: "Afrobeat bounce", bars: makeMelody("major") },
+  { id: "bamboo",   name: "Bamboo Bounce",  bpm: 128, tag: "Upbeat pop",      bars: makeMelody("bright") },
+  { id: "moon",     name: "Moonlit Mambo",  bpm: 96,  tag: "Smooth night",    bars: makeMelody("soft") },
+  { id: "stampede", name: "Stampede Drop",  bpm: 140, tag: "Wild energy",     bars: makeMelody("hype") },
+  { id: "river",    name: "River Rhythm",   bpm: 104, tag: "Laid-back groove",bars: makeMelody("warm") },
+];
+const BUBBLES = ["✨", "🎉", "💃", "🕺", "⭐", "🔥", "🎶", "💛"];
+const state = {
+  outfits: Object.fromEntries(ANIMALS.map(a => [a.id, a.outfit])),
+  pos: Object.fromEntries(ANIMALS.map(a => [a.id, { x: a.x, y: a.y }])),
+  styles: Object.fromEntries(ANIMALS.map(a => [a.id, a.style])),
+  selected: null,
+  track: TRACKS[0],
+  muted: false,
+  party: true,
+  mode: "watch",
+  holding: null,
+};
+const castEl = document.getElementById("cast");
+function outfitIcon(id) {
+  const o = OUTFITS.find(x => x.id === id);
+  return o && o.id !== "natural" ? o.icon : "";
+}
+function renderCast() {
+  const beat = (60 / state.track.bpm) + "s";
+  castEl.innerHTML = "";
+  ANIMALS.forEach(function(a) {
+    const p = state.pos[a.id];
+    const div = document.createElement("div");
+    div.className = "char dancing" + (state.selected === a.id ? " selected" : "");
+    div.dataset.id = a.id;
+    div.dataset.style = state.styles[a.id];
+    div.style.setProperty("--beat", beat);
+    div.style.left = (p.x * 100) + "%";
+    div.style.top = (p.y * 100) + "%";
+    div.innerHTML =
+      '<div class="bubble" data-bubble></div>' +
+      '<div class="body">' +
+        '<div class="outfit-tag">' + outfitIcon(state.outfits[a.id]) + '</div>' +
+        '<div class="emoji">' + a.base + '</div>' +
+        '<div class="name">' + a.name + '</div>' +
+      '</div>';
+    if (state.mode === "interact") {
+      div.addEventListener("pointerdown", function(e) {
+        e.preventDefault();
+        state.holding = a.id;
+        state.selected = a.id;
+        div.classList.add("held", "selected");
+        Array.prototype.forEach.call(castEl.children, function(c) {
+          if (c !== div) c.classList.remove("selected");
+        });
+        document.getElementById("dressName").textContent = a.name;
+      });
+      div.addEventListener("pointerup", function() { releaseHold(div); });
+      div.addEventListener("pointerleave", function() { releaseHold(div); });
+      div.addEventListener("pointercancel", function() { releaseHold(div); });
+    }
+    castEl.appendChild(div);
+  });
+}
+function releaseHold(div) {
+  state.holding = null;
+  if (div) div.classList.remove("held");
+}
+const STYLES = ["bounce", "sway", "spin", "hop"];
+function partyTick() {
+  ANIMALS.forEach(function(a) {
+    if (state.holding === a.id) return;
+    const p = state.pos[a.id];
+    p.x += (Math.random() - 0.5) * 0.012;
+    p.y += (Math.random() - 0.5) * 0.010;
+    p.x = Math.max(0.18, Math.min(0.82, p.x));
+    p.y = Math.max(0.42, Math.min(0.82, p.y));
+  });
+  if (Math.random() < 0.35) {
+    const a = ANIMALS[Math.floor(Math.random() * ANIMALS.length)];
+    if (state.holding !== a.id) {
+      state.styles[a.id] = STYLES[Math.floor(Math.random() * STYLES.length)];
+    }
+  }
+  if (Math.random() < 0.4) {
+    const nodes = castEl.querySelectorAll(".char");
+    if (nodes.length) {
+      const n = nodes[Math.floor(Math.random() * nodes.length)];
+      const b = n.querySelector("[data-bubble]");
+      if (b) {
+        b.textContent = BUBBLES[Math.floor(Math.random() * BUBBLES.length)];
+        b.classList.add("show");
+        setTimeout(function() { b.classList.remove("show"); }, 900);
+      }
+    }
+  }
+  renderCast();
+}
+setInterval(partyTick, 1600);
+const dressSheet = document.getElementById("dressSheet");
+const musicSheet = document.getElementById("musicSheet");
+const outfitGrid = document.getElementById("outfitGrid");
+const trackList = document.getElementById("trackList");
+function openSheet(el) {
+  dressSheet.classList.remove("open");
+  musicSheet.classList.remove("open");
+  el.classList.add("open");
+}
+function closeSheets() {
+  dressSheet.classList.remove("open");
+  musicSheet.classList.remove("open");
+}
+function renderOutfits() {
+  outfitGrid.innerHTML = "";
+  OUTFITS.forEach(function(o) {
+    const t = document.createElement("button");
+    t.type = "button";
+    t.className = "tile" + (state.selected && state.outfits[state.selected] === o.id ? " on" : "");
+    t.innerHTML = o.icon + "<span>" + o.label + "</span>";
+    t.addEventListener("click", function() {
+      if (!state.selected) state.selected = ANIMALS[0].id;
+      state.outfits[state.selected] = o.id;
+      renderOutfits();
+      renderCast();
+    });
+    outfitGrid.appendChild(t);
+  });
+}
+function renderTracks() {
+  trackList.innerHTML = "";
+  TRACKS.forEach(function(tr) {
+    const row = document.createElement("button");
+    row.type = "button";
+    row.className = "track" + (state.track.id === tr.id ? " on" : "");
+    row.innerHTML = '<div style="font-size:22px">🎵</div><div class="meta"><strong>' +
+      tr.name + '</strong><small>' + tr.tag + ' · ' + tr.bpm + ' BPM</small></div>';
+    row.addEventListener("click", function() {
+      state.track = tr;
+      document.getElementById("trackChip").textContent = "♪ " + tr.name;
+      renderTracks();
+      renderCast();
+      restartMusic();
+    });
+    trackList.appendChild(row);
+  });
+}
+class PartyAudio {
+  constructor() {
+    this.ctx = null;
+    this.timer = null;
+    this.step = 0;
+    this.playing = false;
+  }
+  ensure() {
+    if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    if (this.ctx.state === "suspended") this.ctx.resume();
+  }
+  stop() {
+    this.playing = false;
+    if (this.timer) { clearInterval(this.timer); this.timer = null; }
+  }
+  start(track) {
+    this.ensure();
+    this.stop();
+    if (state.muted) return;
+    this.playing = true;
+    const interval = (60 / track.bpm) * 1000 / 2;
+    const scale = track.bars.scale;
+    const base = 110;
+    const self = this;
+    this.step = 0;
+    this.timer = setInterval(function() {
+      if (!self.playing || state.muted) return;
+      const t = self.ctx.currentTime;
+      const degree = scale[self.step % scale.length];
+      const freq = base * Math.pow(2, degree / 12);
+      if (self.step % 4 === 0) self.hit(t, 60, 0.08, "square", 0.11);
+      if (self.step % 4 === 2) self.noise(t, 0.05, 0.05);
+      if (self.step % 2 === 0) self.hit(t, freq, 0.11, "triangle", 0.045);
+      if (self.step % 8 === 6) self.hit(t, freq * 2, 0.06, "sine", 0.03);
+      self.step++;
+    }, interval);
+  }
+  hit(t, freq, dur, type, gain) {
+    const o = this.ctx.createOscillator();
+    const g = this.ctx.createGain();
+    o.type = type;
+    o.frequency.setValueAtTime(freq, t);
+    g.gain.setValueAtTime(gain, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    o.connect(g); g.connect(this.ctx.destination);
+    o.start(t); o.stop(t + dur + 0.02);
+  }
+  noise(t, dur, gain) {
+    const n = this.ctx.createBufferSource();
+    const buf = this.ctx.createBuffer(1, this.ctx.sampleRate * dur, this.ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * 0.5;
+    n.buffer = buf;
+    const g = this.ctx.createGain();
+    g.gain.setValueAtTime(gain, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    n.connect(g); g.connect(this.ctx.destination);
+    n.start(t);
+  }
+}
+const audio = new PartyAudio();
+function restartMusic() {
+  if (state.party && !state.muted) audio.start(state.track);
+  else audio.stop();
+}
+function setMode(mode) {
+  state.mode = mode;
+  document.getElementById("btnWatch").classList.toggle("on", mode === "watch");
+  document.getElementById("btnInteract").classList.toggle("on", mode === "interact");
+  document.getElementById("btnDress").disabled = mode !== "interact";
+  document.getElementById("watchBanner").classList.toggle("hide", mode === "interact");
+  if (mode === "watch") {
+    state.selected = null;
+    state.holding = null;
+    closeSheets();
+  }
+  renderCast();
+}
+document.getElementById("btnWatch").addEventListener("click", function() { setMode("watch"); });
+document.getElementById("btnInteract").addEventListener("click", function() { setMode("interact"); });
+document.getElementById("btnDress").addEventListener("click", function() {
+  if (state.mode !== "interact") return;
+  if (!state.selected) state.selected = ANIMALS[0].id;
+  var a = ANIMALS.find(function(x) { return x.id === state.selected; });
+  document.getElementById("dressName").textContent = a ? a.name : "—";
+  renderOutfits();
+  openSheet(dressSheet);
+});
+document.getElementById("btnMusic").addEventListener("click", function() {
+  renderTracks();
+  openSheet(musicSheet);
+});
+document.getElementById("closeDress").addEventListener("click", closeSheets);
+document.getElementById("closeMusic").addEventListener("click", closeSheets);
+document.getElementById("btnMute").addEventListener("click", function() {
+  state.muted = !state.muted;
+  document.getElementById("btnMute").textContent = state.muted ? "🔊 Unmute" : "🔇 Mute";
+  restartMusic();
+});
+function bootAudio() {
+  audio.ensure();
+  if (!audio.playing && !state.muted) audio.start(state.track);
+}
+document.body.addEventListener("pointerdown", bootAudio, { once: true });
+setTimeout(function() { try { bootAudio(); } catch (e) {} }, 300);
+window.addEventListener("resize", function() { renderCast(); });
+renderCast();
+renderOutfits();
+renderTracks();
+setMode("watch");
+</script>
 </body>
 </html>
