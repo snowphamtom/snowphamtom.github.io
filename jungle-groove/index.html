@@ -1,1 +1,147 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=https://cdn.jsdelivr.net/gh/snowphamtom/jungle-groove@main/index.html"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Jungle Groove</title></head><body><p><a href="https://cdn.jsdelivr.net/gh/snowphamtom/jungle-groove@main/index.html">Open Jungle Groove — Living Dance Party</a></p></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Jungle Groove</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+html,body{margin:0;height:100%;height:100dvh;overflow:hidden;position:fixed;inset:0;width:100%;background:#1a0530;color:#fefae0;font-family:system-ui,-apple-system,sans-serif;-webkit-user-select:none;user-select:none}
+#app{display:flex;flex-direction:column;height:100%;height:100dvh}
+header{padding:8px 10px;padding-top:max(8px,env(safe-area-inset-top));display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap;z-index:5}
+.logo{font-weight:800;color:#c6ff00;font-size:13px}.logo small{display:block;color:#d4a5ff;font-size:9px;font-weight:500}
+.modes button{border:0;padding:10px 14px;min-height:44px;font-weight:700;background:transparent;color:#d4a5ff}
+.modes button.on{background:#c6ff00;color:#1a0530;border-radius:999px}
+#world{flex:1;position:relative;touch-action:none;min-height:0;background:linear-gradient(180deg,#c6ff00 0%,#c6ff00 26%,#7b2cbf 26%,#1a0530 100%)}
+.bowl{position:absolute;left:8%;right:8%;top:30%;bottom:16%;border-radius:40%;background:rgba(60,50,90,.7);border:2px solid rgba(198,255,0,.3);pointer-events:none}
+.zone{position:absolute;border:1px dashed rgba(255,255,255,.15);pointer-events:none;font-size:9px;color:rgba(255,255,255,.4);padding:4px;text-transform:uppercase;letter-spacing:.1em}
+#z-dance{left:10%;right:10%;top:32%;height:40%}
+#z-bar{left:5%;width:42%;bottom:4%;height:20%}
+#z-lounge{right:5%;width:42%;bottom:4%;height:20%}
+.cast{position:absolute;inset:0;pointer-events:none}
+.char{position:absolute;width:80px;height:110px;margin-left:-40px;margin-top:-55px;transition:left .8s ease,top .8s ease}
+.interact .char{pointer-events:auto;touch-action:none}
+.char .name{position:absolute;bottom:0;left:50%;transform:translateX(-50%);font-size:9px;background:rgba(0,0,0,.5);padding:1px 6px;border-radius:9px}
+.char .sprite{width:100%;height:100%;display:block;pointer-events:none}
+.char .figure{transform-origin:40px 100px;animation:breath 2.4s ease-in-out infinite}
+.char[data-act=dance] .figure{animation:bob .5s ease-in-out infinite}
+.char[data-act=idle] .figure{animation:idle 3s ease-in-out infinite}
+.char[data-act=drink] .figure,.char[data-act=sit] .figure{animation:sit 3s ease-in-out infinite}
+.char[data-act=chat] .figure,.char[data-act=rest] .figure{animation:nod 2.5s ease-in-out infinite}
+.char[data-act=wave] .arm-r{animation:wave .5s ease-in-out infinite;transform-origin:68px 78px}
+@keyframes breath{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px) scale(1.02,.98)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes idle{0%,100%{transform:rotate(0)}50%{transform:rotate(2deg) translateY(-2px)}}
+@keyframes sit{0%,100%{transform:translateY(10px) scale(1,.93)}50%{transform:translateY(8px)}}
+@keyframes nod{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(3deg)}}
+@keyframes wave{0%,100%{transform:rotate(-20deg)}50%{transform:rotate(-70deg)}}
+nav{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;padding:8px;padding-bottom:max(12px,env(safe-area-inset-bottom));background:rgba(20,8,40,.95)}
+.btn{border:0;border-radius:12px;padding:12px 14px;min-height:44px;font-weight:700;background:#c6ff00;color:#1a0530;-webkit-appearance:none}
+.btn.sec{background:#9b59b6;color:#fff}.btn.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.25)}
+.btn:disabled{opacity:.4}
+#tap{position:fixed;inset:0;z-index:99;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;flex-direction:column;color:#c6ff00;font-weight:800;font-size:20px;gap:8px}
+#tap small{font-size:13px;font-weight:500;color:#d4a5ff}
+#tap.hide{display:none}
+.sheet{position:fixed;left:0;right:0;bottom:0;max-height:45dvh;background:rgba(20,8,40,.97);padding:14px;padding-bottom:max(16px,env(safe-area-inset-bottom));transform:translateY(110%);transition:transform .25s;z-index:50;overflow:auto;-webkit-overflow-scrolling:touch;border-radius:16px 16px 0 0}
+.sheet.open{transform:translateY(0)}
+.sheet h2{margin:0 0 10px;color:#c6ff00;font-size:13px}
+.row{display:block;width:100%;text-align:left;padding:12px;margin:4px 0;border:0;border-radius:10px;background:rgba(255,255,255,.08);color:#fff;font-size:14px;min-height:48px}
+</style>
+</head>
+<body>
+<div id="tap">TAP TO START<br><small>required on iPhone for sound</small></div>
+<div id="app">
+<header>
+<div class="logo">JUNGLE GROOVE<small>live website</small></div>
+<div class="modes"><button type="button" id="btnW" class="on">WATCH</button><button type="button" id="btnI">INTERACT</button></div>
+</header>
+<div id="world">
+<div class="bowl"></div>
+<div class="zone" id="z-dance">Dance Bowl</div>
+<div class="zone" id="z-bar">Bar</div>
+<div class="zone" id="z-lounge">Lounge</div>
+<div class="cast" id="cast"></div>
+</div>
+<nav>
+<button class="btn" id="btnDress" disabled>Costumes</button>
+<button class="btn sec" id="btnMusic">Music</button>
+<button class="btn ghost" id="btnMute">Mute</button>
+</nav>
+</div>
+<div class="sheet" id="musicSheet"><h2>Music</h2><div id="tracks"></div><button class="row" id="closeM">Close</button></div>
+<script src="./sprites.js"></script>
+<script>
+var Z={dance:{x:[.2,.8],y:[.4,.65]},bar:{x:[.1,.42],y:[.78,.92]},lounge:{x:[.58,.9],y:[.78,.92]}};
+var A=[{id:"leo",name:"Leo",kind:"leo",o:"cape",z:"dance"},{id:"zara",name:"Zara",kind:"zara",o:"shades",z:"dance"},{id:"momo",name:"Momo",kind:"momo",o:"disco",z:"bar"},{id:"pip",name:"Pip",kind:"pip",o:"crown",z:"lounge"},{id:"tiko",name:"Tiko",kind:"tiko",o:"tuxedo",z:"dance"},{id:"nala",name:"Nala",kind:"nala",o:"hula",z:"lounge"},{id:"bongo",name:"Bongo",kind:"bongo",o:"natural",z:"bar"}];
+var TR=[{n:"Groove Safari",b:112},{n:"Bamboo Bounce",b:128},{n:"Moonlit Mambo",b:96},{n:"Stampede Drop",b:140}];
+function ri(a,b){return a+Math.random()*(b-a)}
+function zp(z){var Zz=Z[z];return{x:ri(Zz.x[0],Zz.x[1]),y:ri(Zz.y[0],Zz.y[1])}}
+function act(z){var r=Math.random();if(z==="dance")return r<.6?"dance":r<.85?"idle":"wave";if(z==="bar")return r<.45?"drink":r<.75?"sit":"idle";return r<.4?"chat":r<.7?"rest":"idle"}
+function zat(x,y){if(y<.72&&x>.12&&x<.88)return"dance";return x<.48?"bar":"lounge"}
+var S={mode:"watch",muted:false,track:0,started:false,drag:null,pos:{},zone:{},out:{},sel:null};
+A.forEach(function(a){S.pos[a.id]=zp(a.z);S.zone[a.id]=a.z;S.out[a.id]=a.o;a._act=act(a.z)});
+var cast=document.getElementById("cast"),world=document.getElementById("world");
+function xy(e){var t=e.touches&&e.touches[0]||e.changedTouches&&e.changedTouches[0];return t?{x:t.clientX,y:t.clientY}:{x:e.clientX,y:e.clientY}}
+function render(){
+  cast.innerHTML="";
+  A.forEach(function(a){
+    var p=S.pos[a.id],d=document.createElement("div");
+    d.className="char";d.dataset.act=a._act||"idle";
+    d.style.left=(p.x*100)+"%";d.style.top=(p.y*100)+"%";
+    var svg=typeof spriteSVG==="function"?spriteSVG(a.kind,S.out[a.id]):"";
+    d.innerHTML=svg+'<div class="name">'+a.name+'</div>';
+    if(S.mode==="interact"){
+      function start(e){e.preventDefault();S.drag=a.id;S.sel=a.id;d.style.transition="none"}
+      function move(e){if(S.drag!==a.id)return;e.preventDefault();var c=xy(e),r=world.getBoundingClientRect();var x=Math.max(.08,Math.min(.92,(c.x-r.left)/r.width)),y=Math.max(.12,Math.min(.92,(c.y-r.top)/r.height));S.pos[a.id]={x:x,y:y};d.style.left=(x*100)+"%";d.style.top=(y*100)+"%"}
+      function end(e){if(S.drag!==a.id)return;e.preventDefault();S.drag=null;d.style.transition="";var p=S.pos[a.id],z=zat(p.x,p.y);S.zone[a.id]=z;a._act=act(z);S.pos[a.id]=zp(z);render()}
+      d.addEventListener("touchstart",start,{passive:false});
+      d.addEventListener("touchmove",move,{passive:false});
+      d.addEventListener("touchend",end,{passive:false});
+      d.addEventListener("pointerdown",start,{passive:false});
+      d.addEventListener("pointermove",move,{passive:false});
+      d.addEventListener("pointerup",end,{passive:false});
+    }
+    cast.appendChild(d);
+  });
+}
+function tick(){
+  if(!S.started)return;
+  A.forEach(function(a){
+    if(S.drag===a.id)return;
+    if(Math.random()<.4)S.pos[a.id]=zp(S.zone[a.id]);
+    if(Math.random()<.15){var ks=Object.keys(Z),z=ks[Math.floor(Math.random()*ks.length)];S.zone[a.id]=z;S.pos[a.id]=zp(z);a._act=act(z)}
+    else if(Math.random()<.45)a._act=act(S.zone[a.id]);
+  });
+  render();
+}
+setInterval(tick,2000);
+var ctx=null,timer=null,step=0;
+function ensure(){if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext);if(ctx.state==="suspended")ctx.resume()}
+function music(){
+  ensure();if(timer)clearInterval(timer);if(S.muted)return;
+  var bpm=TR[S.track].b,iv=60/bpm*500;step=0;
+  timer=setInterval(function(){
+    if(S.muted)return;
+    var t=ctx.currentTime,f=110*Math.pow(2,(step%8)/12);
+    var o=ctx.createOscillator(),g=ctx.createGain();
+    o.type=step%4===0?"square":"triangle";o.frequency.value=step%4===0?60:f;
+    g.gain.value=.06;g.gain.exponentialRampToValueAtTime(.001,t+.1);
+    o.connect(g);g.connect(ctx.destination);o.start(t);o.stop(t+.12);step++;
+  },iv);
+}
+function start(e){if(e)e.preventDefault();if(S.started)return;S.started=true;document.getElementById("tap").classList.add("hide");try{ensure();music()}catch(err){}render()}
+document.getElementById("tap").addEventListener("touchstart",start,{passive:false});
+document.getElementById("tap").addEventListener("click",start);
+document.body.addEventListener("touchmove",function(e){if(!e.target.closest||!e.target.closest(".sheet"))e.preventDefault()},{passive:false});
+document.getElementById("btnW").onclick=function(){S.mode="watch";S.drag=null;this.classList.add("on");document.getElementById("btnI").classList.remove("on");document.getElementById("btnDress").disabled=true;world.classList.remove("interact");render()};
+document.getElementById("btnI").onclick=function(){S.mode="interact";this.classList.add("on");document.getElementById("btnW").classList.remove("on");document.getElementById("btnDress").disabled=false;world.classList.add("interact");render()};
+document.getElementById("btnMute").onclick=function(){S.muted=!S.muted;this.textContent=S.muted?"Unmute":"Mute";music()};
+document.getElementById("btnMusic").onclick=function(){var el=document.getElementById("tracks");el.innerHTML="";TR.forEach(function(t,i){var b=document.createElement("button");b.className="row";b.textContent=t.n+" · "+t.b+" BPM";b.onclick=function(){S.track=i;music();document.getElementById("musicSheet").classList.remove("open")};el.appendChild(b)});document.getElementById("musicSheet").classList.add("open")};
+document.getElementById("closeM").onclick=function(){document.getElementById("musicSheet").classList.remove("open")};
+function wait(){if(typeof spriteSVG==="function")render();else setTimeout(wait,40)}
+wait();
+</script>
+</body>
+</html>
