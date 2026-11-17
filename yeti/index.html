@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <meta name="color-scheme" content="dark" />
 <meta name="theme-color" content="#0a2547" />
 <meta name="mobile-web-app-capable" content="yes" />
@@ -459,7 +459,7 @@ var ENTRIES = [
  s:["Open Data — Verify", D.verify]},
 /* ---------- THE HOUSE ---------- */
 {p:"house", k:["monsters ink","the company","llc","taylor heller","who is taylor","who built you","bellevue","nebraska","uei","cage","sam.gov","sos"], t:"Monsters Ink LLC — standing of record",
- a:"**Monsters Ink LLC** — Taylor Heller's company, of **Bellevue, Nebraska**. **Organized April 25, 2019**; Nebraska Secretary of State status **Active**; **SAM.gov Active**; **UEI R9SQEQR51E46**; **CAGE 24VL0**. **8 patent applications receipted.** The portfolio, printed plainly the way the gate prints it: **15 submissions, 5 live, 0 selections, $0 contracted** — never inflated, including by Yeti.",
+ a:"**Monsters Ink LLC** — Taylor Heller's company, of **Bellevue, Nebraska**. **Organized April 25, 2019**; Nebraska Secretary of State status **Active**; **SAM.gov Active**; **UEI [UEI withheld]**; **[CAGE withheld]**. **8 patent applications receipted.** The portfolio, printed plainly the way the gate prints it: **15 submissions, 5 live, 0 selections, $0 contracted** — never inflated, including by Yeti.",
  m:"The standing survived its own history: an administrative dissolution in June 2021, cured by reinstatement in June 2024; biennial report last filed April 2025, next due January 1, 2027. Yeti reports the whole line — the cured gap included — because a standing that hides its history isn't a standing.",
  s:["The house record — Monsters Ink LLC", D.root]},
 {p:"house", k:["six domains","domains","xtech","atec","deep blue","stise","prim3","vr gatekeeper","one math","applications of"], t:"One math, six domains",
@@ -752,7 +752,7 @@ function firstLightAudit(){
     ["669 = a(653,494,691)", function(){ return findText("kimberling","653,494,691"); }],
     ["the census: 944 door + 124 alias + 60 never, Σ 7,140", function(){ return findText("genesis","944 door + 124 alias + 60 never") && findText("genesis","7,140"); }],
     ["the filed [55,8] minimum distance of 1", function(){ return findText("sidon","minimum distance is 1"); }],
-    ["UEI R9SQEQR51E46 and $0 contracted, printed plainly", function(){ return findText("house","R9SQEQR51E46") && findText("house","$0 contracted"); }]
+    ["UEI [UEI withheld] and $0 contracted, printed plainly", function(){ return findText("house","[UEI withheld]") && findText("house","$0 contracted"); }]
   ];
   var passed = 0, failed = [];
   checks.forEach(function(c){ try{ if(c[1]()) passed++; else failed.push(c[0]); }catch(e){ failed.push(c[0]); } });
@@ -844,7 +844,7 @@ var WHYS = {
   "VERIFY_ALL — 215 PASS / 0 FAIL":"Computed — and, unusually, checkable by you in the strongest sense: the verifier is one published file, standard library only, and its author's full run is printed in the drop (215 PASS / 0 FAIL / 1 SKIP / 13 RECORD). My grounds are the run; your grounds can be your own run.",
   "Kimberling Problem 2 — injectivity":"Proved — the Row-Triple Theorem, published with the procedure and full results in the drop. A proof is the one grounding stronger than a measurement: it doesn't sample the claim, it closes it. I hold injectivity as proved, and surjectivity as open, and I never let the two standings blur.",
   "The 30 located values":"Computed — each value forward-traced end to end, all 30 traces re-run inside VERIFY_ALL (30 of 30 pass). 669's address, a(653,494,691), is a trace, not an estimate: follow the shuffle and you arrive there.",
-  "Monsters Ink LLC — standing of record":"Reported — by the registries that own the facts: the Nebraska Secretary of State (organized April 25, 2019; status Active) and SAM.gov (Active; UEI R9SQEQR51E46; CAGE 24VL0), with the portfolio figures from the house's own gate ledger. I did not calculate these; I hold them on that provenance, and I say so."
+  "Monsters Ink LLC — standing of record":"Reported — by the registries that own the facts: the Nebraska Secretary of State (organized April 25, 2019; status Active) and SAM.gov (Active; UEI [UEI withheld]; [CAGE withheld]), with the portfolio figures from the house's own gate ledger. I did not calculate these; I hold them on that provenance, and I say so."
 };
 function whyFor(e){
   if(!e) return "There is nothing under that question yet — no entry, no grounds. That is precisely the state the Gathering List exists for.";
