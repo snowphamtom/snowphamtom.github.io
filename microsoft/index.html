@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Microsoft's November 2026 Microsoft 365 outage, mapped root cause by root cause to the Gate — admission control that measures residual capacity, admits only what fits, and refuses and records the rest.">
+<meta name="color-scheme" content="light">
+<link rel="icon" href="data:,">
+<title>The Microsoft 365 Outage, Mapped to the Gate — Monsters Ink LLC</title>
+<style>
+  :root{
+    --paper:#ffffff;
+    --ink:#101828;
+    --ink-2:#243044;
+    --muted:#475467;
+    --faint:#667085;
+    --line:#d0d5dd;
+    --line-soft:#eaecf0;
+    --panel:#f8f9fb;
+    --panel-2:#f2f4f7;
+    --teal:#0b5e59;
+    --teal-bright:#0b7a72;
+    --teal-tint:#e6f4f2;
+    --red:#9a2b2b;
+    --red-tint:#fdf0f0;
+    --gold:#8a6d00;
+    --gold-tint:#fdf6d8;
+    --green:#0a6b2e;
+    --green-tint:#eaf7ee;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:var(--teal);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+  a:hover{color:var(--teal-bright)}
+  a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--teal-bright);outline-offset:2px}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 24px}
+  @media(max-width:520px){.wrap{padding:0 18px}}
+
+  /* Top bar */
+  .topbar{border-bottom:1px solid var(--line-soft)}
+  .topbar .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 20px;padding-top:14px;padding-bottom:14px}
+  .brand{font-size:13px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
+  .brand span{color:var(--teal)}
+  .topnav{display:flex;flex-wrap:wrap;gap:4px 6px}
+  .topnav a{display:inline-flex;align-items:center;min-height:36px;padding:6px 10px;font-size:14px;font-weight:600;text-decoration:none;border-radius:8px}
+  .topnav a:hover{background:var(--teal-tint)}
+
+  /* Hero */
+  .hero{padding:56px 0 8px}
+  @media(max-width:520px){.hero{padding:38px 0 4px}}
+  .eyebrow{font-size:12.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--teal);margin:0 0 16px}
+  h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(36px,5.6vw,58px);line-height:1.08;font-weight:700;letter-spacing:-.01em;margin:0 0 18px;max-width:820px}
+  h1 em{font-style:normal;color:var(--teal)}
+  .lede{font-size:clamp(17px,2vw,19.5px);line-height:1.65;color:var(--ink-2);max-width:760px;margin:0 0 14px}
+  .lede strong{color:var(--ink)}
+  .source-note{font-size:14px;color:var(--muted);max-width:760px;margin:0}
+  .source-note strong{color:var(--ink-2)}
+
+  /* Fact strip */
+  .facts{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:var(--radius);margin:36px 0 0;overflow:hidden}
+  @media(max-width:820px){.facts{grid-template-columns:1fr 1fr}}
+  @media(max-width:420px){.facts{grid-template-columns:1fr}}
+  .fact{padding:20px 22px;background:var(--paper)}
+  .fact + .fact{border-left:1px solid var(--line-soft)}
+  @media(max-width:820px){.fact + .fact{border-left:none}.fact{border-top:1px solid var(--line-soft)}.fact:nth-child(-n+2){border-top:none}.fact:nth-child(even){border-left:1px solid var(--line-soft)}}
+  @media(max-width:420px){.fact{border-top:1px solid var(--line-soft)!important;border-left:none!important}.fact:first-child{border-top:none!important}}
+  .fact .v{font-family:Georgia,serif;font-size:30px;font-weight:700;line-height:1.1;color:var(--ink)}
+  .fact .v small{font-size:17px;color:var(--muted)}
+  .fact .k{font-size:13.5px;color:var(--muted);margin-top:5px;line-height:1.45}
+
+  .services{margin:18px 0 0;font-size:15px;color:var(--ink-2)}
+  .services .lbl{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-right:10px}
+  .chip{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:4px 12px;margin:3px 4px 3px 0;font-size:14px;font-weight:600;background:var(--panel);min-height:32px;line-height:22px}
+
+  section{padding:52px 0 0}
+  h2{font-family:Georgia,serif;font-size:clamp(27px,3.6vw,38px);line-height:1.15;font-weight:700;margin:0 0 10px}
+  .sec-lede{font-size:16.5px;color:var(--muted);max-width:720px;margin:0 0 28px}
+  .sec-lede strong{color:var(--ink-2)}
+
+  /* Timeline */
+  .timeline{border:1px solid var(--line);border-radius:var(--radius);padding:6px 26px;background:var(--paper)}
+  .trow{display:grid;grid-template-columns:190px 1fr;gap:6px 26px;padding:18px 0;border-bottom:1px solid var(--line-soft)}
+  .trow:last-child{border-bottom:none}
+  @media(max-width:640px){.trow{grid-template-columns:1fr}}
+  .trow .when{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:13.5px;font-weight:700;color:var(--teal);padding-top:2px}
+  .trow .what{font-size:15.5px;color:var(--ink-2)}
+  .trow .what strong{color:var(--ink)}
+
+  /* Mapping rows */
+  .map-row{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-bottom:20px}
+  .map-head{display:flex;gap:16px;align-items:flex-start;padding:22px 26px 0}
+  .map-num{flex:0 0 auto;width:44px;height:44px;border-radius:50%;background:var(--ink);color:#fff;font-family:Georgia,serif;font-size:19px;font-weight:700;display:flex;align-items:center;justify-content:center}
+  .map-head h3{font-size:20px;line-height:1.3;margin:2px 0 4px;font-weight:800}
+  .map-head .sub{font-size:14px;color:var(--faint);margin:0}
+  .map-cols{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:18px}
+  @media(max-width:720px){.map-cols{grid-template-columns:1fr}}
+  .map-col{padding:20px 26px 24px}
+  .map-col.happened{background:var(--red-tint);border-top:1px solid #f3d7d7}
+  .map-col.gate{background:var(--teal-tint);border-top:1px solid #cfe8e4}
+  @media(min-width:721px){.map-col.gate{border-left:1px solid #cfe8e4}}
+  .map-col .tag{font-size:11.5px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;margin:0 0 8px}
+  .map-col.happened .tag{color:var(--red)}
+  .map-col.gate .tag{color:var(--teal)}
+  .map-col p{font-size:15.5px;line-height:1.62;margin:0 0 10px;color:var(--ink-2)}
+  .map-col p:last-child{margin-bottom:0}
+  .map-col p strong{color:var(--ink)}
+  .map-col .outcome{font-weight:700;color:var(--ink)}
+
+  /* Gate law */
+  .law{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:28px 26px}
+  .flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:10px;margin:6px 0 20px}
+  .step{flex:1 1 150px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .step .n{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:4px}
+  .step .t{font-size:15.5px;font-weight:800;line-height:1.3}
+  .step .d{font-size:13.5px;color:var(--muted);margin-top:4px;line-height:1.5}
+  .step.refuse{border-color:#b8452f;background:#fff7f4}
+  .step.refuse .n{color:#9a3412}
+  .arrow{align-self:center;font-size:20px;color:var(--faint);font-weight:700}
+  @media(max-width:720px){.arrow{display:none}.step{flex:1 1 100%}}
+  .law p{font-size:16px;color:var(--ink-2);max-width:780px;margin:0 0 12px}
+  .law p:last-child{margin-bottom:0}
+  .law p strong{color:var(--ink)}
+
+  /* Simulator */
+  .sim{border:1px solid var(--line);border-radius:var(--radius);padding:26px}
+  .sim h3{font-size:19px;margin:0 0 6px;font-weight:800}
+  .sim .hint{font-size:14.5px;color:var(--muted);margin:0 0 20px;max-width:700px}
+  .sim-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  @media(max-width:720px){.sim-grid{grid-template-columns:1fr}}
+  .sim-panel{border:1px solid var(--line-soft);border-radius:10px;padding:18px 20px;background:var(--panel)}
+  .sim-panel.gated{background:var(--teal-tint);border-color:#cfe8e4}
+  .sim-panel h4{font-size:13px;letter-spacing:.1em;text-transform:uppercase;margin:0 0 12px;color:var(--ink-2)}
+  .bar-track{height:30px;background:#fff;border:1px solid var(--line);border-radius:7px;position:relative;overflow:hidden;margin-bottom:8px}
+  .bar-fill{position:absolute;inset:0 auto 0 0;background:var(--teal-bright);transition:width .25s ease}
+  #barNoGate{background:#98a2b3}
+  #barNoGate.over{background:#c0392b}
+  .bar-marker{position:absolute;top:-2px;bottom:-2px;width:3px;background:var(--ink)}
+  .bar-marker span{position:absolute;top:-19px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:700;color:var(--ink);white-space:nowrap}
+  .bar-wrap{padding-top:20px}
+  .sim-stats{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:13.5px;line-height:1.8;color:var(--ink-2)}
+  .sim-stats b{color:var(--ink)}
+  .verdict{margin-top:12px;font-size:14.5px;font-weight:700;line-height:1.5;padding:10px 12px;border-radius:8px;background:#fff;border:1px solid var(--line-soft)}
+  .verdict.bad{color:var(--red);border-color:#f3d7d7;background:#fff}
+  .verdict.good{color:var(--green)}
+  .sim-controls{margin-top:22px}
+  .sim-controls label{font-size:14px;font-weight:700;display:block;margin-bottom:8px}
+  .sim-controls input[type=range]{width:100%;min-height:36px;accent-color:var(--teal)}
+  .preset-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .preset{min-height:40px;padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:#fff;font-size:14px;font-weight:600;color:var(--ink-2);cursor:pointer;font-family:inherit}
+  .preset:hover{border-color:var(--teal);color:var(--teal)}
+  .preset[aria-pressed="true"]{background:var(--teal);border-color:var(--teal);color:#fff}
+  .sim-note{font-size:13px;color:var(--faint);margin:16px 0 0}
+
+  /* Honest limit */
+  .limit{border:2px solid var(--gold);background:var(--gold-tint);border-radius:var(--radius);padding:26px 28px}
+  .limit h2{font-size:clamp(24px,3vw,30px)}
+  .limit p{font-size:16.5px;color:var(--ink-2);max-width:800px;margin:0 0 12px}
+  .limit p:last-child{margin-bottom:0}
+  .limit p strong{color:var(--ink)}
+  .limit .big{font-size:19px;font-weight:700;color:var(--ink)}
+
+  /* Ledger */
+  .ledger-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media(max-width:720px){.ledger-grid{grid-template-columns:1fr}}
+  .ledger-card{border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px}
+  .ledger-card h3{font-size:17px;margin:0 0 10px;font-weight:800}
+  .ledger-card p,.ledger-card li{font-size:15.5px;color:var(--ink-2);line-height:1.62}
+  .ledger-card p{margin:0 0 10px}
+  .ledger-card p:last-child{margin-bottom:0}
+  .ledger-card ul{margin:0;padding-left:20px}
+  .ledger-card li{margin-bottom:6px}
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.92em;background:var(--panel-2);padding:1px 6px;border-radius:5px;color:var(--ink)}
+
+  /* Closing / links */
+  .closing{border-top:1px solid var(--line-soft);margin-top:56px;padding:36px 0 0}
+  .link-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:6px}
+  @media(max-width:640px){.link-cards{grid-template-columns:1fr}}
+  .link-card{display:block;border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;text-decoration:none;min-height:48px}
+  .link-card:hover{border-color:var(--teal)}
+  .link-card .t{font-size:17px;font-weight:800;color:var(--ink)}
+  .link-card .d{font-size:14px;color:var(--muted);margin-top:4px;line-height:1.5}
+  .link-card .go{font-size:14px;font-weight:700;color:var(--teal);margin-top:8px;display:block}
+
+  footer{margin-top:48px;border-top:1px solid var(--line-soft);padding:28px 0 44px;font-size:13.5px;color:var(--muted);line-height:1.75}
+  footer strong{color:var(--ink-2)}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    .bar-fill{transition:none}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="wrap">
+  <div class="brand">Monsters Ink <span>LLC</span></div>
+  <nav class="topnav" aria-label="Site">
+    <a href="https://sequesteredyeti.art/">Ground Gate</a>
+    <a href="https://sequesteredyeti.art/vault/">The Vault</a>
+    <a href="https://sequesteredyeti.art/">sequesteredyeti.art</a>
+  </nav>
+</div></div>
+
+<main class="wrap">
+
+  <header class="hero">
+    <p class="eyebrow">A public mapping &middot; November 2026</p>
+    <h1>The gateway had <em>no refusal</em>. That is the whole failure.</h1>
+    <p class="lede">On <strong>Thursday afternoon, November 12, 2026</strong>, during peak US hours, Microsoft 365 began to fail — and kept failing for almost a full day. Microsoft's preliminary post-incident report names three root causes that stacked on top of each other. This page maps each one to the Gate: the admission control that <strong>measures residual capacity, admits only what fits inside it, refuses the rest, and records the refusal</strong>.</p>
+    <p class="source-note">Source: Microsoft's preliminary post-incident report, <strong>Charles Lamanna, EVP Copilot and AI Agents</strong>. Microsoft states the outage was <strong>not a cyberattack and not AI</strong>. Economic estimate: <strong>Anderson Economic Group</strong>.</p>
+
+    <div class="facts" role="list" aria-label="Outage at a glance">
+      <div class="fact" role="listitem"><div class="v">~1 <small>day</small></div><div class="k">Duration — began Thursday afternoon, Nov 12, peak US hours</div></div>
+      <div class="fact" role="listitem"><div class="v">70+</div><div class="k">Countries affected by the outage</div></div>
+      <div class="fact" role="listitem"><div class="v">$10.3B</div><div class="k">Estimated lost global economic activity — Anderson Economic Group</div></div>
+      <div class="fact" role="listitem"><div class="v">16:10 <small>UTC</small></div><div class="k">Fully recovered — November 13, 2026</div></div>
+    </div>
+
+    <p class="services"><span class="lbl">Services down</span>
+      <span class="chip">Outlook</span><span class="chip">Teams</span><span class="chip">Copilot 365</span><span class="chip">SharePoint</span><span class="chip">OneDrive</span>
+    </p>
+  </header>
+
+  <section aria-labelledby="timeline-h">
+    <h2 id="timeline-h">What happened, in order</h2>
+    <p class="sec-lede">No single cause did this. Three conditions — one of them a day old, one of them months old — met at the primary gateway at the worst hour of the week.</p>
+    <div class="timeline">
+      <div class="trow"><div class="when">THE DAY BEFORE</div><div class="what">An unrelated issue leaves the primary gateway running <strong>nearly 14% short on capacity</strong>. The shortfall is not restored before the next peak.</div></div>
+      <div class="trow"><div class="when">SINCE JULY 2026</div><div class="what">A fix has been deploying across the fleet since July. Inside it sits a <strong>latent bug — lock contention inside an internal process</strong> — dormant for months because nothing has pushed the process hard enough to fire it.</div></div>
+      <div class="trow"><div class="when">THU NOV 12 &middot; AFTERNOON US</div><div class="what">A <strong>Teams network gateway fails</strong>. Its traffic shifts onto the primary gateway — which is already short on capacity — during peak US hours.</div></div>
+      <div class="trow"><div class="when">THE CASCADE</div><div class="what">The primary gateway keeps admitting traffic it cannot serve. The overload <strong>triggers the latent lock-contention bug</strong>. Services fail across Outlook, Teams, Copilot 365, SharePoint, and OneDrive in 70+ countries.</div></div>
+      <div class="trow"><div class="when">FRI NOV 13 &middot; 16:10 UTC</div><div class="what"><strong>Services fully recovered</strong> — almost a full day after the failure began.</div></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="map-h">
+    <h2 id="map-h">Root cause by root cause: what the Gate does</h2>
+    <p class="sec-lede">The Gate sits at ingress, in front of the thing being protected. Its law never changes: <strong>measure the residual, admit what fits, refuse the rest, record the refusal.</strong> Here is that law applied to each of Microsoft's three root causes.</p>
+
+    <article class="map-row">
+      <div class="map-head">
+        <div class="map-num" aria-hidden="true">1</div>
+        <div>
+          <h3>A gateway failed, and its load landed on the primary</h3>
+          <p class="sub">Root cause one — the trigger</p>
+        </div>
+      </div>
+      <div class="map-cols">
+        <div class="map-col happened">
+          <p class="tag">What happened</p>
+          <p>When the Teams network gateway failed, its traffic moved to the primary gateway. The primary <strong>accepted all of it</strong>. There was no point in the path where excess load could be turned away, so a single gateway failure became a fleet-wide overload.</p>
+          <p class="outcome">One failure, inherited by everything behind it.</p>
+        </div>
+        <div class="map-col gate">
+          <p class="tag">What the Gate does</p>
+          <p>The Gate measures the primary's <strong>residual capacity in real time</strong> and admits failover traffic only up to that residual. Everything above it is <strong>refused at ingress and recorded</strong> — turned away cleanly, with a reason, instead of being admitted to die inside.</p>
+          <p class="outcome">Result: graceful degradation instead of cascade. Some requests are refused; the service stays up for the rest.</p>
+        </div>
+      </div>
+    </article>
+
+    <article class="map-row">
+      <div class="map-head">
+        <div class="map-num" aria-hidden="true">2</div>
+        <div>
+          <h3>The primary was already running ~14% short</h3>
+          <p class="sub">Root cause two — the hidden shortfall</p>
+        </div>
+      </div>
+      <div class="map-cols">
+        <div class="map-col happened">
+          <p class="tag">What happened</p>
+          <p>An unrelated issue from the previous day left the primary gateway <strong>nearly 14% below its nominal capacity</strong>. Planning and failover assumed the full number. The system was weaker than anyone's dashboard said it was — and the shortfall only became visible when the extra load arrived.</p>
+          <p class="outcome">The margin everyone counted on was not there.</p>
+        </div>
+        <div class="map-col gate">
+          <p class="tag">What the Gate does</p>
+          <p>The Gate never admits against nominal capacity. It admits against the <strong>measured residual</strong> — nominal minus whatever is already gone. A gateway at 86% has a residual of 86%, and that is the number the Gate enforces, whether the missing 14% was lost yesterday or a minute ago.</p>
+          <p class="outcome">Result: the shortfall shows up as a smaller admission limit before the crisis, not as a collapse during it.</p>
+        </div>
+      </div>
+    </article>
+
+    <article class="map-row">
+      <div class="map-head">
+        <div class="map-num" aria-hidden="true">3</div>
+        <div>
+          <h3>The overload woke a bug that had slept since July</h3>
+          <p class="sub">Root cause three — the latent bug</p>
+        </div>
+      </div>
+      <div class="map-cols">
+        <div class="map-col happened">
+          <p class="tag">What happened</p>
+          <p>Under the overload, an internal process hit <strong>lock contention</strong> — a bug carried in a fix deploying since July. It had run for months without incident because the load that triggers it had never arrived. When it finally did, there was no quick rollback: the bug was woven through months of deployment.</p>
+          <p class="outcome">A dormant defect became the outage's amplifier.</p>
+        </div>
+        <div class="map-col gate">
+          <p class="tag">What the Gate does</p>
+          <p>The Gate caps admitted load at the measured residual — <strong>below the overload the bug needs in order to fire</strong>. The latent bug stays latent, not because it was found, but because it never receives the load that triggers it. And if load ever does approach the line, the refusals are already in the ledger, timestamped, before anything breaks.</p>
+          <p class="outcome">Result: the bug never gets its trigger, and the blast radius of anything downstream stays bounded.</p>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <section aria-labelledby="law-h">
+    <h2 id="law-h">The Gate law, stated plainly</h2>
+    <p class="sec-lede">Four steps, in order, for every arrival. Nothing is admitted on trust, on nominal figures, or on hope.</p>
+    <div class="law">
+      <div class="flow" aria-label="Gate flow">
+        <div class="step"><div class="n">Step 1</div><div class="t">Arrival</div><div class="d">A request, a failover, a burst — load presents itself at ingress.</div></div>
+        <div class="arrow" aria-hidden="true">&rarr;</div>
+        <div class="step"><div class="n">Step 2</div><div class="t">Measure the residual</div><div class="d">Real remaining capacity, right now — not the nameplate number.</div></div>
+        <div class="arrow" aria-hidden="true">&rarr;</div>
+        <div class="step"><div class="n">Step 3</div><div class="t">Admit what fits</div><div class="d">Load inside the residual is admitted and served normally.</div></div>
+        <div class="arrow" aria-hidden="true">&rarr;</div>
+        <div class="step refuse"><div class="n">Step 4</div><div class="t">Refuse &amp; record the rest</div><div class="d">Load beyond the residual is refused, and the refusal is written to the ledger.</div></div>
+      </div>
+      <p>A refusal is not a failure. <strong>A refusal is the system working</strong> — a bounded, recorded, explainable "no" at the door, instead of an unbounded collapse inside. The service degrades gracefully: fewer requests served, all of them served well, and a complete record of every one that was turned away.</p>
+      <p>That record matters. Because every admission and every refusal is written as it happens, <strong>the ledger is the post-incident report</strong> — the timeline, the shortfall, and the moment load crossed the line are already documented, not reconstructed afterward from fragments.</p>
+    </div>
+  </section>
+
+  <section aria-labelledby="sim-h">
+    <h2 id="sim-h">Try the arithmetic</h2>
+    <p class="sec-lede">An illustration built on the report's own figure: the primary gateway at <strong>86% of nominal capacity</strong> after its ~14% shortfall. Move the incoming load and watch what each design does with it.</p>
+    <div class="sim">
+      <h3>Load vs. residual — with and without a gate</h3>
+      <p class="hint">Demand is shown as a percentage of the gateway's nominal capacity. The black marker is the measured residual: 86%. Past that line, there is no real capacity left — only overload.</p>
+      <div class="sim-grid">
+        <div class="sim-panel">
+          <h4>Without a gate — what happened</h4>
+          <div class="bar-wrap"><div class="bar-track"><div class="bar-fill" id="barNoGate" style="width:86%"></div><div class="bar-marker" style="left:57.3%"><span>Residual 86%</span></div></div></div>
+          <div class="sim-stats" id="statsNoGate"></div>
+          <div class="verdict" id="verdictNoGate"></div>
+        </div>
+        <div class="sim-panel gated">
+          <h4>With the Gate — admission control</h4>
+          <div class="bar-wrap"><div class="bar-track"><div class="bar-fill" id="barGate" style="width:57.3%"></div><div class="bar-marker" style="left:57.3%"><span>Residual 86%</span></div></div></div>
+          <div class="sim-stats" id="statsGate"></div>
+          <div class="verdict" id="verdictGate"></div>
+        </div>
+      </div>
+      <div class="sim-controls">
+        <label for="loadRange">Incoming load: <span id="loadVal">118%</span> of nominal capacity</label>
+        <input type="range" id="loadRange" min="40" max="150" step="1" value="118" aria-describedby="loadVal">
+        <div class="preset-row" role="group" aria-label="Load scenarios">
+          <button type="button" class="preset" data-load="62" aria-pressed="false">Normal day — 62%</button>
+          <button type="button" class="preset" data-load="86" aria-pressed="false">Exactly at residual — 86%</button>
+          <button type="button" class="preset" data-load="118" aria-pressed="true">Teams failover — 118%</button>
+          <button type="button" class="preset" data-load="145" aria-pressed="false">Peak surge — 145%</button>
+        </div>
+      </div>
+      <p class="sim-note">Illustrative model, not Microsoft telemetry. Residual fixed at 86% from the report's "nearly 14 percent short" figure; the load values are scenarios chosen to show the mechanism. The mechanism is the claim: admit to the residual, refuse and record the rest.</p>
+    </div>
+  </section>
+
+  <section aria-labelledby="limit-h">
+    <div class="limit">
+      <p class="eyebrow" style="color:var(--gold)">Stated honestly</p>
+      <h2 id="limit-h">What the Gate does not do</h2>
+      <p class="big">The Gate does not fix the latent bug.</p>
+      <p>The lock-contention defect in Microsoft's internal process would still be there, in the code, exactly as it has been since July. No admission control repairs another system's software, and this page does not claim otherwise.</p>
+      <p>What the Gate does is narrower, and it is enough: <strong>it keeps admitted load below the threshold where the bug fires</strong>, so the defect never receives its trigger — and <strong>it bounds the blast radius</strong> when anything downstream does fail, because load beyond the residual was already refused and recorded at the door instead of piling up inside. The bug remains Microsoft's to fix. The day-long, 70-country cascade was not the bug's doing alone — it was what happened when nothing stood between the bug and unlimited load.</p>
+    </div>
+  </section>
+
+  <section aria-labelledby="ledger-h">
+    <h2 id="ledger-h">The ledger writes the report</h2>
+    <p class="sec-lede">Microsoft's preliminary report arrived days after recovery, reconstructed from the inside of a failed system. A gated system produces its account as it goes.</p>
+    <div class="ledger-grid">
+      <div class="ledger-card">
+        <h3>Every decision, recorded at the moment it is made</h3>
+        <ul>
+          <li>The <strong>measured residual</strong> at the time of each admission decision — so a capacity shortfall is a number in the record, not a discovery made afterward.</li>
+          <li>Every <strong>refusal</strong>: what was turned away, when, and how far beyond the residual it was.</li>
+          <li>The <strong>sequence</strong> — arrival, measurement, admission or refusal — in order, end to end, for any single request.</li>
+        </ul>
+      </div>
+      <div class="ledger-card">
+        <h3>What that buys in an incident</h3>
+        <p>When something still goes wrong — and the honest claim is <em>bounded</em>, not <em>impossible</em> — the questions a post-incident report exists to answer are already answered: <strong>When did capacity drop? When did load cross the line? What was refused, and what got through?</strong></p>
+        <p>No reconstruction. No archaeology through a system that was too overloaded to log its own failure. The record was written by the same mechanism that prevented the cascade.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="closing">
+    <h2 style="font-size:clamp(24px,3vw,30px)">Read the Gate itself</h2>
+    <p class="sec-lede" style="margin-bottom:20px">This mapping is public, and the diagnosis is free to read. The Gate itself is the licensed work — the dossier, the evidence, and the record live on the open site.</p>
+    <div class="link-cards">
+      <a class="link-card" href="https://sequesteredyeti.art/">
+        <span class="t">The Ground Gate landing</span>
+        <span class="d">The Gate as built and measured — the refusal, the checks, and the numbers behind them.</span>
+        <span class="go">sequesteredyeti.art &rarr;</span>
+      </a>
+      <a class="link-card" href="https://sequesteredyeti.art/vault/">
+        <span class="t">The Vault</span>
+        <span class="d">The open dossier. The figures recompute in your browser from the published data.</span>
+        <span class="go">sequesteredyeti.art/vault &rarr;</span>
+      </a>
+    </div>
+  </div>
+
+</main>
+
+<footer><div class="wrap">
+  <strong>Monsters Ink LLC</strong> &middot; Bellevue, Nebraska<br>
+  Contact: <a href="mailto:monstersink.business@gmail.com">monstersink.business@gmail.com</a><br>
+  Outage facts and root causes: Microsoft's preliminary post-incident report (Charles Lamanna, EVP Copilot and AI Agents), November 2026. Economic estimate: Anderson Economic Group (~$10.3B). The Gate mapping, the illustrative model, and the honest limit are Monsters Ink LLC's, stated as written above.
+</div></footer>
+
+<script>
+(function(){
+  var RESIDUAL = 86; // percent of nominal, from the report's ~14% shortfall
+  var range = document.getElementById('loadRange');
+  var loadVal = document.getElementById('loadVal');
+  var barNoGate = document.getElementById('barNoGate');
+  var barGate = document.getElementById('barGate');
+  var statsNoGate = document.getElementById('statsNoGate');
+  var statsGate = document.getElementById('statsGate');
+  var verdictNoGate = document.getElementById('verdictNoGate');
+  var verdictGate = document.getElementById('verdictGate');
+  var presets = Array.prototype.slice.call(document.querySelectorAll('.preset'));
+  var MAX = 150;
+
+  function pct(v){ return (v / MAX * 100).toFixed(1) + '%'; }
+
+  function render(load){
+    loadVal.textContent = load + '%';
+    var admittedGate = Math.min(load, RESIDUAL);
+    var refused = Math.max(0, load - RESIDUAL);
+    var overload = Math.max(0, load - RESIDUAL);
+
+    barNoGate.style.width = pct(load);
+    barNoGate.classList.toggle('over', load > RESIDUAL);
+    barGate.style.width = pct(admittedGate);
+
+    statsNoGate.innerHTML =
+      'Admitted: <b>' + load + '%</b> of nominal<br>' +
+      'Real capacity: <b>' + RESIDUAL + '%</b><br>' +
+      'Overload: <b>' + overload + '%</b> beyond capacity';
+    statsGate.innerHTML =
+      'Admitted: <b>' + admittedGate + '%</b> of nominal<br>' +
+      'Refused &amp; recorded: <b>' + refused + '%</b><br>' +
+      'Overload inside: <b>0%</b>';
+
+    if (load <= RESIDUAL) {
+      verdictNoGate.textContent = 'Within capacity. The system copes — this time, on this margin.';
+      verdictNoGate.className = 'verdict good';
+      verdictGate.textContent = 'Everything fits inside the residual. Nothing refused, nothing recorded but admissions.';
+      verdictGate.className = 'verdict good';
+    } else {
+      verdictNoGate.textContent = 'All ' + load + '% admitted against ' + RESIDUAL + '% of real capacity. The overload reaches the internal process — the latent bug gets its trigger. Cascade.';
+      verdictNoGate.className = 'verdict bad';
+      verdictGate.textContent = refused + '% refused at the door and written to the ledger. The process inside never sees load past ' + RESIDUAL + '% — the bug stays dormant. Degraded, not down.';
+      verdictGate.className = 'verdict good';
+    }
+
+    presets.forEach(function(b){
+      b.setAttribute('aria-pressed', String(parseInt(b.getAttribute('data-load'),10) === load));
+    });
+  }
+
+  range.addEventListener('input', function(){ render(parseInt(range.value,10)); });
+  presets.forEach(function(b){
+    b.addEventListener('click', function(){
+      var v = parseInt(b.getAttribute('data-load'),10);
+      range.value = v;
+      render(v);
+    });
+  });
+
+  render(parseInt(range.value,10));
+})();
+</script>
+</body>
+</html>
